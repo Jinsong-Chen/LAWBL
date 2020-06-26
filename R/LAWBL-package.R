@@ -1,0 +1,43 @@
+#' LAWBL: Latent (variable) analysis with Bayesian learning
+#'
+#' @description The long-term goal of this package is to provide a analytical framework for
+#' modeling latent variables with different Bayesian learning methods.
+#'
+#'
+#' @details
+#' Currently, this package includes the Partially Confirmatory Factor Analysis (PCFA),
+#' a partially confirmatory approach covering a wide range of the exploratory-confirmatory
+#'  continuum in factor analytic models (Chen, Guo, Zhang, & Pan, 2020). There are two major
+#'   model variants with different constraints for identification. One assumes local
+#'  independence (LI) with a more exploratory tendency, which can be also called the E-step.
+#'  The other allows local dependence (LD) with a more confirmatory tendency, which can be also
+#'  called the C-step.
+#'  Parameters are obtained by sampling from the posterior distributions with
+#'  the Markov chain Monte Carlo (MCMC) techniques. Different Bayesian Lasso methos are used to
+#'  regularize the loading pattern and local dependence.
+#'
+#'  Although only continuous data are supported currently, inclusion of mixed-type data is on schedule.
+#'  More Bayesian learning approaches will be also included in future releases of this package.
+#'
+#' @name LAWBL-package
+#' @aliases LAWBL
+#' @docType package
+#'
+#' @author {Jinsong Chen, \email{jinsong.chen@live.com}}
+#'
+#' @note This package is under development. You are very welcome to send me any comments or
+#'  suggestions for improvements, and to share with me any problems you may encounter with
+#'   the use of this package.
+#'
+#'
+#' @import stats
+#' @import MASS
+#' @import coda
+#'
+#' @references
+#'
+#' Chen, J., Guo, Z., Zhang, L., & Pan, J. (2020). A partially confirmatory approach to scale development with the Bayesian Lasso. \emph{Psychological Methods}. http://dx.doi.org/10.1037/met0000293.
+#'
+#' @keywords package
+NULL
+
