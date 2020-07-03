@@ -4,7 +4,7 @@
 \name{LAWBL-package}
 \alias{LAWBL-package}
 \alias{LAWBL}
-\title{LAWBL: Latent (variable) analysis with Bayesian learning}
+\title{LAWBL: Latent (variable) Analysis with Bayesian Learning}
 \description{
 The long-term goal of this package is to provide a analytical framework for
 modeling latent variables with different Bayesian learning methods.
@@ -18,7 +18,7 @@ a partially confirmatory approach covering a wide range of the exploratory-confi
  The other allows local dependence (LD) with a more confirmatory tendency, which can be also
  called the C-step.
  Parameters are obtained by sampling from the posterior distributions with
- the Markov chain Monte Carlo (MCMC) techniques. Different Bayesian Lasso methos are used to
+ the Markov chain Monte Carlo (MCMC) techniques. Different Bayesian Lasso methods are used to
  regularize the loading pattern and local dependence.
 
  Although only continuous data are supported currently, inclusion of mixed-type data is on schedule.
@@ -30,7 +30,7 @@ This package is under development. You are very welcome to send me any comments 
   the use of this package.
 }
 \references{
-Chen, J., Guo, Z., Zhang, L., & Pan, J. (2020). A partially confirmatory approach to scale development with the Bayesian Lasso. \emph{Psychological Methods}. doi:http://dx.doi.org/10.1037/met0000293
+Chen, J., Guo, Z., Zhang, L., & Pan, J. (2020). A partially confirmatory approach to scale development with the Bayesian Lasso. \emph{Psychological Methods}. http://dx.doi.org/10.1037/met0000293.
 }
 \author{
 {Jinsong Chen, \email{jinsong.chen@live.com}}

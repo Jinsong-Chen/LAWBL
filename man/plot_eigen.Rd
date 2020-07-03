@@ -7,7 +7,7 @@
 plot_eigen(obj, what = "trace")
 }
 \arguments{
-\item{obj}{A \code{pcfa} object}
+\item{obj}{A \code{lawbl} object}
 
 \item{what}{A list of options for what to plot.
 

@@ -5,7 +5,7 @@
 #'
 #' @name plot_eigen
 #'
-#' @param obj A \code{pcfa} object
+#' @param obj A \code{lawbl} object
 #'
 #' @param what A list of options for what to plot.
 #'
@@ -17,6 +17,8 @@
 #'
 #'
 #' @return NULL
+#'
+#' @importFrom graphics plot
 #'
 #' @export
 #'
@@ -35,8 +37,8 @@
 #' plot_eigen(mod0, what='PGR')
 #' }
 plot_eigen <- function(obj, what = "trace") {
-    if (class(obj) != "pcfa") 
-        stop("It must be a pcfa object.", call. = F)
+    if (class(obj) != "lawbl")
+        stop("It must be a lawbl object.", call. = F)
     Q <- obj$Q
     poq <- which(Q != 0, arr.ind = T)
     iter <- obj$iter
@@ -53,8 +55,11 @@ plot_eigen <- function(obj, what = "trace") {
     # x1<-mcmc(mobj[1:(iter/2)]);x2<-mcmc(mobj[(iter/2+1):iter])
     xx <- mcmc.list(x1, x2)
     # gelman.diag(xx)
-    
-    switch(what, PGR = gelman.plot(xx, autoburnin = F), trace = plot(mcmc(eig_arr), density = F), density = plot(mcmc(eig_arr), 
-        trace = F, cex.main = 1), stop(sprintf("Can not plot element '%s'", what), call. = FALSE))
-    
+
+    switch(what,
+           APSR = gelman.plot(xx, autoburnin = F,xlab = "", ylab = "PSRF"),
+           trace = plot(mcmc(eig_arr), density = F,xlab = "",cex.main = 1),
+           density = plot(mcmc(eig_arr), trace = F, xlab = "",cex.main = 1),
+        stop(sprintf("Can not plot element '%s'", what), call. = FALSE))
+
 }

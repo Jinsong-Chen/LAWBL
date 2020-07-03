@@ -42,7 +42,7 @@ GwMH_LA_MYC <- function(y, mu = 0, ome, la, psx, gammal_sq, thd, const, prior) {
                 # diag(PSiginv)<-rep(Sigly,len) Pmean<-PLA[j,subs]
                 vtmp <- chol2inv(chol(tcrossprod(omesub)/psxjs[j] + PSiginv))
                 mtmp <- (omesub %*% yj/psxjs[j] + PSiginv %*% rep(Pmean,len))
-                la[j, subs] <- mvrnorm(1, vtmp %*% mtmp, Sig = vtmp)
+                la[j, subs] <- mvrnorm(1, vtmp %*% mtmp, Sigma = vtmp)
             }  # end len>0
 
         # subs<-(Q[j,]==-1) len<-sum(subs) for specified loadings
@@ -67,7 +67,7 @@ GwMH_LA_MYC <- function(y, mu = 0, ome, la, psx, gammal_sq, thd, const, prior) {
                 }
                 vtmp <- chol2inv(chol(tcrossprod(omesub)/psxjs[j] + invD_tau))
                 mtmp <- (omesub %*% yj/psxjs[j])
-                la[j, subs] <- mvrnorm(1, vtmp %*% mtmp, Sig = vtmp)
+                la[j, subs] <- mvrnorm(1, vtmp %*% mtmp, Sigma = vtmp)
             }  # end len>0
     }  # end of J
 

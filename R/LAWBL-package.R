@@ -1,4 +1,4 @@
-#' LAWBL: Latent (variable) analysis with Bayesian learning
+#' LAWBL: Latent (variable) Analysis with Bayesian Learning
 #'
 #' @description The long-term goal of this package is to provide a analytical framework for
 #' modeling latent variables with different Bayesian learning methods.
@@ -13,7 +13,7 @@
 #'  The other allows local dependence (LD) with a more confirmatory tendency, which can be also
 #'  called the C-step.
 #'  Parameters are obtained by sampling from the posterior distributions with
-#'  the Markov chain Monte Carlo (MCMC) techniques. Different Bayesian Lasso methos are used to
+#'  the Markov chain Monte Carlo (MCMC) techniques. Different Bayesian Lasso methods are used to
 #'  regularize the loading pattern and local dependence.
 #'
 #'  Although only continuous data are supported currently, inclusion of mixed-type data is on schedule.

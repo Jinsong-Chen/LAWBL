@@ -6,8 +6,8 @@
 #'  independence (LI) with a more exploratory tendency, which can be also called the E-step.
 #'  The other allows local dependence (LD) with a more confirmatory tendency, which can be also
 #'  called the C-step. Parameters are obtained by sampling from the posterior distributions with
-#'  the Markov chain Monte Carlo (MCMC) techniques. Different Bayesian Lasso methos are used to
-#'  regularize the loading pattern and LD. The estimation results can be summarized with \code{\link{summary.pcfa}}
+#'  the Markov chain Monte Carlo (MCMC) techniques. Different Bayesian Lasso methods are used to
+#'  regularize the loading pattern and LD. The estimation results can be summarized with \code{\link{summary.lawbl}}
 #'  and the factorial eigenvalue can be plotted with \code{\link{plot_eigen}}.
 #'
 #' @name pcfa
@@ -27,7 +27,7 @@
 #'
 #' @param burn Number of burn-in iterations before posterior sampling.
 #'
-#' @param burn Number of formal iterations for posterior sampling.
+#' @param iter Number of formal iterations for posterior sampling.
 #'
 #' @param update Number of iterations to update the sampling information.
 #'
@@ -38,7 +38,7 @@
 #' @param digits Number of significant digits to print when printing numeric values.
 #'
 #' @return \code{pcfa} returns an object of class \code{pcfa}. It contains a lot of information about
-#' the posteriors that can be summarized using \code{\link{summary.pcfa}}. The factorial eigenvalue
+#' the posteriors that can be summarized using \code{\link{summary.lawbl}}. The factorial eigenvalue
 #'  can be plotted with \code{\link{plot_eigen}}.
 #'
 #' @references
@@ -158,6 +158,14 @@ pcfa <- function(dat, Q, LD = T, PPMC = F, burn = 5000, iter = 5000, update = 10
     chg_count <- rep(0, K)
     Jest <- colSums(Q != 0)
 
+    Eigen <- array(0, dim = c(iter, K))  #Store retained trace of Eigen
+    tmp <- which(Q!=0,arr.ind=T)
+    pof <- matrix(0,NLA,K) #pos of est lam for each factor
+    for (k in 1:K){
+        ind<-(tmp[,2]==k)
+        pof[ind,k]<-1
+    }
+
     ######## end of Init #################################################
 
     ptm <- proc.time()
@@ -212,6 +220,7 @@ pcfa <- function(dat, Q, LD = T, PPMC = F, burn = 5000, iter = 5000, update = 10
         if ((g > 0)) {
             mOmega <- mOmega + OME
             ELA[g, ] <- LA[Q != 0]
+            Eigen[g,] <- (ELA[g,]^2)%*%pof
             # EPSX[g, , ] <- PSX EPSX[g, ] <- ifelse(LD,PSX[lower.tri(PSX,diag=T)],diag(PSX))
             if (LD) {
                 EPSX[g, ] <- PSX[lower.tri(PSX, diag = T)]
@@ -232,48 +241,55 @@ pcfa <- function(dat, Q, LD = T, PPMC = F, burn = 5000, iter = 5000, update = 10
 
         if (ii%%update == 0)
             {
-                cat(ii, fill = T, labels = "Tot. Iter =")
+                cat(ii, fill = T, labels = "\nTot. Iter =")
                 print(proc.time() - ptm)
-                Mgammal <- colMeans(sqrt(gammal_sq))
-                eigen <- diag(crossprod(LA))
-                Nla_ns3 <- colSums(abs(LA) >= 0.3)
+                Shrink <- colMeans(sqrt(gammal_sq))
+                Feigen <- diag(crossprod(LA))
+                NLA_ns3 <- colSums(abs(LA) >= 0.3)
+                # Meigen <- colMeans(Eigen)
                 # Mlambda<-colMeans(LA)
-                print(rbind(eigen, Nla_ns3, Mgammal))
+                print(rbind(Feigen, NLA_ns3, Shrink))
                 # cat(chg_count, fill = T, labels = '#Sign change:')
-                if (LD) {
-                  opsx <- abs(PSX[row(PSX) != col(PSX)])
-                  tmp <- c(sum(opsx >= 0.2)/2, sum(opsx >= 0.1)/2, gammas)
-                  print(c("LD>=.2", ">=.1", "gammas"), quote = F)
-                  print(tmp)
-                }
-
-                if (Jp > 0) {
-                  cat(colMeans(THD), fill = T, labels = "Ave. Thd:")
-                  cat(accrate/update, fill = T, labels = "Acc Rate:")
-                  accrate <- 0
-                }
-
                 if (g > 0) {
                   if (conv == 0) {
-                    tmp <- schain.grd(ELA[1:g, ])
-                    GRD_mean <- colMeans(tmp)
-                    GRD_max <- c(max(tmp[, 1]), max(tmp[, 2]))
-                    GRD <- c(GRD_mean[1], GRD_max[1])
-                    cat(GRD, fill = T, labels = "PGR mean & max:")
+                      APSR <- schain.grd(Eigen[1:g,])
+                      cat(t(APSR[,1]), fill = T, labels = "Adj PSR")
+
+                    # tmp <- schain.grd(ELA[1:g, ])
+                    # GRD_mean <- colMeans(tmp)
+                    # GRD_max <- c(max(tmp[, 1]), max(tmp[, 2]))
+                    # GRD <- c(GRD_mean[1], GRD_max[1])
+                    # cat(GRD, fill = T, labels = "PGR mean & max:")
                   } else {
-                    tmp <- schain.grd(ELA[1:g, ], auto = T)
-                    GRD_mean <- colMeans(tmp)
-                    GRD_max <- c(max(tmp[, 1]), max(tmp[, 2]))
-                    # cat(GRD_mean, fill = T, labels = 'GR Mean & UL:') cat(GRD_max, fill = T, labels = 'GR Max & UL:')
-                    GRD <- c(GRD_mean[1], GRD_max[1])
-                    cat(GRD, fill = T, labels = "PGR mean & max:")
-                    if (conv == 1 && GRD[2] < 1.1)
-                      break
-                    if (conv == 2 && GRD[1] < 1.1 && GRD[2] < 1.2)
-                      break
+                      APSR <- schain.grd(Eigen[1:g,], auto = T)
+                      cat(t(APSR[,1]), fill = T, labels = "Adj PSR")
+                      if (mean(APSR[,1])<1.1) break
+
+                    # tmp <- schain.grd(ELA[1:g, ], auto = T)
+                    # GRD_mean <- colMeans(tmp)
+                    # GRD_max <- c(max(tmp[, 1]), max(tmp[, 2]))
+                    # # cat(GRD_mean, fill = T, labels = 'GR Mean & UL:') cat(GRD_max, fill = T, labels = 'GR Max & UL:')
+                    # GRD <- c(GRD_mean[1], GRD_max[1])
+                    # cat(GRD, fill = T, labels = "PGR mean & max:")
+                    # if (conv == 1 && GRD[2] < 1.1)
+                    #   break
+                    # if (conv == 2 && GRD[1] < 1.1 && GRD[2] < 1.2)
+                    #   break
                   }
                 }
 
+                if (LD) {
+                    opsx <- abs(PSX[row(PSX) != col(PSX)])
+                    tmp <- c(sum(opsx >= 0.2)/2, sum(opsx >= 0.1)/2, gammas)
+                    print(c("LD>=.2", ">=.1", "Shrink"), quote = F)
+                    print(tmp)
+                }
+
+                if (Jp > 0) {
+                    cat(colMeans(THD), fill = T, labels = "Ave. Thd:")
+                    cat(accrate/update, fill = T, labels = "Acc Rate:")
+                    accrate <- 0
+                }
                 # print(chg_count) cat(chg_count, fill = T, labels = '#Sign change:')
             }  # end update
 
@@ -294,9 +310,12 @@ pcfa <- function(dat, Q, LD = T, PPMC = F, burn = 5000, iter = 5000, update = 10
         iter <- burn <- g/2
     }
 
+    # out <- list(Q = Q, LD = LD, LA = ELA, Omega = mOmega/iter, PSX = EPSX, iter = iter, burn = burn,
+    #     PHI = EPHI, gammal = Egammal, gammas = Egammas, Nmis = Nmis, PPP = Eppmc, conv = conv, GRD_mean = GRD_mean,
+    #     GRD_max = GRD_max)
     out <- list(Q = Q, LD = LD, LA = ELA, Omega = mOmega/iter, PSX = EPSX, iter = iter, burn = burn,
-        PHI = EPHI, gammal = Egammal, gammas = Egammas, Nmis = Nmis, PPP = Eppmc, conv = conv, GRD_mean = GRD_mean,
-        GRD_max = GRD_max)
+                PHI = EPHI, gammal = Egammal, gammas = Egammas, Nmis = Nmis, PPP = Eppmc, conv = conv,
+                Eigen = Eigen, APSR = APSR)
 
     if (Jp > 0) {
         out$cati = cati
@@ -304,7 +323,7 @@ pcfa <- function(dat, Q, LD = T, PPMC = F, burn = 5000, iter = 5000, update = 10
         out$mnoc = mnoc
     }
 
-    class(out) <- c("pcfa")
+    class(out) <- c("lawbl")
 
     if (!is.null(oldseed))
         .GlobalEnv$.Random.seed <- oldseed else rm(".Random.seed", envir = .GlobalEnv)

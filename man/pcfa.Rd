@@ -31,7 +31,9 @@ without any specified loading (Chen, Guo, Zhang, & Pan, 2020). See \code{Example
 
 \item{PPMC}{logical; \code{TRUE} for conducting posterior predictive model checking.}
 
-\item{burn}{Number of formal iterations for posterior sampling.}
+\item{burn}{Number of burn-in iterations before posterior sampling.}
+
+\item{iter}{Number of formal iterations for posterior sampling.}
 
 \item{update}{Number of iterations to update the sampling information.}
 
@@ -43,7 +45,7 @@ without any specified loading (Chen, Guo, Zhang, & Pan, 2020). See \code{Example
 }
 \value{
 \code{pcfa} returns an object of class \code{pcfa}. It contains a lot of information about
-the posteriors that can be summarized using \code{\link{summary.pcfa}}. The factorial eigenvalue
+the posteriors that can be summarized using \code{\link{summary.lawbl}}. The factorial eigenvalue
  can be plotted with \code{\link{plot_eigen}}.
 }
 \description{
@@ -53,8 +55,8 @@ the exploratory-confirmatory continuum in factor analytic models (Chen, Guo, Zha
  independence (LI) with a more exploratory tendency, which can be also called the E-step.
  The other allows local dependence (LD) with a more confirmatory tendency, which can be also
  called the C-step. Parameters are obtained by sampling from the posterior distributions with
- the Markov chain Monte Carlo (MCMC) techniques. Different Bayesian Lasso methos are used to
- regularize the loading pattern and LD. The estimation results can be summarized with \code{\link{summary.pcfa}}
+ the Markov chain Monte Carlo (MCMC) techniques. Different Bayesian Lasso methods are used to
+ regularize the loading pattern and LD. The estimation results can be summarized with \code{\link{summary.lawbl}}
  and the factorial eigenvalue can be plotted with \code{\link{plot_eigen}}.
 }
 \examples{
@@ -89,5 +91,5 @@ summary(mod1, what = 'offpsx') #summarize significant LD terms
 }
 }
 \references{
-Chen, J., Guo, Z., Zhang, L., & Pan, J. (2020). A partially confirmatory approach to scale development with the Bayesian Lasso. \emph{Psychological Methods}. doi:http://dx.doi.org/10.1037/met0000293
+Chen, J., Guo, Z., Zhang, L., & Pan, J. (2020). A partially confirmatory approach to scale development with the Bayesian Lasso. \emph{Psychological Methods}. http://dx.doi.org/10.1037/met0000293.
 }

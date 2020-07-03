@@ -1,9 +1,9 @@
 Package: LAWBL
 Type: Package
-Title: Latent (variable) analysis with Bayesian learning
+Title: Latent (variable) Analysis with Bayesian Learning
 Version: 1.0.0
 Author: Jinsong Chen [aut, cre, cph]
-Maintainer: The package maintainer <jinsong.chen@live.com>
+Maintainer: Jinsong Chen <jinsong.chen@live.com>
 Description: A analytical framework for latent variables with different Bayesian learning methods.
 License: GPL-3
 Encoding: UTF-8
