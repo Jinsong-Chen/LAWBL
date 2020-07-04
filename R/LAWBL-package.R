@@ -1,4 +1,4 @@
-#' LAWBL: Latent (variable) Analysis with Bayesian Learning
+#' LAWBL: Latent (Variable) Analysis with Bayesian Learning
 #'
 #' @description The long-term goal of this package is to provide a analytical framework for
 #' modeling latent variables with different Bayesian learning methods.
