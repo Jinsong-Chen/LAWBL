@@ -45,7 +45,7 @@ Although only continuous data are supported currently, inclusion of
 mixed-type data is on schedule. More Bayesian learning approaches will
 be also included in future releases of this package.
 
-For an example of how to use the package, see [here]()
+For an example of how to use the package, see 
 
 ## How to use this package?
 
