@@ -45,7 +45,7 @@ Although only continuous data are supported currently, inclusion of
 mixed-type data is on schedule. More Bayesian learning approaches will
 be also included in future releases of this package.
 
-For an example of how to use the package, see 
+For an example of how to use the package, see vignettes
 
 ## How to use this package?
 
@@ -65,6 +65,6 @@ For an example of how to use the package, see
 
 ## Reference
 
-Chen, J., Guo, Z., Zhang, L., & Pan, J. (2020). A partially confirmatory
-approach to scale development with the Bayesian Lasso. *Psychological
-Methods*. <http://dx.doi.org/10.1037/met0000293>.
+Chen, J., Guo, Z., Zhang, L., & Pan, J. (In Press). A partially
+confirmatory approach to scale development with the Bayesian Lasso.
+*Psychological Methods*.
