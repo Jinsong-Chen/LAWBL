@@ -1,6 +1,6 @@
 ######## Init ########################################################
 init <- function(y, const) {
-    
+
     N <- const$N
     J <- const$J
     K <- const$K
@@ -11,7 +11,7 @@ init <- function(y, const) {
     const$len_sl <- rowSums(Q == 1)
     const$sub_ul <- Q == -1
     const$len_ul <- rowSums(Q == -1)
-    
+
     indmx <- matrix(1:J^2, nrow = J, ncol = J)
     temp <- indmx[upper.tri(indmx)]
     upperind <- temp[temp > 0]
@@ -20,7 +20,7 @@ init <- function(y, const) {
     lowerind <- temp[temp > 0]
     const$upperind <- upperind
     const$lowerind <- lowerind
-    
+
     ind_nod <- array(0, dim = c(J - 1, J))
     for (j in 1:J) {
         if (j == 1) {
@@ -31,7 +31,7 @@ init <- function(y, const) {
         ind_nod[, j] <- tmp
     }  # end of j
     const$ind_nod <- ind_nod
-    
+
     # Prior mean of MU & Loading
     prior <- list()
     prior$m_LA <- 0
@@ -39,37 +39,37 @@ init <- function(y, const) {
     # Inverse prior variance of MU & loading
     prior$s_LA <- 0.25
     prior$s_MU <- 0.25
-    
+
     # hyperparameters of Wishart distribution
     prior$v_PHI <- K + 2
     prior$s_PHI <- matrix(0.1, K, K)
     diag(prior$s_PHI) <- 1
-    
+
     # #Hyperparameters of Gamma distribution for the shrinkage parameter
     prior$a_gams <- 1
     prior$b_gams <- 0.1
     prior$a_gaml_sq <- 1
     prior$b_gaml_sq <- 0.1
-    
+
     # initial values
     LA <- matrix(0, J, K)
     LA[Q == 1] <- 0.5
     # LA[Q==-1] <- .1 LA <- matrix(runif(J * K), J, K) LA[Q == 0] <- 0
-    
+
     PHI <- matrix(0.1, K, K)
     diag(PHI[, ]) <- 1
-    
+
     PSX <- matrix(0, J, J)
     diag(PSX) <- 0.3
     # inv.PSX <-chol2inv(chol(PSX))
-    
+
     # shrinkage for PSX
     gammas <- 0
-    
+
     # shrinkage for loading
     gammal_sq <- array(1, dim = c(J, K))
-    gammal_sq[Q == 0] <- 0
-    
+    gammal_sq[Q != -1] <- 0
+
     if (Jp > 0) {
         Z <- y[pind, ]
         # inf<-.Machine$double.xmax
@@ -90,7 +90,7 @@ init <- function(y, const) {
         for (j in 1:Jp) {
             # j=1
             THD[j, 1:(noc[j] + 1)] <- c(-inf, 0:(noc[j] - 2), inf)
-            if (noc[j] < mnoc) 
+            if (noc[j] < mnoc)
                 THD[j, (noc[j] + 2):(mnoc + 1)] <- inf
         }
         ys <- t(mvrnorm(N, mu = rep(0, Jp), Sigma = diag(1, Jp)))  # J*N
@@ -105,9 +105,9 @@ init <- function(y, const) {
         y <- t(scale(t(y), center = T))
         THD <- NULL
     }  #end Jp
-    
-    out <- list(y = y, const = const, prior = prior, PSX = PSX, PHI = PHI, LA = LA, THD = THD, gammas = gammas, 
+
+    out <- list(y = y, const = const, prior = prior, PSX = PSX, PHI = PHI, LA = LA, THD = THD, gammas = gammas,
         gammal_sq = gammal_sq)
-    
+
 }
 ######## end of Init #################################################

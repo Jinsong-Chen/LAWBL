@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">LAWBL</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0</span>
       </span>
     </div>
 
@@ -136,9 +136,9 @@
 <span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(
   <span class='no'>object</span>,
   <span class='kw'>what</span> <span class='kw'>=</span> <span class='st'>"basic"</span>,
-  <span class='kw'>med</span> <span class='kw'>=</span> <span class='no'>F</span>,
+  <span class='kw'>med</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>SL</span> <span class='kw'>=</span> <span class='fl'>0.05</span>,
-  <span class='kw'>detail</span> <span class='kw'>=</span> <span class='no'>F</span>,
+  <span class='kw'>detail</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>digits</span> <span class='kw'>=</span> <span class='fl'>4</span>,
   <span class='no'>...</span>
 )</pre>
@@ -161,13 +161,13 @@
 <li><p><code>dpsx</code>: Diagonal elements in the residual covariance matrix <code>PSX</code>.</p></li>
 <li><p><code>offpsx</code>: Off-diagonal elements in <code>PSX</code>; local dependence terms.</p></li>
 <li><p><code>phi</code>: Factorial correlations.</p></li>
-<li><p><code>shrink</code>: Shrinkage parameters for the loadings and LD (if <code>LD</code> in <code>pcfa</code> = T).</p></li>
+<li><p><code>shrink</code>: (Ave) shrinkage for each facor's loadings and LD (if <code>LD</code> in <code>pcfa</code> = T).</p></li>
 <li><p><code>all</code>: All above information.</p></li>
 </ul></td>
     </tr>
     <tr>
       <th>med</th>
-      <td><p>logical; if the posterior median (<code>T</code>) or mean (<code>F</code>) is used as the estimate.</p></td>
+      <td><p>logical; if the posterior median (<code>TRUE</code>) or mean (<code>FALSE</code>) is used as the estimate.</p></td>
     </tr>
     <tr>
       <th>SL</th>
@@ -175,7 +175,7 @@
     </tr>
     <tr>
       <th>detail</th>
-      <td><p>logical; if only significant (<code>F</code>) or all (<code>T</code>) estimates are presented.</p></td>
+      <td><p>logical; if only significant (<code>FALSE</code>) or all (<code>TRUE</code>) estimates are presented.</p></td>
     </tr>
     <tr>
       <th>digits</th>
@@ -199,12 +199,12 @@
 <span class='no'>Q</span><span class='kw'>&lt;-</span><span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span>(-<span class='fl'>1</span>,<span class='no'>J</span>,<span class='no'>K</span>);
 <span class='no'>Q</span>[<span class='fl'>1</span>:<span class='fl'>2</span>,<span class='fl'>1</span>]<span class='kw'>&lt;-</span><span class='no'>Q</span>[<span class='fl'>9</span>:<span class='fl'>10</span>,<span class='fl'>2</span>]<span class='kw'>&lt;-</span><span class='no'>Q</span>[<span class='fl'>13</span>:<span class='fl'>14</span>,<span class='fl'>3</span>]<span class='kw'>&lt;-</span><span class='fl'>1</span>
 
-<span class='no'>mod0</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='pcfa.html'>pcfa</a></span>(<span class='kw'>dat</span> <span class='kw'>=</span> <span class='no'>dat</span>, <span class='kw'>Q</span> <span class='kw'>=</span> <span class='no'>Q</span>, <span class='kw'>LD</span> <span class='kw'>=</span> <span class='no'>F</span>,<span class='kw'>burn</span> <span class='kw'>=</span> <span class='fl'>2000</span>, <span class='kw'>iter</span> <span class='kw'>=</span> <span class='fl'>2000</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>mod0</span>) <span class='co'># summarize basic information</span>
-<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>mod0</span>, <span class='kw'>what</span> <span class='kw'>=</span> <span class='st'>'lambda'</span>) <span class='co'>#summarize significant loadings</span>
-<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>mod0</span>, <span class='kw'>what</span> <span class='kw'>=</span> <span class='st'>'qlambda'</span>) <span class='co'>#summarize significant loadings in pattern/Q-matrix format</span>
-<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>mod0</span>, <span class='kw'>what</span> <span class='kw'>=</span> <span class='st'>'offpsx'</span>) <span class='co'>#summarize significant LD terms</span>
-<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>mod0</span>, <span class='kw'>what</span> <span class='kw'>=</span> <span class='st'>'all'</span>) <span class='co'>#summarize all information</span>
+<span class='no'>m0</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='pcfa.html'>pcfa</a></span>(<span class='kw'>dat</span> <span class='kw'>=</span> <span class='no'>dat</span>, <span class='kw'>Q</span> <span class='kw'>=</span> <span class='no'>Q</span>, <span class='kw'>LD</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,<span class='kw'>burn</span> <span class='kw'>=</span> <span class='fl'>2000</span>, <span class='kw'>iter</span> <span class='kw'>=</span> <span class='fl'>2000</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>m0</span>) <span class='co'># summarize basic information</span>
+<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>m0</span>, <span class='kw'>what</span> <span class='kw'>=</span> <span class='st'>'lambda'</span>) <span class='co'>#summarize significant loadings</span>
+<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>m0</span>, <span class='kw'>what</span> <span class='kw'>=</span> <span class='st'>'qlambda'</span>) <span class='co'>#summarize significant loadings in pattern/Q-matrix format</span>
+<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>m0</span>, <span class='kw'>what</span> <span class='kw'>=</span> <span class='st'>'offpsx'</span>) <span class='co'>#summarize significant LD terms</span>
+<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>m0</span>, <span class='kw'>what</span> <span class='kw'>=</span> <span class='st'>'all'</span>) <span class='co'>#summarize all information</span>
 }</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

@@ -3,12 +3,14 @@
 
 # LAWBL: Latent (variable) Analysis with Bayesian Learning
 
-The long-term goal of **LAWBL** is to provide a analytical framework for
-modeling latent variables with different Bayesian learning methods.
+[![Project Status: Active ? The project has reached a stable, usable
+state and is being actively
+developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
+[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/LAWBL)](https://cran.r-project.org/package=LAWBL)
 
 ## Installation
 
-1)  Install the released version from [CRAN](https://CRAN.R-project.org)
+1)  Install the stable version from [CRAN](https://CRAN.R-project.org)
     with:
 
 <!-- end list -->
@@ -29,6 +31,9 @@ devtools::install_github("Jinsong-Chen/LAWBL")
 
 ## What can this package do?
 
+The long-term goal of **LAWBL** is to provide a analytical framework for
+modeling latent variables with different Bayesian learning methods.
+
 Currently, this package includes the Partially Confirmatory Factor
 Analysis (PCFA), a partially confirmatory approach covering a wide range
 of the exploratory-confirmatory continuum in factor analytic models
@@ -45,23 +50,24 @@ Although only continuous data are supported currently, inclusion of
 mixed-type data is on schedule. More Bayesian learning approaches will
 be also included in future releases of this package.
 
-For an example of how to use the package, see vignettes
+For examples of how to use the package, see vignettes or
+[here](https://jinsong-chen.github.io/LAWBL/articles/LAWBL-Vignettes.html).
 
 ## How to use this package?
 
   - To estimate the E-step (when only a few loadings can be specified,
-    e.g., 2 per factor), use **m \<- pcfa(dat=dat,Q=Q,LD=F)**
-  - To estimate the C-step (with one specified loading per item), use
-    **m \<- pcfa(dat=dat,Q=Q,LD=T)**
-  - To summarize basic information after estimation, use **summary(m)**
+    e.g., 2 per factor), use *m \<- pcfa(dat=dat,Q=Q,LD=F)*
+  - To estimate the C-step (with one specified loading per item), use *m
+    \<- pcfa(dat=dat,Q=Q,LD=T)*
+  - To summarize basic information after estimation, use *summary(m)*
   - To summarize significant loadings in pattern/Q-matrix format, use
-    **summary(m,what=‘qlambda’)**
-  - To summarize factorial eigenvalues, use **summary(m,what=‘eigen’)**
-  - To summarize significant LD terms, use **summary(m,what=‘offpsx’)**
-  - To plot eigenvalues’ trace, use **plot\_eigen(m)**
-  - To plot eigenvalues’ density, use **plot\_eigen(m, what=‘density’)**
-  - To plot eigenvalues’ adjusted PSRF, use **plot\_eigen(m,
-    what=‘APSR’)**
+    *summary(m,what=‘qlambda’)*
+  - To summarize factorial eigenvalues, use *summary(m,what=‘eigen’)*
+  - To summarize significant LD terms, use *summary(m,what=‘offpsx’)*
+  - To plot eigenvalues’ trace, use *plot\_eigen(m)*
+  - To plot eigenvalues’ density, use *plot\_eigen(m, what=‘density’)*
+  - To plot eigenvalues’ adjusted PSRF, use *plot\_eigen(m,
+    what=‘APSR’)*
 
 ## Reference
 

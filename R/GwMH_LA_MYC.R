@@ -1,6 +1,7 @@
 ################## update Loading ##############################################################
-GwMH_LA_MYC <- function(y, mu = 0, ome, la, psx, gammal_sq, thd, const, prior) {
+GwMH_LA_MYC <- function(y, mu = 0, ome, la, psx, gammal_sq, thd, const, prior, alas) {
     # y=Y;ome=OME;la=LA;psx=PSX;mu=0;thd=THD;const=const;prior=prior
+    Q <- const$Q
     J <- const$J
     N <- const$N
     K <- const$K
@@ -56,7 +57,7 @@ GwMH_LA_MYC <- function(y, mu = 0, ome, la, psx, gammal_sq, thd, const, prior) {
                 Cadj <- pmax((la[j, subs])^2, 10^(-6))
                 mu_p <- pmin(sqrt(gammal_sq[j, subs]/Cadj), 10^12)
                 taul_sq[j, subs] <- 1/rinvgauss1(len, mean = mu_p, dispersion = 1/gammal_sq[j, subs])
-                gammal_sq[j, subs] <- rgamma(len, shape = a_gamma + 1, rate = b_gamma + taul_sq[j, subs]/2)
+                if(alas) gammal_sq[j, subs] <- rgamma(len, shape = a_gamma + 1, rate = b_gamma + taul_sq[j, subs]/2)
 
                 if (len == 1) {
                   omesub <- matrix(ome[subs, ], nrow = 1)
@@ -71,10 +72,8 @@ GwMH_LA_MYC <- function(y, mu = 0, ome, la, psx, gammal_sq, thd, const, prior) {
             }  # end len>0
     }  # end of J
 
-
-    # for (k in 1:K) { if (mean(la[, k]) < 0.0) { # if (sum(la[, k]<0) > J/2) { # la[ind,k]<--la[ind,k]
-    # la[, k] <- -la[, k] ome[k, ] <- -ome[k, ] # count<-count+1 } } # end of k
-
+    if(!alas)
+        gammal_sq[Q==-1]<- rgamma(1, shape=a_gamma+sum(Q==-1), rate=b_gamma + sum(taul_sq)/2)
 
     if (Nmis > 0 || Jp > 0) {
         # yst<-la[pind,]%*%ome+mst[pind,]

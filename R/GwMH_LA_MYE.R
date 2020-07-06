@@ -1,7 +1,7 @@
 ################## update Loading ##############################################################
-GwMH_LA_MYE <- function(y, mu = 0, ome, la, psx, gammal_sq, thd, const, prior) {
+GwMH_LA_MYE <- function(y, mu = 0, ome, la, psx, gammal_sq, thd, const, prior, alas) {
     # y=Y;ome=OME;la=LA;psx=PSX;mu=0;thd=THD
-
+    Q <- const$Q
     J <- const$J
     N <- const$N
     K <- const$K
@@ -16,6 +16,8 @@ GwMH_LA_MYE <- function(y, mu = 0, ome, la, psx, gammal_sq, thd, const, prior) {
     sub_ul <- const$sub_ul
     len_ul <- const$len_ul
     taul_sq <- gammal_sq
+    a_gams <- prior$a_gams
+    b_gams <- prior$b_gams
 
     temp <- y - mu - la %*% ome  # NY*N
     S <- temp %*% t(temp)  # NY*NY
@@ -52,7 +54,7 @@ GwMH_LA_MYE <- function(y, mu = 0, ome, la, psx, gammal_sq, thd, const, prior) {
             Cadj <- pmax((la[j, subs])^2, 10^(-6))
             mu_p <- pmin(sqrt(gammal_sq[j, subs]/Cadj), 10^12)
             taul_sq[j, subs] <- 1/rinvgauss1(len, mean = mu_p, dispersion = 1/gammal_sq[j, subs])
-            gammal_sq[j, subs] <- rgamma(len, shape = a_gamma + 1, rate = b_gamma + taul_sq[j, subs]/2)
+            if(alas) gammal_sq[j, subs] <- rgamma(len, shape = a_gamma + 1, rate = b_gamma + taul_sq[j, subs]/2)
 
             if (len == 1) {
                 omesub <- matrix(ome[subs, ], nrow = 1)
@@ -66,16 +68,15 @@ GwMH_LA_MYE <- function(y, mu = 0, ome, la, psx, gammal_sq, thd, const, prior) {
             la[j, subs] <- mvrnorm(1, vtmp %*% mtmp, Sigma = vtmp)
 
             tmp <- t(la[j, subs]) %*% invD_tau %*% la[j, subs]
-            psx[j, j] <- 1/rgamma(1, shape = a_gamma + (N + len)/2 - 1, rate = b_gamma + (S[j, j] +
+            psx[j, j] <- 1/rgamma(1, shape = a_gams + (N + len)/2 - 1, rate = b_gams + (S[j, j] +
                 tmp)/2)
         } else {
-            psx[j, j] <- 1/rgamma(1, shape = a_gamma + (N - 1)/2, rate = b_gamma + (S[j, j])/2)
+            psx[j, j] <- 1/rgamma(1, shape = a_gams + (N - 1)/2, rate = b_gams + (S[j, j])/2)
         }  # end len>0
     }  # end of J
 
-    # # change <- 0 for (k in 1:K) { if (mean(la[, k]) < 0.0) { # la[ind,k]<--la[ind,k] la[, k] <- -la[,
-    # k] ome[k, ] <- -ome[k, ] # change <-1 } } # end of k
-
+    if(!alas)
+        gammal_sq[Q==-1]<- rgamma(1, shape=a_gamma+sum(Q==-1), rate=b_gamma + sum(taul_sq)/2)
 
     if (Nmis > 0 || Jp > 0) {
         # yst<-la[pind,]%*%ome+mst[pind,]

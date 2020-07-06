@@ -31,10 +31,10 @@
 #' Q[1:2,1]<-Q[9:10,2]<-Q[13:14,3]<-1
 #'
 #'
-#' mod0 <- pcfa(dat = dat, Q = Q, LD = F,burn = 2000, iter = 2000)
-#' plot_eigen(mod0) # trace
-#' plot_eigen(mod0, what='density')
-#' plot_eigen(mod0, what='PGR')
+#' m0 <- pcfa(dat = dat, Q = Q, LD = FALSE,burn = 2000, iter = 2000)
+#' plot_eigen(m0) # trace
+#' plot_eigen(m0, what='density')
+#' plot_eigen(m0, what='PGR')
 #' }
 plot_eigen <- function(obj, what = "trace") {
     if (class(obj) != "lawbl")

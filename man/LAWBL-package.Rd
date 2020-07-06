@@ -31,7 +31,7 @@ This package is under development. You are very welcome to send me any comments 
 }
 \references{
 Chen, J., Guo, Z., Zhang, L., & Pan, J. (In Press). A partially confirmatory
-approach to scale development with the Bayesian Lasso. *Psychological Methods*.
+approach to scale development with the Bayesian Lasso. \emph{Psychological Methods}.
 }
 \author{
 {Jinsong Chen, \email{jinsong.chen@live.com}}

@@ -33,6 +33,8 @@
 #'
 #' @param missing Value for missing data (default is \code{NA}).
 #'
+#' @param alas logical; for adaptive Lasso or not. The default is \code{FALSE}, which seems slightly stabler.
+#'
 #' @param rseed An integer for the random seed.
 #'
 #' @param digits Number of significant digits to print when printing numeric values.
@@ -44,7 +46,7 @@
 #' @references
 #'
 #' Chen, J., Guo, Z., Zhang, L., & Pan, J. (In Press). A partially confirmatory
-#' approach to scale development with the Bayesian Lasso. *Psychological Methods*.
+#' approach to scale development with the Bayesian Lasso. \emph{Psychological Methods}.
 #'
 #' @importFrom MASS mvrnorm
 #'
@@ -62,37 +64,40 @@
 #' Q<-matrix(-1,J,K);
 #' Q[1:2,1]<-Q[9:10,2]<-Q[13:14,3]<-1
 #' Q
-#' mod0 <- pcfa(dat = dat, Q = Q, LD = F)
-#' summary(mod0) # summarize basic information
-#' summary(mod0, what = 'lambda') #summarize significant loadings
-#' summary(mod0, what = 'qlambda') #summarize significant loadings in pattern/Q-matrix format
-#' summary(mod0, what = 'offpsx') #summarize significant LD terms
+#' m0 <- pcfa(dat = dat, Q = Q, LD = FALSE)
+#' summary(m0) # summarize basic information
+#' summary(m0, what = 'lambda') #summarize significant loadings
+#' summary(m0, what = 'qlambda') #summarize significant loadings in pattern/Q-matrix format
+#' summary(m0, what = 'offpsx') #summarize significant LD terms
 #'
 #'####################################
-#'#  Example 1: Estimation with LD   #
+#'#  Example 2: Estimation with LD   #
 #'####################################
 #'
 #' Q<-matrix(-1,J,K);
 #' Q[1:6,1]<-Q[7:12,2]<-Q[13:18,3]<-1
 #' Q
-#' mod1 <- pcfa(dat = dat, Q = Q)
-#' summary(mod1) # summarize basic information
-#' summary(mod1, what = 'qlambda') #summarize significant loadings in pattern/Q-matrix format
-#' summary(mod1, what = 'offpsx') #summarize significant LD terms
+#' m1 <- pcfa(dat = dat, Q = Q)
+#' summary(m1) # summarize basic information
+#' summary(m1, what = 'qlambda') #summarize significant loadings in pattern/Q-matrix format
+#' summary(m1, what = 'offpsx') #summarize significant LD terms
 #' }
-pcfa <- function(dat, Q, LD = T, PPMC = F, burn = 5000, iter = 5000, update = 1000, missing = NA, rseed = 555,
-    digits = 4) {
+pcfa <- function(dat, Q, LD = TRUE, PPMC = FALSE, burn = 5000, iter = 5000, update = 1000, missing = NA, rseed = 12345,
+    digits = 4, alas = FALSE) {
     cati = NULL
     cand_thd = 0.2
     conv = 0
 
     if (nrow(Q) != ncol(dat))
-        stop("The numbers of items in data and Q are unequal.", call. = F)
+        stop("The numbers of items in data and Q are unequal.", call. = FALSE)
 
     if (exists(".Random.seed", .GlobalEnv))
         oldseed <- .GlobalEnv$.Random.seed else oldseed <- NULL
     set.seed(rseed)
-    old_digits <- getOption("digits")
+
+    oo <- options()       # code line i
+    on.exit(options(oo))  # code line i+1
+    # old_digits <- getOption("digits")
     options(digits = digits)
 
     Y <- t(dat)
@@ -108,7 +113,7 @@ pcfa <- function(dat, Q, LD = T, PPMC = F, burn = 5000, iter = 5000, update = 10
     }
 
     Nmis <- sum(is.na(Y))
-    mind <- which(is.na(Y), arr.ind = T)
+    mind <- which(is.na(Y), arr.ind = TRUE)
 
     const <- list(N = N, J = J, K = K, Q = Q, cati = cati, Jp = Jp, Nmis = Nmis, cand_thd = cand_thd)
 
@@ -160,7 +165,7 @@ pcfa <- function(dat, Q, LD = T, PPMC = F, burn = 5000, iter = 5000, update = 10
     Jest <- colSums(Q != 0)
 
     Eigen <- array(0, dim = c(iter, K))  #Store retained trace of Eigen
-    tmp <- which(Q!=0,arr.ind=T)
+    tmp <- which(Q!=0,arr.ind=TRUE)
     pof <- matrix(0,NLA,K) #pos of est lam for each factor
     for (k in 1:K){
         ind<-(tmp[,2]==k)
@@ -183,10 +188,10 @@ pcfa <- function(dat, Q, LD = T, PPMC = F, burn = 5000, iter = 5000, update = 10
             inv.PSX <- tmp$inv
             gammas <- tmp$gammas
             LAY <- GwMH_LA_MYC(y = Y, ome = OME, la = LA, psx = PSX, gammal_sq = gammal_sq, thd = THD,
-                const = const, prior = prior)
+                const = const, prior = prior, alas = alas)
         } else {
             LAY <- GwMH_LA_MYE(y = Y, ome = OME, la = LA, psx = PSX, gammal_sq = gammal_sq, thd = THD,
-                const = const, prior = prior)
+                const = const, prior = prior, alas = alas)
             PSX <- LAY$psx
             inv.PSX <- chol2inv(chol(PSX))
         }
@@ -200,8 +205,8 @@ pcfa <- function(dat, Q, LD = T, PPMC = F, burn = 5000, iter = 5000, update = 10
             chg_count <- chg_count + chg
             LA1 <- LA1 %*% sign
             OME <- t(t(OME) %*% sign)
-            print(c("ii=", ii), quote = F)
-            cat(chg_count, fill = T, labels = "#Sign change:")
+            print(c("ii=", ii), quote = FALSE)
+            cat(chg_count, fill = TRUE, labels = "#Sign change:")
         }
         LA <- LA1
 
@@ -222,9 +227,9 @@ pcfa <- function(dat, Q, LD = T, PPMC = F, burn = 5000, iter = 5000, update = 10
             mOmega <- mOmega + OME
             ELA[g, ] <- LA[Q != 0]
             Eigen[g,] <- (ELA[g,]^2)%*%pof
-            # EPSX[g, , ] <- PSX EPSX[g, ] <- ifelse(LD,PSX[lower.tri(PSX,diag=T)],diag(PSX))
+            # EPSX[g, , ] <- PSX EPSX[g, ] <- ifelse(LD,PSX[lower.tri(PSX,diag=TRUE)],diag(PSX))
             if (LD) {
-                EPSX[g, ] <- PSX[lower.tri(PSX, diag = T)]
+                EPSX[g, ] <- PSX[lower.tri(PSX, diag = TRUE)]
             } else {
                 EPSX[g, ] <- diag(PSX)
             }
@@ -242,36 +247,36 @@ pcfa <- function(dat, Q, LD = T, PPMC = F, burn = 5000, iter = 5000, update = 10
 
         if (ii%%update == 0)
             {
-                cat(ii, fill = T, labels = "\nTot. Iter =")
+                cat(ii, fill = TRUE, labels = "\nTot. Iter =")
                 print(proc.time() - ptm)
                 Shrink <- colMeans(sqrt(gammal_sq))
                 Feigen <- diag(crossprod(LA))
-                NLA_ns3 <- colSums(abs(LA) >= 0.3)
+                NLA_lg3 <- colSums(abs(LA) > 0.3)
                 # Meigen <- colMeans(Eigen)
                 # Mlambda<-colMeans(LA)
-                print(rbind(Feigen, NLA_ns3, Shrink))
-                # cat(chg_count, fill = T, labels = '#Sign change:')
+                print(rbind(Feigen, NLA_lg3, Shrink))
+                # cat(chg_count, fill = TRUE, labels = '#Sign change:')
                 if (g > 0) {
                   if (conv == 0) {
                       APSR <- schain.grd(Eigen[1:g,])
-                      cat(t(APSR[,1]), fill = T, labels = "Adj PSR")
+                      cat(t(APSR[,1]), fill = TRUE, labels = "Adj PSR")
 
                     # tmp <- schain.grd(ELA[1:g, ])
                     # GRD_mean <- colMeans(tmp)
                     # GRD_max <- c(max(tmp[, 1]), max(tmp[, 2]))
                     # GRD <- c(GRD_mean[1], GRD_max[1])
-                    # cat(GRD, fill = T, labels = "PGR mean & max:")
+                    # cat(GRD, fill = TRUE, labels = "PGR mean & max:")
                   } else {
-                      APSR <- schain.grd(Eigen[1:g,], auto = T)
-                      cat(t(APSR[,1]), fill = T, labels = "Adj PSR")
+                      APSR <- schain.grd(Eigen[1:g,], auto = TRUE)
+                      cat(t(APSR[,1]), fill = TRUE, labels = "Adj PSR")
                       if (mean(APSR[,1])<1.1) break
 
-                    # tmp <- schain.grd(ELA[1:g, ], auto = T)
+                    # tmp <- schain.grd(ELA[1:g, ], auto = TRUE)
                     # GRD_mean <- colMeans(tmp)
                     # GRD_max <- c(max(tmp[, 1]), max(tmp[, 2]))
-                    # # cat(GRD_mean, fill = T, labels = 'GR Mean & UL:') cat(GRD_max, fill = T, labels = 'GR Max & UL:')
+                    # # cat(GRD_mean, fill = TRUE, labels = 'GR Mean & UL:') cat(GRD_max, fill = TRUE, labels = 'GR Max & UL:')
                     # GRD <- c(GRD_mean[1], GRD_max[1])
-                    # cat(GRD, fill = T, labels = "PGR mean & max:")
+                    # cat(GRD, fill = TRUE, labels = "PGR mean & max:")
                     # if (conv == 1 && GRD[2] < 1.1)
                     #   break
                     # if (conv == 2 && GRD[1] < 1.1 && GRD[2] < 1.2)
@@ -281,17 +286,17 @@ pcfa <- function(dat, Q, LD = T, PPMC = F, burn = 5000, iter = 5000, update = 10
 
                 if (LD) {
                     opsx <- abs(PSX[row(PSX) != col(PSX)])
-                    tmp <- c(sum(opsx >= 0.2)/2, sum(opsx >= 0.1)/2, gammas)
-                    print(c("LD>=.2", ">=.1", "Shrink"), quote = F)
+                    tmp <- c(sum(opsx > 0.2)/2, sum(opsx > 0.1)/2, gammas)
+                    print(c("LD>.2", ">.1", "Shrink"), quote = FALSE)
                     print(tmp)
                 }
 
                 if (Jp > 0) {
-                    cat(colMeans(THD), fill = T, labels = "Ave. Thd:")
-                    cat(accrate/update, fill = T, labels = "Acc Rate:")
+                    cat(colMeans(THD), fill = TRUE, labels = "Ave. Thd:")
+                    cat(accrate/update, fill = TRUE, labels = "Acc Rate:")
                     accrate <- 0
                 }
-                # print(chg_count) cat(chg_count, fill = T, labels = '#Sign change:')
+                # print(chg_count) cat(chg_count, fill = TRUE, labels = '#Sign change:')
             }  # end update
 
     }  #end of g MCMAX
@@ -329,7 +334,7 @@ pcfa <- function(dat, Q, LD = T, PPMC = F, burn = 5000, iter = 5000, update = 10
     if (!is.null(oldseed))
         .GlobalEnv$.Random.seed <- oldseed else rm(".Random.seed", envir = .GlobalEnv)
 
-    options(digits = old_digits)
+    # options(digits = old_digits)
 
     return(out)
 }

@@ -80,7 +80,7 @@ the exploratory-confirmatory continuum in factor analytic models (Chen, Guo, Zha
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">LAWBL</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0</span>
       </span>
     </div>
 
@@ -151,14 +151,15 @@ the exploratory-confirmatory continuum in factor analytic models (Chen, Guo, Zha
     <pre class="usage"><span class='fu'>pcfa</span>(
   <span class='no'>dat</span>,
   <span class='no'>Q</span>,
-  <span class='kw'>LD</span> <span class='kw'>=</span> <span class='no'>T</span>,
-  <span class='kw'>PPMC</span> <span class='kw'>=</span> <span class='no'>F</span>,
+  <span class='kw'>LD</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>PPMC</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>burn</span> <span class='kw'>=</span> <span class='fl'>5000</span>,
   <span class='kw'>iter</span> <span class='kw'>=</span> <span class='fl'>5000</span>,
   <span class='kw'>update</span> <span class='kw'>=</span> <span class='fl'>1000</span>,
   <span class='kw'>missing</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
-  <span class='kw'>rseed</span> <span class='kw'>=</span> <span class='fl'>555</span>,
-  <span class='kw'>digits</span> <span class='kw'>=</span> <span class='fl'>4</span>
+  <span class='kw'>rseed</span> <span class='kw'>=</span> <span class='fl'>12345</span>,
+  <span class='kw'>digits</span> <span class='kw'>=</span> <span class='fl'>4</span>,
+  <span class='kw'>alas</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -209,6 +210,10 @@ without any specified loading (Chen, Guo, Zhang, &amp; Pan, 2020). See <code>Exa
       <th>digits</th>
       <td><p>Number of significant digits to print when printing numeric values.</p></td>
     </tr>
+    <tr>
+      <th>alas</th>
+      <td><p>logical; for adaptive Lasso or not. The default is <code>FALSE</code>, which seems slightly stabler.</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -219,7 +224,7 @@ the posteriors that can be summarized using <code><a href='summary.lawbl.html'>s
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     <p>Chen, J., Guo, Z., Zhang, L., &amp; Pan, J. (In Press). A partially confirmatory
-approach to scale development with the Bayesian Lasso. *Psychological Methods*.</p>
+approach to scale development with the Bayesian Lasso. <em>Psychological Methods</em>.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
@@ -233,23 +238,23 @@ approach to scale development with the Bayesian Lasso. *Psychological Methods*.<
 <span class='no'>Q</span><span class='kw'>&lt;-</span><span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span>(-<span class='fl'>1</span>,<span class='no'>J</span>,<span class='no'>K</span>);
 <span class='no'>Q</span>[<span class='fl'>1</span>:<span class='fl'>2</span>,<span class='fl'>1</span>]<span class='kw'>&lt;-</span><span class='no'>Q</span>[<span class='fl'>9</span>:<span class='fl'>10</span>,<span class='fl'>2</span>]<span class='kw'>&lt;-</span><span class='no'>Q</span>[<span class='fl'>13</span>:<span class='fl'>14</span>,<span class='fl'>3</span>]<span class='kw'>&lt;-</span><span class='fl'>1</span>
 <span class='no'>Q</span>
-<span class='no'>mod0</span> <span class='kw'>&lt;-</span> <span class='fu'>pcfa</span>(<span class='kw'>dat</span> <span class='kw'>=</span> <span class='no'>dat</span>, <span class='kw'>Q</span> <span class='kw'>=</span> <span class='no'>Q</span>, <span class='kw'>LD</span> <span class='kw'>=</span> <span class='no'>F</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>mod0</span>) <span class='co'># summarize basic information</span>
-<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>mod0</span>, <span class='kw'>what</span> <span class='kw'>=</span> <span class='st'>'lambda'</span>) <span class='co'>#summarize significant loadings</span>
-<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>mod0</span>, <span class='kw'>what</span> <span class='kw'>=</span> <span class='st'>'qlambda'</span>) <span class='co'>#summarize significant loadings in pattern/Q-matrix format</span>
-<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>mod0</span>, <span class='kw'>what</span> <span class='kw'>=</span> <span class='st'>'offpsx'</span>) <span class='co'>#summarize significant LD terms</span>
+<span class='no'>m0</span> <span class='kw'>&lt;-</span> <span class='fu'>pcfa</span>(<span class='kw'>dat</span> <span class='kw'>=</span> <span class='no'>dat</span>, <span class='kw'>Q</span> <span class='kw'>=</span> <span class='no'>Q</span>, <span class='kw'>LD</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>m0</span>) <span class='co'># summarize basic information</span>
+<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>m0</span>, <span class='kw'>what</span> <span class='kw'>=</span> <span class='st'>'lambda'</span>) <span class='co'>#summarize significant loadings</span>
+<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>m0</span>, <span class='kw'>what</span> <span class='kw'>=</span> <span class='st'>'qlambda'</span>) <span class='co'>#summarize significant loadings in pattern/Q-matrix format</span>
+<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>m0</span>, <span class='kw'>what</span> <span class='kw'>=</span> <span class='st'>'offpsx'</span>) <span class='co'>#summarize significant LD terms</span>
 
 <span class='co'>####################################</span>
-<span class='co'>#  Example 1: Estimation with LD   #</span>
+<span class='co'>#  Example 2: Estimation with LD   #</span>
 <span class='co'>####################################</span>
 
 <span class='no'>Q</span><span class='kw'>&lt;-</span><span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span>(-<span class='fl'>1</span>,<span class='no'>J</span>,<span class='no'>K</span>);
 <span class='no'>Q</span>[<span class='fl'>1</span>:<span class='fl'>6</span>,<span class='fl'>1</span>]<span class='kw'>&lt;-</span><span class='no'>Q</span>[<span class='fl'>7</span>:<span class='fl'>12</span>,<span class='fl'>2</span>]<span class='kw'>&lt;-</span><span class='no'>Q</span>[<span class='fl'>13</span>:<span class='fl'>18</span>,<span class='fl'>3</span>]<span class='kw'>&lt;-</span><span class='fl'>1</span>
 <span class='no'>Q</span>
-<span class='no'>mod1</span> <span class='kw'>&lt;-</span> <span class='fu'>pcfa</span>(<span class='kw'>dat</span> <span class='kw'>=</span> <span class='no'>dat</span>, <span class='kw'>Q</span> <span class='kw'>=</span> <span class='no'>Q</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>mod1</span>) <span class='co'># summarize basic information</span>
-<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>mod1</span>, <span class='kw'>what</span> <span class='kw'>=</span> <span class='st'>'qlambda'</span>) <span class='co'>#summarize significant loadings in pattern/Q-matrix format</span>
-<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>mod1</span>, <span class='kw'>what</span> <span class='kw'>=</span> <span class='st'>'offpsx'</span>) <span class='co'>#summarize significant LD terms</span>
+<span class='no'>m1</span> <span class='kw'>&lt;-</span> <span class='fu'>pcfa</span>(<span class='kw'>dat</span> <span class='kw'>=</span> <span class='no'>dat</span>, <span class='kw'>Q</span> <span class='kw'>=</span> <span class='no'>Q</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>m1</span>) <span class='co'># summarize basic information</span>
+<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>m1</span>, <span class='kw'>what</span> <span class='kw'>=</span> <span class='st'>'qlambda'</span>) <span class='co'>#summarize significant loadings in pattern/Q-matrix format</span>
+<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>m1</span>, <span class='kw'>what</span> <span class='kw'>=</span> <span class='st'>'offpsx'</span>) <span class='co'>#summarize significant LD terms</span>
 }</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

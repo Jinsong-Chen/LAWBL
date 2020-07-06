@@ -16,15 +16,15 @@
 #'     \item \code{dpsx}: Diagonal elements in the residual covariance matrix \code{PSX}.
 #'     \item \code{offpsx}: Off-diagonal elements in \code{PSX}; local dependence terms.
 #'     \item \code{phi}: Factorial correlations.
-#'     \item \code{shrink}: Shrinkage parameters for the loadings and LD (if \code{LD} in \code{pcfa} = T).
+#'     \item \code{shrink}: (Ave) shrinkage for each facor's loadings and LD (if \code{LD} in \code{pcfa} = T).
 #'     \item \code{all}: All above information.
 #'  }
 #'
-#' @param med logical; if the posterior median (\code{T}) or mean (\code{F}) is used as the estimate.
+#' @param med logical; if the posterior median (\code{TRUE}) or mean (\code{FALSE}) is used as the estimate.
 #'
 #' @param SL Significance level for interval estimate. The default is .05.
 #'
-#' @param detail logical; if only significant (\code{F}) or all (\code{T}) estimates are presented.
+#' @param detail logical; if only significant (\code{FALSE}) or all (\code{TRUE}) estimates are presented.
 #'
 #' @param digits Number of significant digits to print when printing numeric values.
 #'
@@ -42,15 +42,15 @@
 #' Q<-matrix(-1,J,K);
 #' Q[1:2,1]<-Q[9:10,2]<-Q[13:14,3]<-1
 #'
-#' mod0 <- pcfa(dat = dat, Q = Q, LD = F,burn = 2000, iter = 2000)
-#' summary(mod0) # summarize basic information
-#' summary(mod0, what = 'lambda') #summarize significant loadings
-#' summary(mod0, what = 'qlambda') #summarize significant loadings in pattern/Q-matrix format
-#' summary(mod0, what = 'offpsx') #summarize significant LD terms
-#' summary(mod0, what = 'all') #summarize all information
+#' m0 <- pcfa(dat = dat, Q = Q, LD = FALSE,burn = 2000, iter = 2000)
+#' summary(m0) # summarize basic information
+#' summary(m0, what = 'lambda') #summarize significant loadings
+#' summary(m0, what = 'qlambda') #summarize significant loadings in pattern/Q-matrix format
+#' summary(m0, what = 'offpsx') #summarize significant LD terms
+#' summary(m0, what = 'all') #summarize all information
 #' }
 
-summary.lawbl <- function(object, what = "basic", med = F, SL = 0.05, detail = F, digits = 4, ...) {
+summary.lawbl <- function(object, what = "basic", med = FALSE, SL = 0.05, detail = FALSE, digits = 4, ...) {
 
     Q <- object$Q
     J <- nrow(Q)
@@ -60,10 +60,13 @@ summary.lawbl <- function(object, what = "basic", med = F, SL = 0.05, detail = F
     iter <- dim(ELA)[1]
     N <- dim(object$Omega)[2]
 
-    old_digits <- getOption("digits")
+    oo <- options()       # code line i
+    on.exit(options(oo))  # code line i+1
+
+    # old_digits <- getOption("digits")
     options(digits = digits)
 
-    # Loading med=T;SL=.05
+    # Loading med=TRUE;SL=.05
     tmp <- result(ELA, med, SL)
     nt <- dim(tmp)[2]
     sig <- tmp[, nt]
@@ -71,14 +74,14 @@ summary.lawbl <- function(object, what = "basic", med = F, SL = 0.05, detail = F
 
     if (detail) {
         # all Loading
-        ind <- which(Q != 0, arr.ind = T)
+        ind <- which(Q != 0, arr.ind = TRUE)
         colnames(ind) <- c("Item", "F")
         LAM <- (cbind(ind, tmp))
         MLA[Q != 0] <- tmp[, 1]
     } else {
         # Sig. Loading
         MLA[Q != 0] <- sig
-        ind <- which(MLA > 0, arr.ind = T)
+        ind <- which(MLA > 0, arr.ind = TRUE)
         colnames(ind) <- c("Item", "F")
         LAM <- (cbind(ind, tmp[sig > 0, ]))
         MLA[MLA > 0] <- tmp[sig > 0, 1]
@@ -89,7 +92,7 @@ summary.lawbl <- function(object, what = "basic", med = F, SL = 0.05, detail = F
 
     # eigenvalue
 
-    # poq = which(Q != 0, arr.ind = T)
+    # poq = which(Q != 0, arr.ind = TRUE)
     # eig_arr <- array(0, dim = c(iter, K))
     # for (k in 1:K) {
     #     ind1 <- (poq[, 2] == k)
@@ -107,8 +110,8 @@ summary.lawbl <- function(object, what = "basic", med = F, SL = 0.05, detail = F
     # Sig. PSX
     if (LD) {
         tmp <- result(object$PSX, med, SL)
-        pos <- lower.tri(matrix(0, J, J), diag = T)
-        ind <- which(pos, arr.ind = T)
+        pos <- lower.tri(matrix(0, J, J), diag = TRUE)
+        ind <- which(pos, arr.ind = TRUE)
         dpsx <- tmp[ind[, 1] == ind[, 2], ]
         ofind <- ind[, 1] != ind[, 2]
         offpsx <- cbind(ind[ofind, ], tmp[ofind, ])
@@ -124,7 +127,7 @@ summary.lawbl <- function(object, what = "basic", med = F, SL = 0.05, detail = F
 
     tmp <- result(object$PHI, med, SL)
     pos <- lower.tri(matrix(0, K, K))
-    ind <- which(pos, arr.ind = T)
+    ind <- which(pos, arr.ind = TRUE)
     phi <- cbind(ind, tmp)
 
 
@@ -192,7 +195,7 @@ summary.lawbl <- function(object, what = "basic", med = F, SL = 0.05, detail = F
             out1
         }, stop(sprintf("Can not show element '%s'", what), call. = FALSE))
 
-    options(digits = old_digits)
+    # options(digits = old_digits)
     return(out)
 }
 

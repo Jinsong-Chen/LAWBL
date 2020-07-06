@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">LAWBL</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0</span>
       </span>
     </div>
 
@@ -93,9 +93,9 @@
     
     
 <p><strong>Note: the estimation process can be time consuming depending on the computing power. You can same some time by reducing the length of the chains.</strong></p>
-<div id="data-with-local-independence" class="section level2">
+<div id="continuous-data-wo-local-dependence" class="section level2">
 <h2 class="hasAnchor">
-<a href="#data-with-local-independence" class="anchor"></a>Data with Local Independence:</h2>
+<a href="#continuous-data-wo-local-dependence" class="anchor"></a>Continuous Data w/o Local Dependence:</h2>
 <ol style="list-style-type: decimal">
 <li>Load the package, obtain the data, loading pattern (<em>qlam</em>), and setup the design matrix Q.</li>
 </ol>
@@ -105,62 +105,248 @@
 <span class="no">K</span> <span class="kw">&lt;-</span> <span class="fl">3</span> <span class="co"># no. of factors</span>
 <span class="no">qlam</span> <span class="kw">&lt;-</span> <span class="no">sim18cfa0</span>$<span class="no">qlam</span>
 <span class="no">qlam</span>
+<span class="co">#&gt;       [,1] [,2] [,3]</span>
+<span class="co">#&gt;  [1,]  0.7  0.0  0.0</span>
+<span class="co">#&gt;  [2,]  0.7  0.0  0.0</span>
+<span class="co">#&gt;  [3,]  0.7  0.0  0.0</span>
+<span class="co">#&gt;  [4,]  0.7  0.0  0.0</span>
+<span class="co">#&gt;  [5,]  0.7  0.4  0.0</span>
+<span class="co">#&gt;  [6,]  0.7  0.4  0.0</span>
+<span class="co">#&gt;  [7,]  0.0  0.7  0.0</span>
+<span class="co">#&gt;  [8,]  0.0  0.7  0.0</span>
+<span class="co">#&gt;  [9,]  0.0  0.7  0.0</span>
+<span class="co">#&gt; [10,]  0.0  0.7  0.0</span>
+<span class="co">#&gt; [11,]  0.0  0.7  0.4</span>
+<span class="co">#&gt; [12,]  0.0  0.7  0.4</span>
+<span class="co">#&gt; [13,]  0.0  0.0  0.7</span>
+<span class="co">#&gt; [14,]  0.0  0.0  0.7</span>
+<span class="co">#&gt; [15,]  0.0  0.0  0.7</span>
+<span class="co">#&gt; [16,]  0.0  0.0  0.7</span>
+<span class="co">#&gt; [17,]  0.4  0.0  0.7</span>
+<span class="co">#&gt; [18,]  0.4  0.0  0.7</span>
 
 <span class="no">Q</span><span class="kw">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span>(-<span class="fl">1</span>,<span class="no">J</span>,<span class="no">K</span>); <span class="co"># -1 for unspecified items</span>
 <span class="no">Q</span>[<span class="fl">1</span>:<span class="fl">2</span>,<span class="fl">1</span>]<span class="kw">&lt;-</span><span class="no">Q</span>[<span class="fl">7</span>:<span class="fl">8</span>,<span class="fl">2</span>]<span class="kw">&lt;-</span><span class="no">Q</span>[<span class="fl">13</span>:<span class="fl">14</span>,<span class="fl">3</span>]<span class="kw">&lt;-</span><span class="fl">1</span> <span class="co"># 1 for specified items</span>
-<span class="no">Q</span></pre></body></html></div>
+<span class="no">Q</span>
+<span class="co">#&gt;       [,1] [,2] [,3]</span>
+<span class="co">#&gt;  [1,]    1   -1   -1</span>
+<span class="co">#&gt;  [2,]    1   -1   -1</span>
+<span class="co">#&gt;  [3,]   -1   -1   -1</span>
+<span class="co">#&gt;  [4,]   -1   -1   -1</span>
+<span class="co">#&gt;  [5,]   -1   -1   -1</span>
+<span class="co">#&gt;  [6,]   -1   -1   -1</span>
+<span class="co">#&gt;  [7,]   -1    1   -1</span>
+<span class="co">#&gt;  [8,]   -1    1   -1</span>
+<span class="co">#&gt;  [9,]   -1   -1   -1</span>
+<span class="co">#&gt; [10,]   -1   -1   -1</span>
+<span class="co">#&gt; [11,]   -1   -1   -1</span>
+<span class="co">#&gt; [12,]   -1   -1   -1</span>
+<span class="co">#&gt; [13,]   -1   -1    1</span>
+<span class="co">#&gt; [14,]   -1   -1    1</span>
+<span class="co">#&gt; [15,]   -1   -1   -1</span>
+<span class="co">#&gt; [16,]   -1   -1   -1</span>
+<span class="co">#&gt; [17,]   -1   -1   -1</span>
+<span class="co">#&gt; [18,]   -1   -1   -1</span></pre></body></html></div>
 <ol start="2" style="list-style-type: decimal">
 <li>
-<strong>E-step:</strong> Estimate with the PCFA-LI model (E-step) by setting <em>LD=F</em>. Only a few loadings need to be specified in Q (e.g., 2 per factor). Longer chain is suggested for stabler performance (<em>burn=iter=5,000</em> by default). Note the sampling information is updated every 1000 draws by default, with <em>Feigen</em> for factorial eigenvalue, “<em>NLA_ns3</em>” for no. of <span class="math inline">\(\lambda\)</span> not smaller than .3, <em>Shrink</em> for shrinkage, and <em>Adj PSR</em> for adjusted PSRF. Estimates are close to the true values.</li>
+<strong>E-step:</strong> Estimate with the PCFA-LI model (E-step) by setting <em>LD=F</em>. Only a few loadings need to be specified in Q (e.g., 2 per factor). Longer chain is suggested for stabler performance (<em>burn=iter=5,000</em> by default). Note the sampling information is updated every 1000 draws by default, with <em>Feigen</em> for factorial eigenvalue, “<em>NLA_lg3</em>” for no. of <span class="math inline">\(\lambda\)</span> larger than .3, <em>Shrink</em> for shrinkage, and <em>Adj PSR</em> for adjusted PSRF. Estimates are close to the true values.</li>
 </ol>
-<div class="sourceCode" id="cb2"><html><body><pre class="r">
-<span class="no">mod0</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/pcfa.html">pcfa</a></span>(<span class="kw">dat</span> <span class="kw">=</span> <span class="no">dat</span>, <span class="kw">Q</span> <span class="kw">=</span> <span class="no">Q</span>,<span class="kw">LD</span> <span class="kw">=</span> <span class="no">F</span>, <span class="kw">burn</span> <span class="kw">=</span> <span class="fl">10000</span>, <span class="kw">iter</span> <span class="kw">=</span> <span class="fl">10000</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">mod0</span>) <span class="co"># summarize basic information</span>
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">mod0</span>, <span class="kw">what</span> <span class="kw">=</span> <span class="st">'qlambda'</span>) <span class="co">#summarize significant loadings in pattern/Q-matrix format</span>
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">mod0</span>,<span class="kw">what</span><span class="kw">=</span><span class="st">'eigen'</span>) <span class="co">#factorial eigenvalue</span>
+<div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="no">m0</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/pcfa.html">pcfa</a></span>(<span class="kw">dat</span> <span class="kw">=</span> <span class="no">dat</span>, <span class="kw">Q</span> <span class="kw">=</span> <span class="no">Q</span>,<span class="kw">LD</span> <span class="kw">=</span> <span class="fl">FALSE</span>)
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Tot. Iter = 1000</span>
+<span class="co">#&gt;    user  system elapsed </span>
+<span class="co">#&gt;    4.64    0.07    4.70 </span>
+<span class="co">#&gt;          [,1]  [,2]  [,3]</span>
+<span class="co">#&gt; Feigen  3.323 2.577 3.291</span>
+<span class="co">#&gt; NLA_lg3 8.000 8.000 8.000</span>
+<span class="co">#&gt; Shrink  3.851 3.851 3.851</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Tot. Iter = 2000</span>
+<span class="co">#&gt;    user  system elapsed </span>
+<span class="co">#&gt;    9.02    0.07    9.08 </span>
+<span class="co">#&gt;          [,1]  [,2]  [,3]</span>
+<span class="co">#&gt; Feigen  2.903 3.304 4.193</span>
+<span class="co">#&gt; NLA_lg3 8.000 8.000 8.000</span>
+<span class="co">#&gt; Shrink  2.636 2.636 2.636</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Tot. Iter = 3000</span>
+<span class="co">#&gt;    user  system elapsed </span>
+<span class="co">#&gt;   13.45    0.07   13.51 </span>
+<span class="co">#&gt;          [,1]  [,2]  [,3]</span>
+<span class="co">#&gt; Feigen  2.772 3.243 3.514</span>
+<span class="co">#&gt; NLA_lg3 8.000 8.000 8.000</span>
+<span class="co">#&gt; Shrink  3.445 3.445 3.445</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Tot. Iter = 4000</span>
+<span class="co">#&gt;    user  system elapsed </span>
+<span class="co">#&gt;   17.83    0.07   17.89 </span>
+<span class="co">#&gt;          [,1]  [,2]   [,3]</span>
+<span class="co">#&gt; Feigen  3.991 4.713  4.308</span>
+<span class="co">#&gt; NLA_lg3 8.000 8.000 10.000</span>
+<span class="co">#&gt; Shrink  3.201 3.201  3.201</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Tot. Iter = 5000</span>
+<span class="co">#&gt;    user  system elapsed </span>
+<span class="co">#&gt;   22.13    0.07   22.18 </span>
+<span class="co">#&gt;          [,1]  [,2]  [,3]</span>
+<span class="co">#&gt; Feigen  3.552 2.764 3.614</span>
+<span class="co">#&gt; NLA_lg3 8.000 8.000 8.000</span>
+<span class="co">#&gt; Shrink  3.469 3.469 3.469</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Tot. Iter = 6000</span>
+<span class="co">#&gt;    user  system elapsed </span>
+<span class="co">#&gt;   26.70    0.07   26.76 </span>
+<span class="co">#&gt;          [,1]  [,2]  [,3]</span>
+<span class="co">#&gt; Feigen  3.120 3.523 3.644</span>
+<span class="co">#&gt; NLA_lg3 8.000 8.000 8.000</span>
+<span class="co">#&gt; Shrink  2.995 2.995 2.995</span>
+<span class="co">#&gt; Adj PSR 1.233 1.704 1.005</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Tot. Iter = 7000</span>
+<span class="co">#&gt;    user  system elapsed </span>
+<span class="co">#&gt;   31.16    0.07   31.22 </span>
+<span class="co">#&gt;          [,1]  [,2]  [,3]</span>
+<span class="co">#&gt; Feigen  3.055 3.400 4.898</span>
+<span class="co">#&gt; NLA_lg3 6.000 8.000 8.000</span>
+<span class="co">#&gt; Shrink  3.511 3.511 3.511</span>
+<span class="co">#&gt; Adj PSR 1.215 1.038 1.025</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Tot. Iter = 8000</span>
+<span class="co">#&gt;    user  system elapsed </span>
+<span class="co">#&gt;   35.42    0.07   35.48 </span>
+<span class="co">#&gt;          [,1]  [,2]  [,3]</span>
+<span class="co">#&gt; Feigen  4.777 3.911 3.781</span>
+<span class="co">#&gt; NLA_lg3 8.000 8.000 8.000</span>
+<span class="co">#&gt; Shrink  2.938 2.938 2.938</span>
+<span class="co">#&gt; Adj PSR 1.035 1.072 1.203</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Tot. Iter = 9000</span>
+<span class="co">#&gt;    user  system elapsed </span>
+<span class="co">#&gt;   40.06    0.07   40.12 </span>
+<span class="co">#&gt;          [,1]  [,2]  [,3]</span>
+<span class="co">#&gt; Feigen  3.135 4.037 3.674</span>
+<span class="co">#&gt; NLA_lg3 6.000 8.000 7.000</span>
+<span class="co">#&gt; Shrink  3.863 3.863 3.863</span>
+<span class="co">#&gt; Adj PSR 1.15 1.039 1.078</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Tot. Iter = 10000</span>
+<span class="co">#&gt;    user  system elapsed </span>
+<span class="co">#&gt;   44.70    0.07   44.76 </span>
+<span class="co">#&gt;          [,1]  [,2]  [,3]</span>
+<span class="co">#&gt; Feigen  3.837 2.125 3.872</span>
+<span class="co">#&gt; NLA_lg3 7.000 7.000 8.000</span>
+<span class="co">#&gt; Shrink  3.318 3.318 3.318</span>
+<span class="co">#&gt; Adj PSR 1.308 1.055 1.058</span>
 
-<span class="fu"><a href="../reference/plot_eigen.html">plot_eigen</a></span>(<span class="no">mod0</span>) <span class="co"># trace</span>
-<span class="fu"><a href="../reference/plot_eigen.html">plot_eigen</a></span>(<span class="no">mod0</span>, <span class="kw">what</span><span class="kw">=</span><span class="st">'density'</span>)
-<span class="fu"><a href="../reference/plot_eigen.html">plot_eigen</a></span>(<span class="no">mod0</span>, <span class="kw">what</span><span class="kw">=</span><span class="st">'APSR'</span>)</pre></body></html></div>
+<span class="co"># summarize basic information</span>
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">m0</span>)
+<span class="co">#&gt; $N</span>
+<span class="co">#&gt; [1] 500</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $J</span>
+<span class="co">#&gt; [1] 18</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $K</span>
+<span class="co">#&gt; [1] 3</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $`Miss%`</span>
+<span class="co">#&gt; [1] 0</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $`LD enabled`</span>
+<span class="co">#&gt; [1] FALSE</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $`Burn in`</span>
+<span class="co">#&gt; [1] 5000</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $Iteration</span>
+<span class="co">#&gt; [1] 5000</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $`No. of sig lambda`</span>
+<span class="co">#&gt; [1] 24</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $`Adj. PSR`</span>
+<span class="co">#&gt;    Point est. Upper C.I.</span>
+<span class="co">#&gt; F1   1.308183   1.990194</span>
+<span class="co">#&gt; F2   1.054861   1.103524</span>
+<span class="co">#&gt; F3   1.058274   1.223908</span>
+
+<span class="co">#summarize significant loadings in pattern/Q-matrix format</span>
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">m0</span>, <span class="kw">what</span> <span class="kw">=</span> <span class="st">'qlambda'</span>)
+<span class="co">#&gt;          [,1]      [,2]      [,3]</span>
+<span class="co">#&gt; I1  0.7133091 0.0000000 0.0000000</span>
+<span class="co">#&gt; I2  0.7222598 0.0000000 0.0000000</span>
+<span class="co">#&gt; I3  0.7280720 0.0000000 0.0000000</span>
+<span class="co">#&gt; I4  0.6843326 0.0000000 0.0000000</span>
+<span class="co">#&gt; I5  0.7218921 0.3511857 0.0000000</span>
+<span class="co">#&gt; I6  0.6927414 0.3691416 0.0000000</span>
+<span class="co">#&gt; I7  0.0000000 0.7049908 0.0000000</span>
+<span class="co">#&gt; I8  0.0000000 0.7616667 0.0000000</span>
+<span class="co">#&gt; I9  0.0000000 0.7125699 0.0000000</span>
+<span class="co">#&gt; I10 0.0000000 0.6528643 0.0000000</span>
+<span class="co">#&gt; I11 0.0000000 0.6927721 0.4216320</span>
+<span class="co">#&gt; I12 0.0000000 0.6673949 0.4700455</span>
+<span class="co">#&gt; I13 0.0000000 0.0000000 0.6498391</span>
+<span class="co">#&gt; I14 0.0000000 0.0000000 0.7000221</span>
+<span class="co">#&gt; I15 0.0000000 0.0000000 0.7280201</span>
+<span class="co">#&gt; I16 0.0000000 0.0000000 0.8032441</span>
+<span class="co">#&gt; I17 0.3254804 0.0000000 0.7445459</span>
+<span class="co">#&gt; I18 0.3192965 0.0000000 0.7361669</span>
+
+<span class="co">#factorial eigenvalue</span>
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">m0</span>,<span class="kw">what</span><span class="kw">=</span><span class="st">'eigen'</span>)
+<span class="co">#&gt;         est        sd    lower    upper sig</span>
+<span class="co">#&gt; F1 3.456654 0.5405621 2.552609 4.621831   1</span>
+<span class="co">#&gt; F2 3.353781 0.5857038 2.323921 4.467973   1</span>
+<span class="co">#&gt; F3 3.708205 0.5966391 2.641691 4.925321   1</span>
+
+<span class="co">#plotting factorial eigenvalue</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span>(<span class="kw">mar</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="fl">2</span>, <span class="fl">4</span>))
+<span class="fu"><a href="../reference/plot_eigen.html">plot_eigen</a></span>(<span class="no">m0</span>) <span class="co"># trace</span></pre></body></html></div>
+<p><img src="LAWBL-Vignettes_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
+<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="fu"><a href="../reference/plot_eigen.html">plot_eigen</a></span>(<span class="no">m0</span>, <span class="kw">what</span><span class="kw">=</span><span class="st">'APSR'</span>)</pre></body></html></div>
+<p><img src="LAWBL-Vignettes_files/figure-html/unnamed-chunk-3-2.png" width="700"></p>
 <ol start="3" style="list-style-type: decimal">
 <li>
-<strong>C-step:</strong> Reconfigure the Q matrix for the C-step with one specified loading per item based on results from the E-step. Estimate with the PCFA model by setting <em>LD=T</em>. Longer chain is suggested for stabler performance. <em>LD&gt;=.2 &gt;=.1</em> are no. of LD terms not smaller than .2 and .1. Results are very close to the E-step, since there’s no LD in the data.</li>
+<strong>C-step:</strong> Reconfigure the Q matrix for the C-step with one specified loading per item based on results from the E-step. Estimate with the PCFA model by setting <em>LD=TRUE</em> (by default). Longer chain is suggested for stabler performance. <em>LD&gt;.2 &gt;.1</em> are no. of LD terms larger than .2 and .1. Results are very close to the E-step, since there’s no LD in the data.</li>
 </ol>
-<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="no">Q</span><span class="kw">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span>(-<span class="fl">1</span>,<span class="no">J</span>,<span class="no">K</span>);
+<div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="no">Q</span><span class="kw">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span>(-<span class="fl">1</span>,<span class="no">J</span>,<span class="no">K</span>);
 <span class="no">tmp</span><span class="kw">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">mod0</span>, <span class="kw">what</span><span class="kw">=</span><span class="st">"qlambda"</span>)
 <span class="no">cind</span><span class="kw">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span>(<span class="no">tmp</span>,<span class="fl">1</span>,<span class="no">which.max</span>)
 <span class="no">Q</span>[<span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">1</span>:<span class="no">J</span>),<span class="no">cind</span>)]<span class="kw">&lt;-</span><span class="fl">1</span>
 <span class="co">#alternatively</span>
 <span class="co">#Q[1:6,1]&lt;-Q[7:12,2]&lt;-Q[13:18,3]&lt;-1 # 1 for specified items</span>
 
-<span class="no">mod1</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/pcfa.html">pcfa</a></span>(<span class="kw">dat</span> <span class="kw">=</span> <span class="no">dat</span>, <span class="kw">Q</span> <span class="kw">=</span> <span class="no">Q</span>,<span class="kw">LD</span> <span class="kw">=</span> <span class="no">T</span>, <span class="kw">burn</span> <span class="kw">=</span> <span class="fl">10000</span>, <span class="kw">iter</span> <span class="kw">=</span> <span class="fl">10000</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">mod1</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">mod1</span>, <span class="kw">what</span> <span class="kw">=</span> <span class="st">'qlambda'</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">mod1</span>, <span class="kw">what</span> <span class="kw">=</span> <span class="st">'offpsx'</span>) <span class="co">#summarize significant LD terms</span>
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">mod1</span>,<span class="kw">what</span><span class="kw">=</span><span class="st">'eigen'</span>)</pre></body></html></div>
+<span class="no">m1</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/pcfa.html">pcfa</a></span>(<span class="kw">dat</span> <span class="kw">=</span> <span class="no">dat</span>, <span class="kw">Q</span> <span class="kw">=</span> <span class="no">Q</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">m1</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">m1</span>, <span class="kw">what</span> <span class="kw">=</span> <span class="st">'qlambda'</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">m1</span>, <span class="kw">what</span> <span class="kw">=</span> <span class="st">'offpsx'</span>) <span class="co">#summarize significant LD terms</span>
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">m1</span>,<span class="kw">what</span><span class="kw">=</span><span class="st">'eigen'</span>)
+
+<span class="fu"><a href="../reference/plot_eigen.html">plot_eigen</a></span>(<span class="no">m1</span>) <span class="co"># trace</span>
+<span class="fu"><a href="../reference/plot_eigen.html">plot_eigen</a></span>(<span class="no">m1</span>, <span class="kw">what</span><span class="kw">=</span><span class="st">'APSR'</span>)</pre></body></html></div>
 <ol start="4" style="list-style-type: decimal">
 <li>
 <strong>CFA-LD:</strong> One can also configure the Q matrix for a CFA model with local dependence (i.e. without any unspecified loading) based on results from the C-step. Results are also very close.</li>
 </ol>
-<div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="no">Q</span><span class="kw">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">mod1</span>, <span class="kw">what</span><span class="kw">=</span><span class="st">"qlambda"</span>)
+<div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="no">Q</span><span class="kw">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">m1</span>, <span class="kw">what</span><span class="kw">=</span><span class="st">"qlambda"</span>)
 <span class="no">Q</span>[<span class="no">Q</span><span class="kw">!=</span><span class="fl">0</span>]<span class="kw">&lt;-</span><span class="fl">1</span>
 <span class="no">Q</span>
 
-<span class="no">mod2</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/pcfa.html">pcfa</a></span>(<span class="kw">dat</span> <span class="kw">=</span> <span class="no">dat</span>, <span class="kw">Q</span> <span class="kw">=</span> <span class="no">Q</span>,<span class="kw">LD</span> <span class="kw">=</span> <span class="no">T</span>, <span class="kw">burn</span> <span class="kw">=</span> <span class="fl">10000</span>, <span class="kw">iter</span> <span class="kw">=</span> <span class="fl">10000</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">mod2</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">mod2</span>, <span class="kw">what</span> <span class="kw">=</span> <span class="st">'qlambda'</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">mod2</span>, <span class="kw">what</span> <span class="kw">=</span> <span class="st">'offpsx'</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">mod2</span>,<span class="kw">what</span><span class="kw">=</span><span class="st">'eigen'</span>)
+<span class="no">m2</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/pcfa.html">pcfa</a></span>(<span class="kw">dat</span> <span class="kw">=</span> <span class="no">dat</span>, <span class="kw">Q</span> <span class="kw">=</span> <span class="no">Q</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">m2</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">m2</span>, <span class="kw">what</span> <span class="kw">=</span> <span class="st">'qlambda'</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">m2</span>, <span class="kw">what</span> <span class="kw">=</span> <span class="st">'offpsx'</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">m2</span>,<span class="kw">what</span><span class="kw">=</span><span class="st">'eigen'</span>)
 
-<span class="fu"><a href="../reference/plot_eigen.html">plot_eigen</a></span>(<span class="no">mod2</span>) <span class="co"># Eigens' traces are excellent without regulazation of the loadings</span></pre></body></html></div>
+<span class="fu"><a href="../reference/plot_eigen.html">plot_eigen</a></span>(<span class="no">m2</span>) <span class="co"># Eigens' traces are excellent without regulazation of the loadings</span></pre></body></html></div>
 </div>
-<div id="data-with-local-dependence" class="section level2">
+<div id="continuous-data-with-local-dependence" class="section level2">
 <h2 class="hasAnchor">
-<a href="#data-with-local-dependence" class="anchor"></a>Data with Local Dependence:</h2>
+<a href="#continuous-data-with-local-dependence" class="anchor"></a>Continuous Data with Local Dependence:</h2>
 <ol style="list-style-type: decimal">
 <li>Load the the data, loading pattern (<em>qlam</em>), and LD terms, and setup the design matrix Q.</li>
 </ol>
-<div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="no">dat</span> <span class="kw">&lt;-</span> <span class="no">sim18cfa1</span>$<span class="no">dat</span>
+<div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="no">dat</span> <span class="kw">&lt;-</span> <span class="no">sim18cfa1</span>$<span class="no">dat</span>
 <span class="no">J</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span>(<span class="no">dat</span>) <span class="co"># no. of items</span>
 <span class="no">K</span> <span class="kw">&lt;-</span> <span class="fl">3</span> <span class="co"># no. of factors</span>
 <span class="no">sim18cfa1</span>$<span class="no">qlam</span>
@@ -171,40 +357,43 @@
 <span class="no">Q</span></pre></body></html></div>
 <ol start="2" style="list-style-type: decimal">
 <li>
-<strong>E-step:</strong> Estimate with the PCFA-LI model (E-step) by setting <em>LD=F</em>. Only a few loadings need to be specified in Q (e.g., 2 per factor). Some loading estimates are biased due to ignoring the LD. So do the eigenvalues.</li>
+<strong>E-step:</strong> Estimate with the PCFA-LI model (E-step) by setting <em>LD=FALSE</em>. Only a few loadings need to be specified in Q (e.g., 2 per factor). Some loading estimates are biased due to ignoring the LD. So do the eigenvalues.</li>
 </ol>
-<div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="no">mod0</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/pcfa.html">pcfa</a></span>(<span class="kw">dat</span> <span class="kw">=</span> <span class="no">dat</span>, <span class="kw">Q</span> <span class="kw">=</span> <span class="no">Q</span>,<span class="kw">LD</span> <span class="kw">=</span> <span class="no">F</span>, <span class="kw">burn</span> <span class="kw">=</span> <span class="fl">10000</span>, <span class="kw">iter</span> <span class="kw">=</span> <span class="fl">10000</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">mod0</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">mod0</span>, <span class="kw">what</span> <span class="kw">=</span> <span class="st">'qlambda'</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">mod0</span>,<span class="kw">what</span><span class="kw">=</span><span class="st">'eigen'</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb7"><html><body><pre class="r"><span class="no">m0</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/pcfa.html">pcfa</a></span>(<span class="kw">dat</span> <span class="kw">=</span> <span class="no">dat</span>, <span class="kw">Q</span> <span class="kw">=</span> <span class="no">Q</span>,<span class="kw">LD</span> <span class="kw">=</span> <span class="fl">FALSE</span>, <span class="kw">burn</span> <span class="kw">=</span> <span class="fl">10000</span>, <span class="kw">iter</span> <span class="kw">=</span> <span class="fl">10000</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">m0</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">m0</span>, <span class="kw">what</span> <span class="kw">=</span> <span class="st">'qlambda'</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">m0</span>,<span class="kw">what</span><span class="kw">=</span><span class="st">'eigen'</span>)
+
+<span class="fu"><a href="../reference/plot_eigen.html">plot_eigen</a></span>(<span class="no">m0</span>) <span class="co"># trace</span>
+<span class="fu"><a href="../reference/plot_eigen.html">plot_eigen</a></span>(<span class="no">m0</span>, <span class="kw">what</span><span class="kw">=</span><span class="st">'APSR'</span>)</pre></body></html></div>
 <ol start="3" style="list-style-type: decimal">
 <li>
-<strong>C-step:</strong> Reconfigure the Q matrix for the C-step with one specified loading per item based on results from the E-step. Estimate with the PCFA model by setting <em>LD=T</em>. The estimates are more accurate, and the LD terms can be largely recovered.</li>
+<strong>C-step:</strong> Reconfigure the Q matrix for the C-step with one specified loading per item based on results from the E-step. Estimate with the PCFA model by setting <em>LD=TRUE</em> (by default). The estimates are more accurate, and the LD terms can be largely recovered.</li>
 </ol>
-<div class="sourceCode" id="cb7"><html><body><pre class="r"><span class="no">Q</span><span class="kw">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span>(-<span class="fl">1</span>,<span class="no">J</span>,<span class="no">K</span>);
-<span class="no">tmp</span><span class="kw">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">mod0</span>, <span class="kw">what</span><span class="kw">=</span><span class="st">"qlambda"</span>)
+<div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="no">Q</span><span class="kw">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span>(-<span class="fl">1</span>,<span class="no">J</span>,<span class="no">K</span>);
+<span class="no">tmp</span><span class="kw">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">m0</span>, <span class="kw">what</span><span class="kw">=</span><span class="st">"qlambda"</span>)
 <span class="no">cind</span><span class="kw">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span>(<span class="no">tmp</span>,<span class="fl">1</span>,<span class="no">which.max</span>)
 <span class="no">Q</span>[<span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">1</span>:<span class="no">J</span>),<span class="no">cind</span>)]<span class="kw">&lt;-</span><span class="fl">1</span>
 <span class="no">Q</span>
 
-<span class="no">mod1</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/pcfa.html">pcfa</a></span>(<span class="kw">dat</span> <span class="kw">=</span> <span class="no">dat</span>, <span class="kw">Q</span> <span class="kw">=</span> <span class="no">Q</span>,<span class="kw">LD</span> <span class="kw">=</span> <span class="no">T</span>, <span class="kw">burn</span> <span class="kw">=</span> <span class="fl">10000</span>, <span class="kw">iter</span> <span class="kw">=</span> <span class="fl">10000</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">mod1</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">mod1</span>, <span class="kw">what</span> <span class="kw">=</span> <span class="st">'qlambda'</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">mod1</span>,<span class="kw">what</span><span class="kw">=</span><span class="st">'eigen'</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">mod1</span>, <span class="kw">what</span> <span class="kw">=</span> <span class="st">'offpsx'</span>)</pre></body></html></div>
+<span class="no">m1</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/pcfa.html">pcfa</a></span>(<span class="kw">dat</span> <span class="kw">=</span> <span class="no">dat</span>, <span class="kw">Q</span> <span class="kw">=</span> <span class="no">Q</span>,<span class="kw">burn</span> <span class="kw">=</span> <span class="fl">10000</span>, <span class="kw">iter</span> <span class="kw">=</span> <span class="fl">10000</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">m1</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">m1</span>, <span class="kw">what</span> <span class="kw">=</span> <span class="st">'qlambda'</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">m1</span>,<span class="kw">what</span><span class="kw">=</span><span class="st">'eigen'</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">m1</span>, <span class="kw">what</span> <span class="kw">=</span> <span class="st">'offpsx'</span>)</pre></body></html></div>
 <ol start="4" style="list-style-type: decimal">
 <li>
 <strong>CFA-LD:</strong> Configure the Q matrix for a CFA model with local dependence (i.e. without any unspecified loading) based on results from the C-step. Results are better than, but similar to the C-step.</li>
 </ol>
-<div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="no">Q</span><span class="kw">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">mod1</span>, <span class="kw">what</span><span class="kw">=</span><span class="st">"qlambda"</span>)
+<div class="sourceCode" id="cb9"><html><body><pre class="r"><span class="no">Q</span><span class="kw">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">m1</span>, <span class="kw">what</span><span class="kw">=</span><span class="st">"qlambda"</span>)
 <span class="no">Q</span>[<span class="no">Q</span><span class="kw">!=</span><span class="fl">0</span>]<span class="kw">&lt;-</span><span class="fl">1</span>
 <span class="no">Q</span>
 
-<span class="no">mod2</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/pcfa.html">pcfa</a></span>(<span class="kw">dat</span> <span class="kw">=</span> <span class="no">dat</span>, <span class="kw">Q</span> <span class="kw">=</span> <span class="no">Q</span>,<span class="kw">LD</span> <span class="kw">=</span> <span class="no">T</span>, <span class="kw">burn</span> <span class="kw">=</span> <span class="fl">10000</span>, <span class="kw">iter</span> <span class="kw">=</span> <span class="fl">10000</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">mod2</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">mod2</span>, <span class="kw">what</span> <span class="kw">=</span> <span class="st">'qlambda'</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">mod2</span>,<span class="kw">what</span><span class="kw">=</span><span class="st">'eigen'</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">mod2</span>, <span class="kw">what</span> <span class="kw">=</span> <span class="st">'offpsx'</span>)</pre></body></html></div>
+<span class="no">m2</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/pcfa.html">pcfa</a></span>(<span class="kw">dat</span> <span class="kw">=</span> <span class="no">dat</span>, <span class="kw">Q</span> <span class="kw">=</span> <span class="no">Q</span>,<span class="kw">burn</span> <span class="kw">=</span> <span class="fl">10000</span>, <span class="kw">iter</span> <span class="kw">=</span> <span class="fl">10000</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">m2</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">m2</span>, <span class="kw">what</span> <span class="kw">=</span> <span class="st">'qlambda'</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">m2</span>,<span class="kw">what</span><span class="kw">=</span><span class="st">'eigen'</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">m2</span>, <span class="kw">what</span> <span class="kw">=</span> <span class="st">'offpsx'</span>)</pre></body></html></div>
 </div>
   </div>
 

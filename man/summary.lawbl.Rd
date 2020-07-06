@@ -7,9 +7,9 @@
 \method{summary}{lawbl}(
   object,
   what = "basic",
-  med = F,
+  med = FALSE,
   SL = 0.05,
-  detail = F,
+  detail = FALSE,
   digits = 4,
   ...
 )
@@ -27,15 +27,15 @@
     \item \code{dpsx}: Diagonal elements in the residual covariance matrix \code{PSX}.
     \item \code{offpsx}: Off-diagonal elements in \code{PSX}; local dependence terms.
     \item \code{phi}: Factorial correlations.
-    \item \code{shrink}: Shrinkage parameters for the loadings and LD (if \code{LD} in \code{pcfa} = T).
+    \item \code{shrink}: (Ave) shrinkage for each facor's loadings and LD (if \code{LD} in \code{pcfa} = T).
     \item \code{all}: All above information.
  }}
 
-\item{med}{logical; if the posterior median (\code{T}) or mean (\code{F}) is used as the estimate.}
+\item{med}{logical; if the posterior median (\code{TRUE}) or mean (\code{FALSE}) is used as the estimate.}
 
 \item{SL}{Significance level for interval estimate. The default is .05.}
 
-\item{detail}{logical; if only significant (\code{F}) or all (\code{T}) estimates are presented.}
+\item{detail}{logical; if only significant (\code{FALSE}) or all (\code{TRUE}) estimates are presented.}
 
 \item{digits}{Number of significant digits to print when printing numeric values.}
 
@@ -55,11 +55,11 @@ K <- 3
 Q<-matrix(-1,J,K);
 Q[1:2,1]<-Q[9:10,2]<-Q[13:14,3]<-1
 
-mod0 <- pcfa(dat = dat, Q = Q, LD = F,burn = 2000, iter = 2000)
-summary(mod0) # summarize basic information
-summary(mod0, what = 'lambda') #summarize significant loadings
-summary(mod0, what = 'qlambda') #summarize significant loadings in pattern/Q-matrix format
-summary(mod0, what = 'offpsx') #summarize significant LD terms
-summary(mod0, what = 'all') #summarize all information
+m0 <- pcfa(dat = dat, Q = Q, LD = FALSE,burn = 2000, iter = 2000)
+summary(m0) # summarize basic information
+summary(m0, what = 'lambda') #summarize significant loadings
+summary(m0, what = 'qlambda') #summarize significant loadings in pattern/Q-matrix format
+summary(m0, what = 'offpsx') #summarize significant LD terms
+summary(m0, what = 'all') #summarize all information
 }
 }

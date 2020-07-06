@@ -7,14 +7,15 @@
 pcfa(
   dat,
   Q,
-  LD = T,
-  PPMC = F,
+  LD = TRUE,
+  PPMC = FALSE,
   burn = 5000,
   iter = 5000,
   update = 1000,
   missing = NA,
-  rseed = 555,
-  digits = 4
+  rseed = 12345,
+  digits = 4,
+  alas = FALSE
 )
 }
 \arguments{
@@ -42,6 +43,8 @@ without any specified loading (Chen, Guo, Zhang, & Pan, 2020). See \code{Example
 \item{rseed}{An integer for the random seed.}
 
 \item{digits}{Number of significant digits to print when printing numeric values.}
+
+\item{alas}{logical; for adaptive Lasso or not. The default is \code{FALSE}, which seems slightly stabler.}
 }
 \value{
 \code{pcfa} returns an object of class \code{pcfa}. It contains a lot of information about
@@ -71,26 +74,26 @@ K <- 3
 Q<-matrix(-1,J,K);
 Q[1:2,1]<-Q[9:10,2]<-Q[13:14,3]<-1
 Q
-mod0 <- pcfa(dat = dat, Q = Q, LD = F)
-summary(mod0) # summarize basic information
-summary(mod0, what = 'lambda') #summarize significant loadings
-summary(mod0, what = 'qlambda') #summarize significant loadings in pattern/Q-matrix format
-summary(mod0, what = 'offpsx') #summarize significant LD terms
+m0 <- pcfa(dat = dat, Q = Q, LD = FALSE)
+summary(m0) # summarize basic information
+summary(m0, what = 'lambda') #summarize significant loadings
+summary(m0, what = 'qlambda') #summarize significant loadings in pattern/Q-matrix format
+summary(m0, what = 'offpsx') #summarize significant LD terms
 
 ####################################
-#  Example 1: Estimation with LD   #
+#  Example 2: Estimation with LD   #
 ####################################
 
 Q<-matrix(-1,J,K);
 Q[1:6,1]<-Q[7:12,2]<-Q[13:18,3]<-1
 Q
-mod1 <- pcfa(dat = dat, Q = Q)
-summary(mod1) # summarize basic information
-summary(mod1, what = 'qlambda') #summarize significant loadings in pattern/Q-matrix format
-summary(mod1, what = 'offpsx') #summarize significant LD terms
+m1 <- pcfa(dat = dat, Q = Q)
+summary(m1) # summarize basic information
+summary(m1, what = 'qlambda') #summarize significant loadings in pattern/Q-matrix format
+summary(m1, what = 'offpsx') #summarize significant LD terms
 }
 }
 \references{
 Chen, J., Guo, Z., Zhang, L., & Pan, J. (In Press). A partially confirmatory
-approach to scale development with the Bayesian Lasso. *Psychological Methods*.
+approach to scale development with the Bayesian Lasso. \emph{Psychological Methods}.
 }
