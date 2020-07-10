@@ -4,7 +4,7 @@ Title: Latent (Variable) Analysis with Bayesian Learning
 Version: 1.1.0
 Author: Jinsong Chen [aut, cre, cph]
 Maintainer: Jinsong Chen <jinsong.chen@live.com>
-Description: An analytical framework for latent variables with different Bayesian learning methods.
+Description: An analytical framework for latent variables with different Bayesian learning methods, currently based on the partially confirmatory factor analysis (PCFA) model by Chen, Guo, Zhang, & Pan (2020) <DOI:10.1037/met0000293>.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
@@ -13,7 +13,7 @@ Imports:
     stats,
     MASS,
     coda
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
 URL: https://github.com/Jinsong-Chen/LAWBL, https://jinsong-chen.github.io/LAWBL
 BugReports: https://github.com/Jinsong-Chen/LAWBL/issues
 Suggests: 

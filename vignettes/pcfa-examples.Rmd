@@ -1,10 +1,11 @@
 ---
-title: "LAWBL-Vignettes"
+title: "pcfa-examples"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{LAWBL-Vignettes}
+  %\VignetteIndexEntry{pcfa-examples}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
+  <!-- \usepackage[utf8]{inputenc} -->
 editor_options: 
   chunk_output_type: console
 ---
@@ -39,7 +40,7 @@ Q
 
 
 ```{r}
-m0 <- pcfa(dat = dat, Q = Q,LD = FALSE)
+m0 <- pcfa(dat = dat, Q = Q,LD = FALSE, burn = 2000, iter = 2000)
 
 # summarize basic information
 summary(m0)
@@ -53,27 +54,31 @@ summary(m0,what='eigen')
 #plotting factorial eigenvalue
 par(mar = rep(2, 4))
 plot_eigen(m0) # trace
-plot_eigen(m0, what='APSR')
+plot_eigen(m0, what='density') #density
+plot_eigen(m0, what='APSR') #adj, PSRF
 ```
 
 3) **C-step:** Reconfigure the Q matrix for the C-step with one specified loading per item based on results from the E-step. Estimate with the PCFA model by setting *LD=TRUE* (by default). Longer chain is suggested for stabler performance. *LD>.2 >.1* are no. of LD terms larger than .2 and .1. Results are very close to the E-step, since there's no LD in the data.
 
 ```{r eval=FALSE}
 Q<-matrix(-1,J,K);
-tmp<-summary(mod0, what="qlambda")
+tmp<-summary(m0, what="qlambda")
 cind<-apply(tmp,1,which.max)
 Q[cbind(c(1:J),cind)]<-1
 #alternatively
 #Q[1:6,1]<-Q[7:12,2]<-Q[13:18,3]<-1 # 1 for specified items
 
-m1 <- pcfa(dat = dat, Q = Q)
+m1 <- pcfa(dat = dat, Q = Q, burn = 2000, iter = 2000)
 summary(m1)
 summary(m1, what = 'qlambda')
 summary(m1, what = 'offpsx') #summarize significant LD terms
 summary(m1,what='eigen')
 
+#plotting factorial eigenvalue
+par(mar = rep(2, 4))
 plot_eigen(m1) # trace
-plot_eigen(m1, what='APSR')
+plot_eigen(m1, what='density') #density
+plot_eigen(m1, what='APSR') #adj, PSRF
 ```
 
 4) **CFA-LD:** One can also configure the Q matrix for a CFA model with local dependence (i.e. without any unspecified loading) based on results from the C-step. Results are also very close.
@@ -83,7 +88,7 @@ Q<-summary(m1, what="qlambda")
 Q[Q!=0]<-1
 Q
 
-m2 <- pcfa(dat = dat, Q = Q)
+m2 <- pcfa(dat = dat, Q = Q, burn = 2000, iter = 2000)
 summary(m2)
 summary(m2, what = 'qlambda') 
 summary(m2, what = 'offpsx')

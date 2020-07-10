@@ -7,6 +7,6 @@
 * Added - choice for adaptive Lasso or not
 * Added - tests
 * Updated - vignettes
-* Updated - Documents
+* Updated - Documents & references
 
 

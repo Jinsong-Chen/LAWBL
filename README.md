@@ -51,7 +51,7 @@ mixed-type data is on schedule. More Bayesian learning approaches will
 be also included in future releases of this package.
 
 For examples of how to use the package, see vignettes or
-[here](https://jinsong-chen.github.io/LAWBL/articles/LAWBL-Vignettes.html).
+[here](https://jinsong-chen.github.io/LAWBL/articles/pcfa-examples.html).
 
 ## How to use this package?
 
