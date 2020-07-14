@@ -36,8 +36,9 @@
 #'
 #' @references
 #'
-#' Chen, J., Guo, Z., Zhang, L., & Pan, J. (In Press). A partially confirmatory
-#' approach to scale development with the Bayesian Lasso. \emph{Psychological Methods}.
+#' Chen, J., Guo, Z., Zhang, L., & Pan, J. (2020). A partially confirmatory approach to scale development
+#'  with the Bayesian Lasso. \emph{Psychological Methods}.
+#'  Advance online publication. DOI:10.1037/met0000293
 #'
 #' @keywords package
 NULL
