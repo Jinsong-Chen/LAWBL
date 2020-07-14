@@ -31,7 +31,7 @@
 #'
 #' @param update Number of iterations to update the sampling information.
 #'
-#' @param missing Value for missing data (default is \code{NA}).
+#' @param missing Value for missing data (default is \code{NA}) (under development).
 #'
 #' @param alas logical; for adaptive Lasso or not. The default is \code{FALSE}, which seems slightly stabler.
 #'
@@ -86,8 +86,8 @@
 pcfa <- function(dat, Q, LD = TRUE, PPMC = FALSE, burn = 5000, iter = 5000, update = 1000, missing = NA, rseed = 12345,
     digits = 4, alas = FALSE) {
     cati = NULL
-    cand_thd = 0.2
     conv = 0
+    cand_thd = 0
 
     if (nrow(Q) != ncol(dat))
         stop("The numbers of items in data and Q are unequal.", call. = FALSE)
@@ -108,10 +108,6 @@ pcfa <- function(dat, Q, LD = TRUE, PPMC = FALSE, burn = 5000, iter = 5000, upda
     Q <- as.matrix(Q)
     K <- ncol(Q)
     Jp <- length(cati)
-    if (Jp == 1 && cati == -1) {
-        cati <- c(1:J)
-        Jp <- J
-    }
 
     Nmis <- sum(is.na(Y))
     mind <- which(is.na(Y), arr.ind = TRUE)
@@ -149,21 +145,10 @@ pcfa <- function(dat, Q, LD = TRUE, PPMC = FALSE, burn = 5000, iter = 5000, upda
     inv.PSX <- chol2inv(chol(PSX))
     PHI <- init$PHI
     LA <- init$LA
-    THD <- init$THD
+    # THD <- init$THD
     gammas <- init$gammas
     gammal_sq <- init$gammal_sq
 
-    if (Jp > 0) {
-        mnoc <- const$mnoc
-        Etd <- array(0, dim = c(iter, Jp, mnoc - 1))
-    }
-    accrate <- 0
-    if (Nmis > 0)
-        Y[mind] <- rnorm(Nmis)
-
-    # OME <- t(mvrnorm(N,mu=rep(0,K),Sigma=diag(1,K))) # J*N
-    chg_count <- rep(0, K)
-    Jest <- colSums(Q != 0)
 
     Eigen <- array(0, dim = c(iter, K))  #Store retained trace of Eigen
     tmp <- which(Q!=0,arr.ind=TRUE)
@@ -188,40 +173,20 @@ pcfa <- function(dat, Q, LD = TRUE, PPMC = FALSE, burn = 5000, iter = 5000, upda
             PSX <- tmp$obj
             inv.PSX <- tmp$inv
             gammas <- tmp$gammas
-            LAY <- GwMH_LA_MYC(y = Y, ome = OME, la = LA, psx = PSX, gammal_sq = gammal_sq, thd = THD,
+            LAY <- GwMH_LA_MYC0(y = Y, ome = OME, la = LA, psx = PSX, gammal_sq = gammal_sq, thd = THD,
                 const = const, prior = prior, alas = alas)
         } else {
-            LAY <- GwMH_LA_MYE(y = Y, ome = OME, la = LA, psx = PSX, gammal_sq = gammal_sq, thd = THD,
+            LAY <- GwMH_LA_MYE0(y = Y, ome = OME, la = LA, psx = PSX, gammal_sq = gammal_sq, thd = THD,
                 const = const, prior = prior, alas = alas)
             PSX <- LAY$psx
             inv.PSX <- chol2inv(chol(PSX))
         }
-
-        # LA <- LAY$la OME <- LAY$ome
-
-        LA1 <- LAY$la
-        chg <- colSums(LA * LA1 < 0)/Jest > 0.5  # if over half items change sign
-        if (sum(chg) > 0) {
-            sign <- diag(1 - 2 * chg)
-            chg_count <- chg_count + chg
-            LA1 <- LA1 %*% sign
-            OME <- t(t(OME) %*% sign)
-            print(c("ii=", ii), quote = FALSE)
-            cat(chg_count, fill = TRUE, labels = "#Sign change:")
-        }
-        LA <- LA1
+        LA <- LAY$la
 
         gammal_sq <- LAY$gammal_sq
         # OME <- Gibbs_Omega(y = Y, la = LA, phi = PHI, inv.psx = inv.PSX, N = N, K = K)
         PHI <- MH_PHI(phi = PHI, ome = OME, N = N, K = K, prior = prior)
         # Omega<-Gibbs_Omega(y=Y,la=LA,phi=PHI,inv.psx=inv.PSX)
-        if (Jp > 0) {
-            Y[cati, ] <- LAY$ys
-            THD <- LAY$thd
-            accrate <- accrate + LAY$accr
-        }
-        if (Nmis > 0)
-            Y[mind] <- LAY$ysm[mind]
 
         # Save results
         if ((g > 0)) {
@@ -239,8 +204,8 @@ pcfa <- function(dat, Q, LD = TRUE, PPMC = FALSE, burn = 5000, iter = 5000, upda
             # EPHI[g, , ] <- PHI[, ]
             EPHI[g, ] <- PHI[lower.tri(PHI)]
             # EMU[g,]<-MU
-            if (Jp > 0)
-                Etd[g, , ] <- THD[, 2:mnoc]
+            # if (Jp > 0)
+            #     Etd[g, , ] <- THD[, 2:mnoc]
             if (PPMC)
                 Eppmc[g] <- post_pp(y = Y, ome = OME, la = LA, psx = PSX, inv.psx = inv.PSX, N = N,
                   J = J)
@@ -253,36 +218,12 @@ pcfa <- function(dat, Q, LD = TRUE, PPMC = FALSE, burn = 5000, iter = 5000, upda
                 Shrink <- colMeans(sqrt(gammal_sq))
                 Feigen <- diag(crossprod(LA))
                 NLA_lg3 <- colSums(abs(LA) > 0.3)
-                # Meigen <- colMeans(Eigen)
-                # Mlambda<-colMeans(LA)
                 print(rbind(Feigen, NLA_lg3, Shrink))
-                # cat(chg_count, fill = TRUE, labels = '#Sign change:')
+
                 if (g > 0) {
-                  if (conv == 0) {
                       APSR <- schain.grd(Eigen[1:g,])
                       cat(t(APSR[,1]), fill = TRUE, labels = "Adj PSR")
 
-                    # tmp <- schain.grd(ELA[1:g, ])
-                    # GRD_mean <- colMeans(tmp)
-                    # GRD_max <- c(max(tmp[, 1]), max(tmp[, 2]))
-                    # GRD <- c(GRD_mean[1], GRD_max[1])
-                    # cat(GRD, fill = TRUE, labels = "PGR mean & max:")
-                  } else {
-                      APSR <- schain.grd(Eigen[1:g,], auto = TRUE)
-                      cat(t(APSR[,1]), fill = TRUE, labels = "Adj PSR")
-                      if (mean(APSR[,1])<1.1) break
-
-                    # tmp <- schain.grd(ELA[1:g, ], auto = TRUE)
-                    # GRD_mean <- colMeans(tmp)
-                    # GRD_max <- c(max(tmp[, 1]), max(tmp[, 2]))
-                    # # cat(GRD_mean, fill = TRUE, labels = 'GR Mean & UL:') cat(GRD_max, fill = TRUE, labels = 'GR Max & UL:')
-                    # GRD <- c(GRD_mean[1], GRD_max[1])
-                    # cat(GRD, fill = TRUE, labels = "PGR mean & max:")
-                    # if (conv == 1 && GRD[2] < 1.1)
-                    #   break
-                    # if (conv == 2 && GRD[1] < 1.1 && GRD[2] < 1.2)
-                    #   break
-                  }
                 }
 
                 if (LD) {
@@ -292,43 +233,15 @@ pcfa <- function(dat, Q, LD = TRUE, PPMC = FALSE, burn = 5000, iter = 5000, upda
                     print(tmp)
                 }
 
-                if (Jp > 0) {
-                    cat(colMeans(THD), fill = TRUE, labels = "Ave. Thd:")
-                    cat(accrate/update, fill = TRUE, labels = "Acc Rate:")
-                    accrate <- 0
-                }
-                # print(chg_count) cat(chg_count, fill = TRUE, labels = '#Sign change:')
             }  # end update
 
     }  #end of g MCMAX
 
-    if (conv != 0) {
-        st <- g/2 + 1
-        ELA <- ELA[(st):g, ]
-        # EPSX <- EPSX[(st):g, , ] EPHI <- EPHI[(st):g, , ]
-        EPSX <- EPSX[(st):g, ]
-        EPHI <- EPHI[(st):g, ]
-        Egammal <- Egammal[(st):g, ]
-        Egammas <- Egammas[(st):g, ]
-        if (Jp > 0)
-            Etd <- Etd[(st):g, , ]
-        Eppmc <- Eppmc[(st):g]
-        mOmega <- mOmega/2
-        iter <- burn <- g/2
-    }
 
-    # out <- list(Q = Q, LD = LD, LA = ELA, Omega = mOmega/iter, PSX = EPSX, iter = iter, burn = burn,
-    #     PHI = EPHI, gammal = Egammal, gammas = Egammas, Nmis = Nmis, PPP = Eppmc, conv = conv, GRD_mean = GRD_mean,
-    #     GRD_max = GRD_max)
     out <- list(Q = Q, LD = LD, LA = ELA, Omega = mOmega/iter, PSX = EPSX, iter = iter, burn = burn,
                 PHI = EPHI, gammal = Egammal, gammas = Egammas, Nmis = Nmis, PPP = Eppmc, conv = conv,
                 Eigen = Eigen, APSR = APSR)
 
-    if (Jp > 0) {
-        out$cati = cati
-        out$THD = Etd
-        out$mnoc = mnoc
-    }
 
     class(out) <- c("lawbl")
 

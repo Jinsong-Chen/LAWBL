@@ -38,7 +38,7 @@ without any specified loading (Chen, Guo, Zhang, & Pan, 2020). See \code{Example
 
 \item{update}{Number of iterations to update the sampling information.}
 
-\item{missing}{Value for missing data (default is \code{NA}).}
+\item{missing}{Value for missing data (default is \code{NA}) (under development).}
 
 \item{rseed}{An integer for the random seed.}
 
