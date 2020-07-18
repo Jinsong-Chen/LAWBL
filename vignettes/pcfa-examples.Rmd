@@ -4,8 +4,8 @@ output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{pcfa-examples}
   %\VignetteEncoding{UTF-8}
-  %\VignetteEngine{knitr::rmarkdown}
   <!-- \usepackage[utf8]{inputenc} -->
+  %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
   chunk_output_type: console
 ---
@@ -52,6 +52,7 @@ summary(m0, what = 'qlambda')
 summary(m0,what='eigen') 
 
 #plotting factorial eigenvalue
+oldmar <- par("mar")
 par(mar = rep(2, 4))
 plot_eigen(m0) # trace
 plot_eigen(m0, what='density') #density
@@ -75,8 +76,7 @@ summary(m1, what = 'offpsx') #summarize significant LD terms
 summary(m1,what='eigen')
 
 #plotting factorial eigenvalue
-oldmar <- par("mar")
-par(mar = rep(2, 4))
+# par(mar = rep(2, 4))
 plot_eigen(m1) # trace
 plot_eigen(m1, what='density') #density
 plot_eigen(m1, what='APSR') #adj, PSRF
@@ -95,7 +95,7 @@ summary(m2, what = 'qlambda')
 summary(m2, what = 'offpsx')
 summary(m2,what='eigen')
 
-plot_eigen(m2) # Eigens' traces are excellent without regulazation of the loadings
+plot_eigen(m2) # Eigens' traces are excellent without regularization of the loadings
 ```
 
 ## Continuous Data with Local Dependence:
