@@ -75,6 +75,7 @@ summary(m1, what = 'offpsx') #summarize significant LD terms
 summary(m1,what='eigen')
 
 #plotting factorial eigenvalue
+oldmar <- par("mar")
 par(mar = rep(2, 4))
 plot_eigen(m1) # trace
 plot_eigen(m1, what='density') #density
@@ -155,4 +156,6 @@ summary(m2)
 summary(m2, what = 'qlambda') 
 summary(m2,what='eigen')
 summary(m2, what = 'offpsx')
+
+par(mar = oldmar) #reset to old mar
 ```

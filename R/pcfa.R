@@ -54,7 +54,7 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'####################################
 #'#  Example 1: Estimation with LI   #
 #'####################################
@@ -65,7 +65,7 @@
 #' Q<-matrix(-1,J,K);
 #' Q[1:2,1]<-Q[9:10,2]<-Q[13:14,3]<-1
 #' Q
-#' m0 <- pcfa(dat = dat, Q = Q, LD = FALSE)
+#' m0 <- pcfa(dat = dat, Q = Q, LD = FALSE,burn = 1000, iter = 1000)
 #' summary(m0) # summarize basic information
 #' summary(m0, what = 'lambda') #summarize significant loadings
 #' summary(m0, what = 'qlambda') #summarize significant loadings in pattern/Q-matrix format
@@ -78,7 +78,7 @@
 #' Q<-matrix(-1,J,K);
 #' Q[1:6,1]<-Q[7:12,2]<-Q[13:18,3]<-1
 #' Q
-#' m1 <- pcfa(dat = dat, Q = Q)
+#' m1 <- pcfa(dat = dat, Q = Q,burn = 1000, iter = 1000)
 #' summary(m1) # summarize basic information
 #' summary(m1, what = 'qlambda') #summarize significant loadings in pattern/Q-matrix format
 #' summary(m1, what = 'offpsx') #summarize significant LD terms
@@ -94,6 +94,7 @@ pcfa <- function(dat, Q, LD = TRUE, PPMC = FALSE, burn = 5000, iter = 5000, upda
 
     if (exists(".Random.seed", .GlobalEnv))
         oldseed <- .GlobalEnv$.Random.seed else oldseed <- NULL
+
     set.seed(rseed)
 
     oo <- options()       # code line i
@@ -145,7 +146,7 @@ pcfa <- function(dat, Q, LD = TRUE, PPMC = FALSE, burn = 5000, iter = 5000, upda
     inv.PSX <- chol2inv(chol(PSX))
     PHI <- init$PHI
     LA <- init$LA
-    # THD <- init$THD
+    THD <- init$THD
     gammas <- init$gammas
     gammal_sq <- init$gammal_sq
 
@@ -213,24 +214,24 @@ pcfa <- function(dat, Q, LD = TRUE, PPMC = FALSE, burn = 5000, iter = 5000, upda
 
         if (ii%%update == 0)
             {
-                cat(ii, fill = TRUE, labels = "\nTot. Iter =")
-                print(proc.time() - ptm)
+                # cat(ii, fill = TRUE, labels = "\nTot. Iter =")
+                # print(proc.time() - ptm)
                 Shrink <- colMeans(sqrt(gammal_sq))
                 Feigen <- diag(crossprod(LA))
                 NLA_lg3 <- colSums(abs(LA) > 0.3)
-                print(rbind(Feigen, NLA_lg3, Shrink))
+                # print(rbind(Feigen, NLA_lg3, Shrink))
 
                 if (g > 0) {
                       APSR <- schain.grd(Eigen[1:g,])
-                      cat(t(APSR[,1]), fill = TRUE, labels = "Adj PSR")
+                      # cat(t(APSR[,1]), fill = TRUE, labels = "Adj PSR")
 
                 }
 
                 if (LD) {
                     opsx <- abs(PSX[row(PSX) != col(PSX)])
                     tmp <- c(sum(opsx > 0.2)/2, sum(opsx > 0.1)/2, gammas)
-                    print(c("LD>.2", ">.1", "Shrink"), quote = FALSE)
-                    print(tmp)
+                    # print(c("LD>.2", ">.1", "Shrink"), quote = FALSE)
+                    # print(tmp)
                 }
 
             }  # end update

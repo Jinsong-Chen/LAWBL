@@ -14,14 +14,14 @@ plot_eigen(obj, what = "trace")
 \itemize{
      \item \code{trace}: The trace of each factor's eigenvalue.
     \item \code{density}: The trace of each factor's eigenvalue.
-    \item \code{PGR}: The pseudo Gelman-Rubin diagnostics of each factor's eigenvalue.
+    \item \code{APSR}: The pseudo Gelman-Rubin diagnostics of each factor's eigenvalue.
  }}
 }
 \description{
 Provide plots based on the factorial eigenvalues of a \code{pcfa} objects.
 }
 \examples{
-\dontrun{
+\donttest{
 dat <- sim18cfa0$dat
 J <- ncol(dat)
 K <- 3
@@ -29,9 +29,9 @@ Q<-matrix(-1,J,K);
 Q[1:2,1]<-Q[9:10,2]<-Q[13:14,3]<-1
 
 
-m0 <- pcfa(dat = dat, Q = Q, LD = FALSE,burn = 2000, iter = 2000)
+m0 <- pcfa(dat = dat, Q = Q, LD = FALSE,burn = 1000, iter = 1000)
 plot_eigen(m0) # trace
 plot_eigen(m0, what='density')
-plot_eigen(m0, what='PGR')
+plot_eigen(m0, what='APSR')
 }
 }

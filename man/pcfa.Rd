@@ -63,7 +63,7 @@ the exploratory-confirmatory continuum in factor analytic models (Chen, Guo, Zha
  and the factorial eigenvalue can be plotted with \code{\link{plot_eigen}}.
 }
 \examples{
-\dontrun{
+\donttest{
 ####################################
 #  Example 1: Estimation with LI   #
 ####################################
@@ -74,7 +74,7 @@ K <- 3
 Q<-matrix(-1,J,K);
 Q[1:2,1]<-Q[9:10,2]<-Q[13:14,3]<-1
 Q
-m0 <- pcfa(dat = dat, Q = Q, LD = FALSE)
+m0 <- pcfa(dat = dat, Q = Q, LD = FALSE,burn = 1000, iter = 1000)
 summary(m0) # summarize basic information
 summary(m0, what = 'lambda') #summarize significant loadings
 summary(m0, what = 'qlambda') #summarize significant loadings in pattern/Q-matrix format
@@ -87,7 +87,7 @@ summary(m0, what = 'offpsx') #summarize significant LD terms
 Q<-matrix(-1,J,K);
 Q[1:6,1]<-Q[7:12,2]<-Q[13:18,3]<-1
 Q
-m1 <- pcfa(dat = dat, Q = Q)
+m1 <- pcfa(dat = dat, Q = Q,burn = 1000, iter = 1000)
 summary(m1) # summarize basic information
 summary(m1, what = 'qlambda') #summarize significant loadings in pattern/Q-matrix format
 summary(m1, what = 'offpsx') #summarize significant LD terms
