@@ -162,23 +162,8 @@
 <span class='no'>Q</span>[<span class='fl'>1</span>:<span class='fl'>2</span>,<span class='fl'>1</span>]<span class='kw'>&lt;-</span><span class='no'>Q</span>[<span class='fl'>9</span>:<span class='fl'>10</span>,<span class='fl'>2</span>]<span class='kw'>&lt;-</span><span class='no'>Q</span>[<span class='fl'>13</span>:<span class='fl'>14</span>,<span class='fl'>3</span>]<span class='kw'>&lt;-</span><span class='fl'>1</span>
 
 
-<span class='no'>m0</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='pcfa.html'>pcfa</a></span>(<span class='kw'>dat</span> <span class='kw'>=</span> <span class='no'>dat</span>, <span class='kw'>Q</span> <span class='kw'>=</span> <span class='no'>Q</span>, <span class='kw'>LD</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,<span class='kw'>burn</span> <span class='kw'>=</span> <span class='fl'>1000</span>, <span class='kw'>iter</span> <span class='kw'>=</span> <span class='fl'>1000</span>)</div><div class='output co'>#&gt; 
-#&gt; Tot. Iter = 1000
-#&gt;    user  system elapsed 
-#&gt;    6.46    0.00    6.45 
-#&gt;          [,1]  [,2]  [,3]
-#&gt; Feigen  3.458 2.298 4.014
-#&gt; NLA_lg3 8.000 6.000 8.000
-#&gt; Shrink  3.535 3.535 3.535
-#&gt; 
-#&gt; Tot. Iter = 2000
-#&gt;    user  system elapsed 
-#&gt;   12.88    0.00   12.87 
-#&gt;          [,1]  [,2]  [,3]
-#&gt; Feigen  4.772 3.420 5.092
-#&gt; NLA_lg3 7.000 8.000 8.000
-#&gt; Shrink  3.223 3.223 3.223
-#&gt; Adj PSR 1.109 1.01 2.87</div><div class='input'><span class='fu'>plot_eigen</span>(<span class='no'>m0</span>) <span class='co'># trace</span></div><div class='img'><img src='plot_eigen-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>plot_eigen</span>(<span class='no'>m0</span>, <span class='kw'>what</span><span class='kw'>=</span><span class='st'>'density'</span>)</div><div class='img'><img src='plot_eigen-2.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>plot_eigen</span>(<span class='no'>m0</span>, <span class='kw'>what</span><span class='kw'>=</span><span class='st'>'APSR'</span>)</div><div class='img'><img src='plot_eigen-3.png' alt='' width='700' height='433' /></div><div class='input'># }
+<span class='no'>m0</span> <span class='kw'>&lt;-</span> <span class='fu'>pcfa</span>(<span class='kw'>dat</span> <span class='kw'>=</span> <span class='no'>dat</span>, <span class='kw'>Q</span> <span class='kw'>=</span> <span class='no'>Q</span>, <span class='kw'>LD</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,<span class='kw'>burn</span> <span class='kw'>=</span> <span class='fl'>1000</span>, <span class='kw'>iter</span> <span class='kw'>=</span> <span class='fl'>1000</span>)
+<span class='fu'>plot_eigen</span>(<span class='no'>m0</span>) <span class='co'># trace</span></div><div class='img'><img src='plot_eigen-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>plot_eigen</span>(<span class='no'>m0</span>, <span class='kw'>what</span><span class='kw'>=</span><span class='st'>'density'</span>)</div><div class='img'><img src='plot_eigen-2.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>plot_eigen</span>(<span class='no'>m0</span>, <span class='kw'>what</span><span class='kw'>=</span><span class='st'>'APSR'</span>)</div><div class='img'><img src='plot_eigen-3.png' alt='' width='700' height='433' /></div><div class='input'># }
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

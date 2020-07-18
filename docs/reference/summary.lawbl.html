@@ -199,23 +199,8 @@
 <span class='no'>Q</span><span class='kw'>&lt;-</span><span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span>(-<span class='fl'>1</span>,<span class='no'>J</span>,<span class='no'>K</span>);
 <span class='no'>Q</span>[<span class='fl'>1</span>:<span class='fl'>2</span>,<span class='fl'>1</span>]<span class='kw'>&lt;-</span><span class='no'>Q</span>[<span class='fl'>9</span>:<span class='fl'>10</span>,<span class='fl'>2</span>]<span class='kw'>&lt;-</span><span class='no'>Q</span>[<span class='fl'>13</span>:<span class='fl'>14</span>,<span class='fl'>3</span>]<span class='kw'>&lt;-</span><span class='fl'>1</span>
 
-<span class='no'>m0</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='pcfa.html'>pcfa</a></span>(<span class='kw'>dat</span> <span class='kw'>=</span> <span class='no'>dat</span>, <span class='kw'>Q</span> <span class='kw'>=</span> <span class='no'>Q</span>, <span class='kw'>LD</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,<span class='kw'>burn</span> <span class='kw'>=</span> <span class='fl'>1000</span>, <span class='kw'>iter</span> <span class='kw'>=</span> <span class='fl'>1000</span>)</div><div class='output co'>#&gt; 
-#&gt; Tot. Iter = 1000
-#&gt;    user  system elapsed 
-#&gt;    6.12    0.00    6.13 
-#&gt;          [,1]  [,2]  [,3]
-#&gt; Feigen  3.458 2.298 4.014
-#&gt; NLA_lg3 8.000 6.000 8.000
-#&gt; Shrink  3.535 3.535 3.535
-#&gt; 
-#&gt; Tot. Iter = 2000
-#&gt;    user  system elapsed 
-#&gt;   12.26    0.00   12.27 
-#&gt;          [,1]  [,2]  [,3]
-#&gt; Feigen  4.772 3.420 5.092
-#&gt; NLA_lg3 7.000 8.000 8.000
-#&gt; Shrink  3.223 3.223 3.223
-#&gt; Adj PSR 1.109 1.01 2.87</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>m0</span>) <span class='co'># summarize basic information</span></div><div class='output co'>#&gt; $N
+<span class='no'>m0</span> <span class='kw'>&lt;-</span> <span class='fu'>pcfa</span>(<span class='kw'>dat</span> <span class='kw'>=</span> <span class='no'>dat</span>, <span class='kw'>Q</span> <span class='kw'>=</span> <span class='no'>Q</span>, <span class='kw'>LD</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,<span class='kw'>burn</span> <span class='kw'>=</span> <span class='fl'>1000</span>, <span class='kw'>iter</span> <span class='kw'>=</span> <span class='fl'>1000</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>m0</span>) <span class='co'># summarize basic information</span></div><div class='output co'>#&gt; $N
 #&gt; [1] 500
 #&gt; 
 #&gt; $J
