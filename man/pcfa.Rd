@@ -21,7 +21,7 @@ pcfa(
 )
 }
 \arguments{
-\item{dat}{A \eqn{N \time J} \code{matrix} or \code{data.frame} consisting of the
+\item{dat}{A \eqn{N \times J} \code{matrix} or \code{data.frame} consisting of the
 responses of \eqn{N} individuals to \eqn{J} items. Only continuous data are supported currently.}
 
 \item{Q}{A \eqn{J \times K} design matrix for the loading pattern with \eqn{K} factors and \eqn{J} items.
@@ -52,8 +52,9 @@ without any specified loading (Chen, Guo, Zhang, & Pan, 2020). See \code{Example
 \item{alas}{logical; for adaptive Lasso or not. The default is \code{FALSE}, which seems slightly stabler.}
 
 \item{verbose}{logical; to display the sampling information every \code{update} or not.
-*Feigen* for factorial eigenvalue, "*NLA_lg3*" for no. of $\lambda$ larger than .3,
-*Shrink* for shrinkage, and *Adj PSR* for adjusted PSRF.}
+*Feigen* for factorial eigenvalue, "*NLA_lg3*" for no. of \eqn{\lambda} larger than .3,
+*Shrink* for shrinkage, and *Adj PSR* for adjusted PSRF.
+*LD>.2 >.1* are no. of LD terms larger than .2 and .1.}
 }
 \value{
 \code{pcfa} returns an object of class \code{pcfa}. It contains a lot of information about

@@ -2,7 +2,7 @@
 title: "gpcfa-examples"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{pcfa-examples}
+  %\VignetteIndexEntry{gpcfa-examples}
   %\VignetteEncoding{UTF-8}
   <!-- \usepackage[utf8]{inputenc} -->
   %\VignetteEngine{knitr::rmarkdown}

@@ -13,8 +13,8 @@ sim_lvm(
   lac = 0.3,
   phi = 0.5,
   ph1 = -1,
-  ecr = 0.3,
-  ome_out = F,
+  ecr = 0,
+  ome_out = FALSE,
   cati = NULL,
   noc = c(4),
   misp = 0,
@@ -40,52 +40,54 @@ sim_lvm(
 
 \item{lac}{Number of iterations to update the sampling information.}
 
-\item{phi}{= 0.5, ph1 = -1, logical; for adaptive Lasso or not. The default is \code{FALSE}, which seems slightly stabler.}
+\item{phi}{Homogeneous correlations between any two factors.}
+
+\item{ph1}{Correlation between factor 1 and 2 (if it's different from \code{phi}.}
+
+\item{ecr}{Residual correlation (local dependence).}
+
+\item{ome_out}{Output factor score \eqn{\ome} or not.}
 
 \item{cati}{The set of categorical (polytomous) items in sequence number (i.e., 1 to \eqn{J});
 \code{NULL} for no and -1 for all (default is \code{NULL}).}
 
+\item{noc}{Number of categories for categorical items}
+
+\item{misp}{Proportion of missingness.}
+
 \item{rseed}{An integer for the random seed.}
-
-\item{LD}{logical; \code{TRUE} for allowing LD (model with LD or C-step).}
-
-\item{missing}{Value for missing data (default is \code{NA}).}
-
-\item{digits}{Number of significant digits to print when printing numeric values.}
-
-\item{verbose}{logical; to display the sampling information every \code{update} or not.}
 }
 \value{
-\code{pcfa} returns an object of class \code{pcfa}. It contains a lot of information about
-the posteriors that can be summarized using \code{\link{summary.lawbl}}. The factorial eigenvalue
- can be plotted with \code{\link{plot_eigen}}.
+An object of class \code{list} containing the data, loading, and factorial correlation matrix.
 }
 \description{
 \code{sim_lvm} can simulate data based on factor analytic models
  with different loading patterns and residual covariance (local dependence) structures.
 }
 \examples{
-\donttest{
-####################################
-#  Example 1: Estimation with LI   #
-####################################
 
-dat <- sim18cfa1$dat
+# for continuous data with cross-loadings and local dependence effect .3
+out <- sim_lvm(N=1000,K=3,ipf=6,lam = .7, lac=.3,ecr=.3,rseed = 123)
+head(out$dat)
+out$MLA
+out$ofd_ind
+
+# for categorical data with cross-loadings .4
+out <- sim_lvm(N=1000,K=3,ipf=6,lam = .7, lac=.4,cati=-1,noc=4,rseed = 123)
+head(out$dat)
+out$MLA\
+out$ofd_ind
+
+\donttest{
+dat <- out$dat
 J <- ncol(dat)
 K <- 3
 Q<-matrix(-1,J,K);
 Q[1:2,1]<-Q[9:10,2]<-Q[13:14,3]<-1
 Q
-m0 <- pcfa(dat = dat, Q = Q, LD = FALSE)
+m0 <- pcfa(dat = dat, cati = -1, Q = Q, LD = FALSE,burn = 3000, iter = 3000,verbose=TRUE)
 summary(m0) # summarize basic information
 summary(m0, what = 'lambda') #summarize significant loadings
 summary(m0, what = 'qlambda') #summarize significant loadings in pattern/Q-matrix format
-summary(m0, what = 'offpsx') #summarize significant LD terms
-
 }
-}
-\references{
-Chen, J., Guo, Z., Zhang, L., & Pan, J. (2020). A partially confirmatory approach to scale development
- with the Bayesian Lasso. \emph{Psychological Methods}.
- Advance online publication. DOI:10.1037/met0000293
 }
