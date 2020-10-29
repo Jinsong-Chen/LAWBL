@@ -1,5 +1,5 @@
 ---
-title: "pcfa-examples"
+title: "gpcfa-examples"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{pcfa-examples}
@@ -19,16 +19,17 @@ knitr::opts_chunk$set(
 
 **Note: the estimation process can be time consuming depending on the computing power. You can same some time by reducing the length of the chains.**
 
-## Continuous Data w/o Local Dependence:
+## Categorical Data w/o Local Dependence:
 
 1) Load the package, obtain the data, loading pattern (*qlam*), and setup the design matrix Q.
 
 ```{r}
 library(LAWBL)
-dat <- sim18cfa0$dat
+dat <- sim18ccfa40$dat
+head(dat)
 J <- ncol(dat) # no. of items
 K <- 3 # no. of factors
-qlam <- sim18cfa0$qlam
+qlam <- sim18ccfa40$qlam
 qlam
 
 Q<-matrix(-1,J,K); # -1 for unspecified items
@@ -36,11 +37,11 @@ Q[1:2,1]<-Q[7:8,2]<-Q[13:14,3]<-1 # 1 for specified items
 Q
 ```
 
-2) **E-step:** Estimate with the PCFA-LI model (E-step) by setting *LD=F*. Only a few loadings need to be specified in Q (e.g., 2 per factor). Longer chain is suggested for stabler performance (*burn=iter=5,000* by default).
+2) **E-step:** Estimate with the GPCFA-LI model (E-step) by setting *LD=F*. Only a few loadings need to be specified in Q (e.g., 2 per factor). Longer chain is suggested for stabler performance (*burn=iter=5,000* by default).
 
 
 ```{r}
-m0 <- pcfa(dat = dat, Q = Q,LD = FALSE, burn = 2000, iter = 2000,verbose = TRUE)
+m0 <- pcfa(dat = dat, Q = Q,LD = FALSE, cati = -1,burn = 2000, iter = 2000,verbose = TRUE)
 
 # summarize basic information
 summary(m0)
@@ -51,13 +52,16 @@ summary(m0, what = 'qlambda')
 #factorial eigenvalue
 summary(m0,what='eigen') 
 
+#thresholds for categorical items
+summary(m0,what='threshold')
+
 #plotting factorial eigenvalue
 plot_eigen(m0) # trace
 plot_eigen(m0, what='density') #density
 plot_eigen(m0, what='APSR') #adj, PSRF
 ```
 
-3) **C-step:** Reconfigure the Q matrix for the C-step with one specified loading per item based on results from the E-step. Estimate with the PCFA model by setting *LD=TRUE* (by default). Longer chain is suggested for stabler performance. Results are very close to the E-step, since there's no LD in the data.
+3) **C-step:** Reconfigure the Q matrix for the C-step with one specified loading per item based on results from the E-step. Estimate with the GPCFA model by setting *LD=TRUE* (by default). Longer chain is suggested for stabler performance. Results are very close to the E-step, since there's no LD in the data.
 
 ```{r eval=FALSE}
 Q<-matrix(-1,J,K);
@@ -67,11 +71,12 @@ Q[cbind(c(1:J),cind)]<-1
 #alternatively
 #Q[1:6,1]<-Q[7:12,2]<-Q[13:18,3]<-1 # 1 for specified items
 
-m1 <- pcfa(dat = dat, Q = Q, burn = 2000, iter = 2000,verbose = TRUE)
+m1 <- pcfa(dat = dat, Q = Q, cati = -1,burn = 2000, iter = 2000,verbose = TRUE)
 summary(m1)
 summary(m1, what = 'qlambda')
 summary(m1, what = 'offpsx') #summarize significant LD terms
 summary(m1,what='eigen')
+summary(m1,what='threshold')
 
 #plotting factorial eigenvalue
 # par(mar = rep(2, 4))
@@ -80,32 +85,34 @@ plot_eigen(m1, what='density') #density
 plot_eigen(m1, what='APSR') #adj, PSRF
 ```
 
-4) **CFA-LD:** One can also configure the Q matrix for a CFA model with local dependence (i.e. without any unspecified loading) based on results from the C-step. Results are also very close.
+4) **CFA-LD:** One can also configure the Q matrix for a CCFA model with local dependence (i.e. without any unspecified loading) based on results from the C-step. Results are also very close.
 
 ```{r eval=FALSE}
 Q<-summary(m1, what="qlambda")
 Q[Q!=0]<-1
 Q
 
-m2 <- pcfa(dat = dat, Q = Q, burn = 2000, iter = 2000,verbose = TRUE)
+m2 <- pcfa(dat = dat, Q = Q, cati = -1,burn = 2000, iter = 2000,verbose = TRUE)
 summary(m2)
 summary(m2, what = 'qlambda') 
 summary(m2, what = 'offpsx')
 summary(m2,what='eigen')
+summary(m2,what='threshold')
 
 plot_eigen(m2) # Eigens' traces are excellent without regularization of the loadings
 ```
 
-## Continuous Data with Local Dependence:
+## Categorical Data with Local Dependence:
 
 1) Load the the data, loading pattern (*qlam*), and LD terms, and setup the design matrix Q.
 
 ```{r, eval=FALSE}
-dat <- sim18cfa1$dat
+dat <- sim18ccfa41$dat
+head(dat)
 J <- ncol(dat) # no. of items
 K <- 3 # no. of factors
-sim18cfa1$qlam
-sim18cfa1$LD # effect size = .3
+sim18ccfa41$qlam
+sim18ccfa41$LD # effect size = .3
 
 Q<-matrix(-1,J,K); # -1 for unspecified items
 Q[1:2,1]<-Q[7:8,2]<-Q[13:14,3]<-1 # 1 for specified items
@@ -113,19 +120,20 @@ Q
 
 ```
 
-2) **E-step:** Estimate with the PCFA-LI model (E-step) by setting *LD=FALSE*. Only a few loadings need to be specified in Q (e.g., 2 per factor). Some loading estimates are biased due to ignoring the LD. So do the eigenvalues.
+2) **E-step:** Estimate with the GPCFA-LI model (E-step) by setting *LD=FALSE*. Only a few loadings need to be specified in Q (e.g., 2 per factor). Some loading estimates are biased due to ignoring the LD. So do the eigenvalues.
 
 ```{r eval=FALSE}
-m0 <- pcfa(dat = dat, Q = Q,LD = FALSE, burn = 4000, iter = 4000,verbose = TRUE)
+m0 <- pcfa(dat = dat, Q = Q,LD = FALSE, cati = -1,burn = 4000, iter = 4000,verbose = TRUE)
 summary(m0)
 summary(m0, what = 'qlambda')
 summary(m0,what='eigen')
+summary(m0,what='threshold')
 
 plot_eigen(m0) # trace
 plot_eigen(m0, what='APSR')
 ```
 
-3) **C-step:** Reconfigure the Q matrix for the C-step with one specified loading per item based on results from the E-step. Estimate with the PCFA model by setting *LD=TRUE* (by default). The estimates are more accurate, and the LD terms can be largely recovered.
+3) **C-step:** Reconfigure the Q matrix for the C-step with one specified loading per item based on results from the E-step. Estimate with the GPCFA model by setting *LD=TRUE* (by default). The estimates are more accurate, and the LD terms can be largely recovered.
 
 ```{r eval=FALSE}
 Q<-matrix(-1,J,K);
@@ -134,25 +142,25 @@ cind<-apply(tmp,1,which.max)
 Q[cbind(c(1:J),cind)]<-1
 Q
 
-m1 <- pcfa(dat = dat, Q = Q,burn = 4000, iter = 4000,verbose = TRUE)
+m1 <- pcfa(dat = dat, Q = Q, cati = -1,burn = 4000, iter = 4000,verbose = TRUE)
 summary(m1)
 summary(m1, what = 'qlambda')
 summary(m1,what='eigen')
 summary(m1, what = 'offpsx')
-
+summary(m1,what='threshold')
 ```
 
-4) **CFA-LD:** Configure the Q matrix for a CFA model with local dependence (i.e. without any unspecified loading) based on results from the C-step. Results are better than, but similar to the C-step.
+4) **CFA-LD:** Configure the Q matrix for a CCFA model with local dependence (i.e. without any unspecified loading) based on results from the C-step. Results are better than, but similar to the C-step.
 
 ```{r eval=FALSE}
 Q<-summary(m1, what="qlambda")
 Q[Q!=0]<-1
 Q
 
-m2 <- pcfa(dat = dat, Q = Q,burn = 4000, iter = 4000,verbose = TRUE)
+m2 <- pcfa(dat = dat, Q = Q, cati = -1,burn = 4000, iter = 4000,verbose = TRUE)
 summary(m2)
 summary(m2, what = 'qlambda') 
 summary(m2,what='eigen')
 summary(m2, what = 'offpsx')
-
+summary(m2,what='threshold')
 ```

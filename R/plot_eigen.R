@@ -39,6 +39,10 @@
 plot_eigen <- function(obj, what = "trace") {
     if (class(obj) != "lawbl")
         stop("It must be a lawbl object.", call. = F)
+
+    oldmar <- par("mar")
+    par(mar = rep(2, 4))
+
     Q <- obj$Q
     poq <- which(Q != 0, arr.ind = T)
     iter <- obj$iter
@@ -62,4 +66,5 @@ plot_eigen <- function(obj, what = "trace") {
            density = plot(mcmc(eig_arr), trace = F, xlab = "",cex.main = 1),
         stop(sprintf("Can not plot element '%s'", what), call. = FALSE))
 
+    par(mar = oldmar) #reset to old mar
 }

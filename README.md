@@ -31,27 +31,28 @@ devtools::install_github("Jinsong-Chen/LAWBL")
 
 ## What can this package do?
 
-The long-term goal of **LAWBL** is to provide a analytical framework for
-modeling latent variables with different Bayesian learning methods.
+The long-term goal of **LAWBL** is to provide an analytical framework
+for modeling latent variables with different Bayesian learning methods.
 
 Currently, this package includes the Partially Confirmatory Factor
 Analysis (PCFA), a partially confirmatory approach covering a wide range
-of the exploratory-confirmatory continuum in factor analytic models
-(Chen, Guo, Zhang, & Pan, 2020). There are two major model variants with
-different constraints for identification. One assumes local independence
-(LI) with a more exploratory tendency, which can be also called the
-E-step. The other allows local dependence (LD) with a more confirmatory
-tendency, which can be also called the C-step. Parameters are obtained
-by sampling from the posterior distributions with the Markov chain Monte
-Carlo (MCMC) techniques. Different Bayesian Lasso methods are used to
+of the exploratory-confirmatory continuum in factor analytic models. The
+PCFA (Chen, Guo, Zhang, & Pan, 2020) is only for continuous data, while
+the generalized PCFA (GPCFA) covers both continuous, categorical, or
+mixed-type data. There are two major model variants with different
+constraints for identification. One assumes local independence (LI) with
+a more exploratory tendency, which can be also called the E-step. The
+other allows local dependence (LD) with a more confirmatory tendency,
+which can be also called the C-step. Parameters are obtained by sampling
+from the posterior distributions with the Markov chain Monte Carlo
+(MCMC) techniques. Different Bayesian Lasso methods are used to
 regularize the loading pattern and local dependence.
 
-Although only continuous data are supported currently, inclusion of
-mixed-type data is on schedule. More Bayesian learning approaches will
-be also included in future releases of this package.
-
 For examples of how to use the package, see vignettes or
-[here](https://jinsong-chen.github.io/LAWBL/articles/pcfa-examples.html).
+[here](https://jinsong-chen.github.io/LAWBL/articles/pcfa-examples.html)
+for PCFA with continuous data;
+[here](https://jinsong-chen.github.io/LAWBL/articles/gpcfa-examples.html)
+for GPCFA with categorical data.
 
 ## How to use this package?
 

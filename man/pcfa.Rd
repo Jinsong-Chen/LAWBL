@@ -8,6 +8,7 @@ pcfa(
   dat,
   Q,
   LD = TRUE,
+  cati = NULL,
   PPMC = FALSE,
   burn = 5000,
   iter = 5000,
@@ -15,11 +16,12 @@ pcfa(
   missing = NA,
   rseed = 12345,
   digits = 4,
-  alas = FALSE
+  alas = FALSE,
+  verbose = FALSE
 )
 }
 \arguments{
-\item{dat}{A \eqn{N \times J} \code{matrix} or \code{data.frame} consisting of the
+\item{dat}{A \eqn{N \time J} \code{matrix} or \code{data.frame} consisting of the
 responses of \eqn{N} individuals to \eqn{J} items. Only continuous data are supported currently.}
 
 \item{Q}{A \eqn{J \times K} design matrix for the loading pattern with \eqn{K} factors and \eqn{J} items.
@@ -30,6 +32,9 @@ without any specified loading (Chen, Guo, Zhang, & Pan, 2020). See \code{Example
 
 \item{LD}{logical; \code{TRUE} for allowing LD (model with LD or C-step).}
 
+\item{cati}{The set of categorical (polytomous) items in sequence number (i.e., 1 to \eqn{J});
+\code{NULL} for no and -1 for all items (default is \code{NULL}).}
+
 \item{PPMC}{logical; \code{TRUE} for conducting posterior predictive model checking.}
 
 \item{burn}{Number of burn-in iterations before posterior sampling.}
@@ -38,13 +43,17 @@ without any specified loading (Chen, Guo, Zhang, & Pan, 2020). See \code{Example
 
 \item{update}{Number of iterations to update the sampling information.}
 
-\item{missing}{Value for missing data (default is \code{NA}) (under development).}
+\item{missing}{Value for missing data (default is \code{NA}).}
 
 \item{rseed}{An integer for the random seed.}
 
 \item{digits}{Number of significant digits to print when printing numeric values.}
 
 \item{alas}{logical; for adaptive Lasso or not. The default is \code{FALSE}, which seems slightly stabler.}
+
+\item{verbose}{logical; to display the sampling information every \code{update} or not.
+*Feigen* for factorial eigenvalue, "*NLA_lg3*" for no. of $\lambda$ larger than .3,
+*Shrink* for shrinkage, and *Adj PSR* for adjusted PSRF.}
 }
 \value{
 \code{pcfa} returns an object of class \code{pcfa}. It contains a lot of information about
@@ -54,6 +63,7 @@ the posteriors that can be summarized using \code{\link{summary.lawbl}}. The fac
 \description{
 \code{PCFA} is a partially confirmatory approach covering a wide range of
 the exploratory-confirmatory continuum in factor analytic models (Chen, Guo, Zhang, & Pan, 2020).
+The PCFA is only for continuous data, while the generalized PCFA (GPCFA) covers both continuous and categorical data.
  There are two major model variants with different constraints for identification. One assumes local
  independence (LI) with a more exploratory tendency, which can be also called the E-step.
  The other allows local dependence (LD) with a more confirmatory tendency, which can be also
@@ -74,7 +84,7 @@ K <- 3
 Q<-matrix(-1,J,K);
 Q[1:2,1]<-Q[9:10,2]<-Q[13:14,3]<-1
 Q
-m0 <- pcfa(dat = dat, Q = Q, LD = FALSE,burn = 1000, iter = 1000)
+m0 <- pcfa(dat = dat, Q = Q, LD = FALSE)
 summary(m0) # summarize basic information
 summary(m0, what = 'lambda') #summarize significant loadings
 summary(m0, what = 'qlambda') #summarize significant loadings in pattern/Q-matrix format
@@ -87,7 +97,7 @@ summary(m0, what = 'offpsx') #summarize significant LD terms
 Q<-matrix(-1,J,K);
 Q[1:6,1]<-Q[7:12,2]<-Q[13:18,3]<-1
 Q
-m1 <- pcfa(dat = dat, Q = Q,burn = 1000, iter = 1000)
+m1 <- pcfa(dat = dat, Q = Q)
 summary(m1) # summarize basic information
 summary(m1, what = 'qlambda') #summarize significant loadings in pattern/Q-matrix format
 summary(m1, what = 'offpsx') #summarize significant LD terms

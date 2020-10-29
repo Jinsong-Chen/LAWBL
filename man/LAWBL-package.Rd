@@ -12,8 +12,9 @@ modeling latent variables with different Bayesian learning methods.
 \details{
 Currently, this package includes the Partially Confirmatory Factor Analysis (PCFA),
 a partially confirmatory approach covering a wide range of the exploratory-confirmatory
- continuum in factor analytic models (Chen, Guo, Zhang, & Pan, 2020). There are two major
-  model variants with different constraints for identification. One assumes local
+ continuum in factor analytic models (Chen, Guo, Zhang, & Pan, 2020). The PCFA is only for
+ continuous data, while the generalized PCFA (GPCFA) covers both continuous and categorical data.
+ There are two major model variants with different constraints for identification. One assumes local
  independence (LI) with a more exploratory tendency, which can be also called the E-step.
  The other allows local dependence (LD) with a more confirmatory tendency, which can be also
  called the C-step.

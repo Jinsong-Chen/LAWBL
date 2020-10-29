@@ -3,6 +3,7 @@
 S3method(summary,lawbl)
 export(pcfa)
 export(plot_eigen)
+export(sim_lvm)
 import(MASS)
 import(coda)
 import(stats)

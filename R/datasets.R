@@ -25,3 +25,31 @@
 #' }
 #'
 "sim18cfa1"
+
+#' Simulated CCFA data with LI
+#'
+#' Categorical CFA data simulated based on 18 items, 3 factors, 4 categories and local independence;
+#'  factorial correlation \eqn{\Phi=.3}.
+#'
+#' @format A list with components:
+#' \describe{
+#' \item{\code{dat}}{A dataset with simulated responses of 500 individuals to 18 items}
+#' \item{\code{qlam}}{Loading pattern and values used to simulated the data}
+#' }
+#'
+"sim18ccfa40"
+
+#' Simulated CCFA data with LD
+#'
+#' Categorical CFA data simulated based on 18 items, 3 factors, 4 categories
+#'  and local dependence; factorial correlation \eqn{\Phi=.3}.
+#'
+#'
+#' @format A list with components:
+#' \describe{
+#' \item{\code{dat}}{A dataset with simulated responses of 1000 individuals to 18 items}
+#' \item{\code{qlam}}{Loading pattern and values used to simulated the data}
+#' \item{\code{LD}}{Local dependence between items (LD effect = .3)}
+#' }
+#'
+"sim18ccfa41"

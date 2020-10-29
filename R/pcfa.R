@@ -2,6 +2,7 @@
 #'
 #' @description \code{PCFA} is a partially confirmatory approach covering a wide range of
 #' the exploratory-confirmatory continuum in factor analytic models (Chen, Guo, Zhang, & Pan, 2020).
+#' The PCFA is only for continuous data, while the generalized PCFA (GPCFA) covers both continuous and categorical data.
 #'  There are two major model variants with different constraints for identification. One assumes local
 #'  independence (LI) with a more exploratory tendency, which can be also called the E-step.
 #'  The other allows local dependence (LD) with a more confirmatory tendency, which can be also
@@ -23,6 +24,9 @@
 #'
 #' @param LD logical; \code{TRUE} for allowing LD (model with LD or C-step).
 #'
+#' @param cati The set of categorical (polytomous) items in sequence number (i.e., 1 to \eqn{J});
+#' \code{NULL} for no and -1 for all items (default is \code{NULL}).
+#'
 #' @param PPMC logical; \code{TRUE} for conducting posterior predictive model checking.
 #'
 #' @param burn Number of burn-in iterations before posterior sampling.
@@ -31,13 +35,18 @@
 #'
 #' @param update Number of iterations to update the sampling information.
 #'
-#' @param missing Value for missing data (default is \code{NA}) (under development).
+#' @param missing Value for missing data (default is \code{NA}).
 #'
 #' @param alas logical; for adaptive Lasso or not. The default is \code{FALSE}, which seems slightly stabler.
 #'
 #' @param rseed An integer for the random seed.
 #'
 #' @param digits Number of significant digits to print when printing numeric values.
+#'
+#' @param verbose logical; to display the sampling information every \code{update} or not.
+#' *Feigen* for factorial eigenvalue, "*NLA_lg3*" for no. of \eqn{\lambda} larger than .3,
+#' *Shrink* for shrinkage, and *Adj PSR* for adjusted PSRF.
+#' *LD>.2 >.1* are no. of LD terms larger than .2 and .1.
 #'
 #' @return \code{pcfa} returns an object of class \code{pcfa}. It contains a lot of information about
 #' the posteriors that can be summarized using \code{\link{summary.lawbl}}. The factorial eigenvalue
@@ -65,7 +74,7 @@
 #' Q<-matrix(-1,J,K);
 #' Q[1:2,1]<-Q[9:10,2]<-Q[13:14,3]<-1
 #' Q
-#' m0 <- pcfa(dat = dat, Q = Q, LD = FALSE,burn = 1000, iter = 1000)
+#' m0 <- pcfa(dat = dat, Q = Q, LD = FALSE)
 #' summary(m0) # summarize basic information
 #' summary(m0, what = 'lambda') #summarize significant loadings
 #' summary(m0, what = 'qlambda') #summarize significant loadings in pattern/Q-matrix format
@@ -78,23 +87,22 @@
 #' Q<-matrix(-1,J,K);
 #' Q[1:6,1]<-Q[7:12,2]<-Q[13:18,3]<-1
 #' Q
-#' m1 <- pcfa(dat = dat, Q = Q,burn = 1000, iter = 1000)
+#' m1 <- pcfa(dat = dat, Q = Q)
 #' summary(m1) # summarize basic information
 #' summary(m1, what = 'qlambda') #summarize significant loadings in pattern/Q-matrix format
 #' summary(m1, what = 'offpsx') #summarize significant LD terms
 #' }
-pcfa <- function(dat, Q, LD = TRUE, PPMC = FALSE, burn = 5000, iter = 5000, update = 1000, missing = NA, rseed = 12345,
-    digits = 4, alas = FALSE) {
-    cati = NULL
+pcfa <- function(dat, Q, LD = TRUE,cati = NULL, PPMC = FALSE, burn = 5000, iter = 5000, update = 1000, missing = NA, rseed = 12345,
+    digits = 4, alas = FALSE, verbose = FALSE) {
+
+    cand_thd = 0.2
     conv = 0
-    cand_thd = 0
 
     if (nrow(Q) != ncol(dat))
         stop("The numbers of items in data and Q are unequal.", call. = FALSE)
 
     if (exists(".Random.seed", .GlobalEnv))
         oldseed <- .GlobalEnv$.Random.seed else oldseed <- NULL
-
     set.seed(rseed)
 
     oo <- options()       # code line i
@@ -109,6 +117,10 @@ pcfa <- function(dat, Q, LD = TRUE, PPMC = FALSE, burn = 5000, iter = 5000, upda
     Q <- as.matrix(Q)
     K <- ncol(Q)
     Jp <- length(cati)
+    if (Jp == 1 && cati == -1) {
+        cati <- c(1:J)
+        Jp <- J
+    }
 
     Nmis <- sum(is.na(Y))
     mind <- which(is.na(Y), arr.ind = TRUE)
@@ -150,6 +162,20 @@ pcfa <- function(dat, Q, LD = TRUE, PPMC = FALSE, burn = 5000, iter = 5000, upda
     gammas <- init$gammas
     gammal_sq <- init$gammal_sq
 
+    if (Jp > 0) {
+        mnoc <- const$mnoc
+        Etd <- array(0, dim = c(iter, Jp, mnoc - 1))
+    }
+    accrate <- 0
+    if (Nmis > 0)
+        Y[mind] <- rnorm(Nmis)
+
+    # OME <- t(mvrnorm(N,mu=rep(0,K),Sigma=diag(1,K))) # J*N
+    chg_count <- rep(0, K)
+    chg0_count <- rep(0, K)
+    # chg1_count <- rep(0, K)
+    # Jest <- colSums(Q != 0)
+    LA_eps <- -1
 
     Eigen <- array(0, dim = c(iter, K))  #Store retained trace of Eigen
     tmp <- which(Q!=0,arr.ind=TRUE)
@@ -174,20 +200,50 @@ pcfa <- function(dat, Q, LD = TRUE, PPMC = FALSE, burn = 5000, iter = 5000, upda
             PSX <- tmp$obj
             inv.PSX <- tmp$inv
             gammas <- tmp$gammas
-            LAY <- GwMH_LA_MYC0(y = Y, ome = OME, la = LA, psx = PSX, gammal_sq = gammal_sq, thd = THD,
+            LAY <- GwMH_LA_MYC(y = Y, ome = OME, la = LA, psx = PSX, gammal_sq = gammal_sq, thd = THD,
                 const = const, prior = prior, alas = alas)
         } else {
-            LAY <- GwMH_LA_MYE0(y = Y, ome = OME, la = LA, psx = PSX, gammal_sq = gammal_sq, thd = THD,
+            LAY <- GwMH_LA_MYE(y = Y, ome = OME, la = LA, psx = PSX, gammal_sq = gammal_sq, thd = THD,
                 const = const, prior = prior, alas = alas)
             PSX <- LAY$psx
             inv.PSX <- chol2inv(chol(PSX))
         }
-        LA <- LAY$la
+
+        LA <- LAY$la # OME <- LAY$ome
+
+        # LA1 <- LAY$la
+        # chg <- colSums(LA * LA1 < 0)/Jest > 0.5  # if over half items change sign
+        # if (sum(chg) > 0) {
+        #     sign <- diag(1 - 2 * chg)
+        #     chg_count <- chg_count + chg
+        #     LA1 <- LA1 %*% sign
+        #     OME <- t(t(OME) %*% sign)
+        #     print(c("ii=", ii), quote = FALSE)
+        #     cat(chg_count, fill = TRUE, labels = "#Sign change:")
+        # }
+        # LA <- LA1
+
+
+        chg <- (colSums(LA)<= LA_eps)
+        if (any(chg)) {
+            sign <- diag(1 - 2 * chg)
+            if(g<0){chg0_count <- chg0_count + chg}else{chg_count <- chg_count + chg}
+            LA <- LA %*% sign
+            OME <- t(t(OME) %*% sign)
+
+        }
 
         gammal_sq <- LAY$gammal_sq
         # OME <- Gibbs_Omega(y = Y, la = LA, phi = PHI, inv.psx = inv.PSX, N = N, K = K)
         PHI <- MH_PHI(phi = PHI, ome = OME, N = N, K = K, prior = prior)
         # Omega<-Gibbs_Omega(y=Y,la=LA,phi=PHI,inv.psx=inv.PSX)
+        if (Jp > 0) {
+            Y[cati, ] <- LAY$ys
+            THD <- LAY$thd
+            accrate <- accrate + LAY$accr
+        }
+        if (Nmis > 0)
+            Y[mind] <- LAY$ysm[mind]
 
         # Save results
         if ((g > 0)) {
@@ -205,8 +261,8 @@ pcfa <- function(dat, Q, LD = TRUE, PPMC = FALSE, burn = 5000, iter = 5000, upda
             # EPHI[g, , ] <- PHI[, ]
             EPHI[g, ] <- PHI[lower.tri(PHI)]
             # EMU[g,]<-MU
-            # if (Jp > 0)
-            #     Etd[g, , ] <- THD[, 2:mnoc]
+            if (Jp > 0)
+                Etd[g, , ] <- THD[, 2:mnoc]
             if (PPMC)
                 Eppmc[g] <- post_pp(y = Y, ome = OME, la = LA, psx = PSX, inv.psx = inv.PSX, N = N,
                   J = J)
@@ -214,35 +270,102 @@ pcfa <- function(dat, Q, LD = TRUE, PPMC = FALSE, burn = 5000, iter = 5000, upda
 
         if (ii%%update == 0)
             {
-                # cat(ii, fill = TRUE, labels = "\nTot. Iter =")
+                if (g > 0) {
+                  if (conv == 0) {
+                      APSR <- schain.grd(Eigen[1:g,])
+                      # cat(t(APSR[,1]), fill = TRUE, labels = "Adj PSR")
+
+                    # tmp <- schain.grd(ELA[1:g, ])
+                    # GRD_mean <- colMeans(tmp)
+                    # GRD_max <- c(max(tmp[, 1]), max(tmp[, 2]))
+                    # GRD <- c(GRD_mean[1], GRD_max[1])
+                    # cat(GRD, fill = TRUE, labels = "PGR mean & max:")
+                  } else {
+                      APSR <- schain.grd(Eigen[1:g,], auto = TRUE)
+                      # cat(t(APSR[,1]), fill = TRUE, labels = "Adj PSR")
+                      if (mean(APSR[,1])<1.1) break
+
+                    # tmp <- schain.grd(ELA[1:g, ], auto = TRUE)
+                    # GRD_mean <- colMeans(tmp)
+                    # GRD_max <- c(max(tmp[, 1]), max(tmp[, 2]))
+                    # # cat(GRD_mean, fill = TRUE, labels = 'GR Mean & UL:') cat(GRD_max, fill = TRUE, labels = 'GR Max & UL:')
+                    # GRD <- c(GRD_mean[1], GRD_max[1])
+                    # cat(GRD, fill = TRUE, labels = "PGR mean & max:")
+                    # if (conv == 1 && GRD[2] < 1.1)
+                    #   break
+                    # if (conv == 2 && GRD[1] < 1.1 && GRD[2] < 1.2)
+                    #   break
+                  }
+                }
+
+
+            if(verbose){
                 # print(proc.time() - ptm)
                 Shrink <- colMeans(sqrt(gammal_sq))
                 Feigen <- diag(crossprod(LA))
                 NLA_lg3 <- colSums(abs(LA) > 0.3)
-                # print(rbind(Feigen, NLA_lg3, Shrink))
+                # Meigen <- colMeans(Eigen)
+                # Mlambda<-colMeans(LA)
 
-                if (g > 0) {
-                      APSR <- schain.grd(Eigen[1:g,])
-                      # cat(t(APSR[,1]), fill = TRUE, labels = "Adj PSR")
-
-                }
+                cat(ii, fill = TRUE, labels = "\nTot. Iter =")
+                print(rbind(Feigen, NLA_lg3, Shrink))
+                # cat(chg_count, fill = TRUE, labels = '#Sign change:')
+                if (g > 0) cat(t(APSR[,1]), fill = TRUE, labels = "Adj PSR")
 
                 if (LD) {
                     opsx <- abs(PSX[row(PSX) != col(PSX)])
                     tmp <- c(sum(opsx > 0.2)/2, sum(opsx > 0.1)/2, gammas)
-                    # print(c("LD>.2", ">.1", "Shrink"), quote = FALSE)
-                    # print(tmp)
+                    print(c("LD>.2", ">.1", "Shrink"), quote = FALSE)
+                    print(tmp)
                 }
+
+                if (Jp > 0) {
+                    cat(colMeans(THD), fill = TRUE, labels = "Ave. Thd:")
+                    cat(accrate/update, fill = TRUE, labels = "Acc Rate:")
+                    accrate <- 0
+                }
+                # print(chg_count) cat(chg_count, fill = TRUE, labels = '#Sign change:')
+
+            }#end verbose
 
             }  # end update
 
     }  #end of g MCMAX
 
+    if(verbose){
+        cat(chg0_count,chg_count, fill = TRUE, labels = "\n#Sign change:")
+        print(proc.time()-ptm)
+    }else{
+        # APSR <- schain.grd(Eigen[1:g,])
+    }
 
+    if (conv != 0) {
+        st <- g/2 + 1
+        ELA <- ELA[(st):g, ]
+        # EPSX <- EPSX[(st):g, , ] EPHI <- EPHI[(st):g, , ]
+        EPSX <- EPSX[(st):g, ]
+        EPHI <- EPHI[(st):g, ]
+        Egammal <- Egammal[(st):g, ]
+        Egammas <- Egammas[(st):g, ]
+        if (Jp > 0)
+            Etd <- Etd[(st):g, , ]
+        Eppmc <- Eppmc[(st):g]
+        mOmega <- mOmega/2
+        iter <- burn <- g/2
+    }
+
+    # out <- list(Q = Q, LD = LD, LA = ELA, Omega = mOmega/iter, PSX = EPSX, iter = iter, burn = burn,
+    #     PHI = EPHI, gammal = Egammal, gammas = Egammas, Nmis = Nmis, PPP = Eppmc, conv = conv, GRD_mean = GRD_mean,
+    #     GRD_max = GRD_max)
     out <- list(Q = Q, LD = LD, LA = ELA, Omega = mOmega/iter, PSX = EPSX, iter = iter, burn = burn,
                 PHI = EPHI, gammal = Egammal, gammas = Egammas, Nmis = Nmis, PPP = Eppmc, conv = conv,
                 Eigen = Eigen, APSR = APSR)
 
+    if (Jp > 0) {
+        out$cati = cati
+        out$THD = Etd
+        out$mnoc = mnoc
+    }
 
     class(out) <- c("lawbl")
 
