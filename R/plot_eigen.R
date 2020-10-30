@@ -19,6 +19,7 @@
 #' @return NULL
 #'
 #' @importFrom graphics plot
+#' @importFrom graphics par
 #'
 #' @export
 #'

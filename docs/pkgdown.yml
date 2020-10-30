@@ -1,7 +1,8 @@
 pandoc: 2.7.3
-pkgdown: 1.5.1
+pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
   pcfa-examples: pcfa-examples.html
-last_built: 2020-07-18T14:18Z
+  gpcfa-examples: gpcfa-examples.html
+last_built: 2020-10-30T05:22Z
 

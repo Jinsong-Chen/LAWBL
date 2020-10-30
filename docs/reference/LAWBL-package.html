@@ -40,7 +40,7 @@
 
 
 <meta property="og:title" content="LAWBL: Latent (Variable) Analysis with Bayesian Learning — LAWBL-package" />
-<meta property="og:description" content="The long-term goal of this package is to provide a analytical framework for
+<meta property="og:description" content="The long-term goal of this package is to provide an analytical framework for
 modeling latent variables with different Bayesian learning methods." />
 
 
@@ -73,7 +73,7 @@ modeling latent variables with different Bayesian learning methods." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">LAWBL</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.0</span>
       </span>
     </div>
 
@@ -97,6 +97,9 @@ modeling latent variables with different Bayesian learning methods." />
   <ul class="dropdown-menu" role="menu">
     <li>
       <a href="../articles/pcfa-examples.html">pcfa-examples</a>
+    </li>
+    <li>
+      <a href="../articles/gpcfa-examples.html">gpcfa-examples</a>
     </li>
   </ul>
 </li>
@@ -130,7 +133,7 @@ modeling latent variables with different Bayesian learning methods." />
     </div>
 
     <div class="ref-description">
-    <p>The long-term goal of this package is to provide a analytical framework for
+    <p>The long-term goal of this package is to provide an analytical framework for
 modeling latent variables with different Bayesian learning methods.</p>
     </div>
 
@@ -140,16 +143,15 @@ modeling latent variables with different Bayesian learning methods.</p>
 
     <p>Currently, this package includes the Partially Confirmatory Factor Analysis (PCFA),
 a partially confirmatory approach covering a wide range of the exploratory-confirmatory
- continuum in factor analytic models (Chen, Guo, Zhang, &amp; Pan, 2020). There are two major
-  model variants with different constraints for identification. One assumes local
+ continuum in factor analytic models (Chen, Guo, Zhang, &amp; Pan, 2020). The PCFA is only for
+ continuous data, while the generalized PCFA (GPCFA) covers both continuous and categorical data.
+ There are two major model variants with different constraints for identification. One assumes local
  independence (LI) with a more exploratory tendency, which can be also called the E-step.
  The other allows local dependence (LD) with a more confirmatory tendency, which can be also
  called the C-step.
  Parameters are obtained by sampling from the posterior distributions with
  the Markov chain Monte Carlo (MCMC) techniques. Different Bayesian Lasso methods are used to
  regularize the loading pattern and local dependence.</p>
-<p>Although only continuous data are supported currently, inclusion of mixed-type data is on schedule.
- More Bayesian learning approaches will be also included in future releases of this package.</p>
     <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
 
     <p>This package is under development. You are very welcome to send me any comments or
@@ -160,6 +162,9 @@ a partially confirmatory approach covering a wide range of the exploratory-confi
     <p>Chen, J., Guo, Z., Zhang, L., &amp; Pan, J. (2020). A partially confirmatory approach to scale development
  with the Bayesian Lasso. <em>Psychological Methods</em>.
  Advance online publication. DOI:10.1037/met0000293</p>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Jinsong Chen, <a href='mailto:jinsong.chen@live.com'>jinsong.chen@live.com</a></p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -176,7 +181,7 @@ a partially confirmatory approach covering a wide range of the exploratory-confi
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

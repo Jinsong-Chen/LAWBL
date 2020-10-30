@@ -46,7 +46,7 @@ sim_lvm(
 
 \item{ecr}{Residual correlation (local dependence).}
 
-\item{ome_out}{Output factor score \eqn{\ome} or not.}
+\item{ome_out}{Output factor score or not.}
 
 \item{cati}{The set of categorical (polytomous) items in sequence number (i.e., 1 to \eqn{J});
 \code{NULL} for no and -1 for all (default is \code{NULL}).}
@@ -56,6 +56,18 @@ sim_lvm(
 \item{misp}{Proportion of missingness.}
 
 \item{rseed}{An integer for the random seed.}
+
+\item{necw}{Number of withinn-factor local dependence.}
+
+\item{necb}{Number of between-factor local dependence.}
+
+\item{add_ind}{(Additional) minor factor with cross-loadings.}
+
+\item{add_la}{Value of cross-loadings on (Additional) minor factor.}
+
+\item{add_phi}{Correlations between (Additional) minor factor and other factors.}
+
+\item{zero_it}{Surplus items with zero loading.}
 }
 \value{
 An object of class \code{list} containing the data, loading, and factorial correlation matrix.
@@ -75,7 +87,7 @@ out$ofd_ind
 # for categorical data with cross-loadings .4
 out <- sim_lvm(N=1000,K=3,ipf=6,lam = .7, lac=.4,cati=-1,noc=4,rseed = 123)
 head(out$dat)
-out$MLA\
+out$MLA
 out$ofd_ind
 
 \donttest{

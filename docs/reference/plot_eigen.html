@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">LAWBL</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.0</span>
       </span>
     </div>
 
@@ -96,6 +96,9 @@
   <ul class="dropdown-menu" role="menu">
     <li>
       <a href="../articles/pcfa-examples.html">pcfa-examples</a>
+    </li>
+    <li>
+      <a href="../articles/gpcfa-examples.html">gpcfa-examples</a>
     </li>
   </ul>
 </li>
@@ -132,7 +135,7 @@
     <p>Provide plots based on the factorial eigenvalues of a <code>pcfa</code> objects.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>plot_eigen</span>(<span class='no'>obj</span>, <span class='kw'>what</span> <span class='kw'>=</span> <span class='st'>"trace"</span>)</pre>
+    <pre class="usage"><span class='fu'>plot_eigen</span><span class='op'>(</span><span class='va'>obj</span>, what <span class='op'>=</span> <span class='st'>"trace"</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -155,15 +158,18 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
-<span class='no'>dat</span> <span class='kw'>&lt;-</span> <span class='no'>sim18cfa0</span>$<span class='no'>dat</span>
-<span class='no'>J</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>ncol</a></span>(<span class='no'>dat</span>)
-<span class='no'>K</span> <span class='kw'>&lt;-</span> <span class='fl'>3</span>
-<span class='no'>Q</span><span class='kw'>&lt;-</span><span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span>(-<span class='fl'>1</span>,<span class='no'>J</span>,<span class='no'>K</span>);
-<span class='no'>Q</span>[<span class='fl'>1</span>:<span class='fl'>2</span>,<span class='fl'>1</span>]<span class='kw'>&lt;-</span><span class='no'>Q</span>[<span class='fl'>9</span>:<span class='fl'>10</span>,<span class='fl'>2</span>]<span class='kw'>&lt;-</span><span class='no'>Q</span>[<span class='fl'>13</span>:<span class='fl'>14</span>,<span class='fl'>3</span>]<span class='kw'>&lt;-</span><span class='fl'>1</span>
+<span class='va'>dat</span> <span class='op'>&lt;-</span> <span class='va'>sim18cfa0</span><span class='op'>$</span><span class='va'>dat</span>
+<span class='va'>J</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>ncol</a></span><span class='op'>(</span><span class='va'>dat</span><span class='op'>)</span>
+<span class='va'>K</span> <span class='op'>&lt;-</span> <span class='fl'>3</span>
+<span class='va'>Q</span><span class='op'>&lt;-</span><span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>1</span>,<span class='va'>J</span>,<span class='va'>K</span><span class='op'>)</span>;
+<span class='va'>Q</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>2</span>,<span class='fl'>1</span><span class='op'>]</span><span class='op'>&lt;-</span><span class='va'>Q</span><span class='op'>[</span><span class='fl'>9</span><span class='op'>:</span><span class='fl'>10</span>,<span class='fl'>2</span><span class='op'>]</span><span class='op'>&lt;-</span><span class='va'>Q</span><span class='op'>[</span><span class='fl'>13</span><span class='op'>:</span><span class='fl'>14</span>,<span class='fl'>3</span><span class='op'>]</span><span class='op'>&lt;-</span><span class='fl'>1</span>
 
 
-<span class='no'>m0</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='pcfa.html'>pcfa</a></span>(<span class='kw'>dat</span> <span class='kw'>=</span> <span class='no'>dat</span>, <span class='kw'>Q</span> <span class='kw'>=</span> <span class='no'>Q</span>, <span class='kw'>LD</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,<span class='kw'>burn</span> <span class='kw'>=</span> <span class='fl'>1000</span>, <span class='kw'>iter</span> <span class='kw'>=</span> <span class='fl'>1000</span>)
-<span class='fu'>plot_eigen</span>(<span class='no'>m0</span>) <span class='co'># trace</span></div><div class='img'><img src='plot_eigen-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>plot_eigen</span>(<span class='no'>m0</span>, <span class='kw'>what</span><span class='kw'>=</span><span class='st'>'density'</span>)</div><div class='img'><img src='plot_eigen-2.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>plot_eigen</span>(<span class='no'>m0</span>, <span class='kw'>what</span><span class='kw'>=</span><span class='st'>'APSR'</span>)</div><div class='img'><img src='plot_eigen-3.png' alt='' width='700' height='433' /></div><div class='input'># }
+<span class='va'>m0</span> <span class='op'>&lt;-</span> <span class='fu'><a href='pcfa.html'>pcfa</a></span><span class='op'>(</span>dat <span class='op'>=</span> <span class='va'>dat</span>, Q <span class='op'>=</span> <span class='va'>Q</span>, LD <span class='op'>=</span> <span class='cn'>FALSE</span>,burn <span class='op'>=</span> <span class='fl'>1000</span>, iter <span class='op'>=</span> <span class='fl'>1000</span><span class='op'>)</span>
+<span class='fu'>plot_eigen</span><span class='op'>(</span><span class='va'>m0</span><span class='op'>)</span> <span class='co'># trace</span>
+</div><div class='img'><img src='plot_eigen-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>plot_eigen</span><span class='op'>(</span><span class='va'>m0</span>, what<span class='op'>=</span><span class='st'>'density'</span><span class='op'>)</span>
+</div><div class='img'><img src='plot_eigen-2.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>plot_eigen</span><span class='op'>(</span><span class='va'>m0</span>, what<span class='op'>=</span><span class='st'>'APSR'</span><span class='op'>)</span>
+</div><div class='img'><img src='plot_eigen-3.png' alt='' width='700' height='433' /></div><div class='input'><span class='co'># }</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -180,7 +186,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

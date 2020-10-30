@@ -1,6 +1,6 @@
 #' LAWBL: Latent (Variable) Analysis with Bayesian Learning
 #'
-#' @description The long-term goal of this package is to provide a analytical framework for
+#' @description The long-term goal of this package is to provide an analytical framework for
 #' modeling latent variables with different Bayesian learning methods.
 #'
 #'
@@ -17,8 +17,6 @@
 #'  the Markov chain Monte Carlo (MCMC) techniques. Different Bayesian Lasso methods are used to
 #'  regularize the loading pattern and local dependence.
 #'
-#'  Although only continuous data are supported currently, inclusion of mixed-type data is on schedule.
-#'  More Bayesian learning approaches will be also included in future releases of this package.
 #'
 #' @name LAWBL-package
 #' @aliases LAWBL

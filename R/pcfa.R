@@ -13,7 +13,7 @@
 #'
 #' @name pcfa
 #'
-#' @param dat A \eqn{N \times J} \code{matrix} or \code{data.frame} consisting of the
+#' @param dat A \eqn{N \times J} data \emph{matrix} or \emph{data.frame} consisting of the
 #'     responses of \eqn{N} individuals to \eqn{J} items. Only continuous data are supported currently.
 #'
 #' @param Q A \eqn{J \times K} design matrix for the loading pattern with \eqn{K} factors and \eqn{J} items.

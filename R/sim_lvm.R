@@ -27,7 +27,7 @@
 #'
 #' @param ecr Residual correlation (local dependence).
 #'
-#' @param ome_out Output factor score \eqn{\ome} or not.
+#' @param ome_out Output factor score or not.
 #'
 #' @param cati The set of categorical (polytomous) items in sequence number (i.e., 1 to \eqn{J});
 #' \code{NULL} for no and -1 for all (default is \code{NULL}).
@@ -38,6 +38,17 @@
 #'
 #' @param rseed An integer for the random seed.
 #'
+#' @param necb Number of between-factor local dependence.
+#'
+#' @param necw Number of withinn-factor local dependence.
+#'
+#' @param add_ind (Additional) minor factor with cross-loadings.
+#'
+#' @param add_la Value of cross-loadings on (Additional) minor factor.
+#'
+#' @param add_phi Correlations between (Additional) minor factor and other factors.
+#'
+#' @param zero_it Surplus items with zero loading.
 #'
 #' @return An object of class \code{list} containing the data, loading, and factorial correlation matrix.
 #'
@@ -57,7 +68,7 @@
 #' # for categorical data with cross-loadings .4
 #' out <- sim_lvm(N=1000,K=3,ipf=6,lam = .7, lac=.4,cati=-1,noc=4,rseed = 123)
 #' head(out$dat)
-#' out$MLA\
+#' out$MLA
 #' out$ofd_ind
 #'
 #' \donttest{

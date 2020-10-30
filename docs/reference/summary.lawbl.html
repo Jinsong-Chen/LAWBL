@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Summary method for <code>pcfa</code> objectects — summary.lawbl • LAWBL</title>
+<title>Summary method for pcfa objectects — summary.lawbl • LAWBL</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,7 @@
 
 
 
-<meta property="og:title" content="Summary method for <code>pcfa</code> objectects — summary.lawbl" />
+<meta property="og:title" content="Summary method for pcfa objectects — summary.lawbl" />
 <meta property="og:description" content="Provide basic information for an PCFA object, and summarize various posteriors." />
 
 
@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">LAWBL</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.0</span>
       </span>
     </div>
 
@@ -96,6 +96,9 @@
   <ul class="dropdown-menu" role="menu">
     <li>
       <a href="../articles/pcfa-examples.html">pcfa-examples</a>
+    </li>
+    <li>
+      <a href="../articles/gpcfa-examples.html">gpcfa-examples</a>
     </li>
   </ul>
 </li>
@@ -133,15 +136,15 @@
     </div>
 
     <pre class="usage"><span class='co'># S3 method for lawbl</span>
-<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(
-  <span class='no'>object</span>,
-  <span class='kw'>what</span> <span class='kw'>=</span> <span class='st'>"basic"</span>,
-  <span class='kw'>med</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>SL</span> <span class='kw'>=</span> <span class='fl'>0.05</span>,
-  <span class='kw'>detail</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>digits</span> <span class='kw'>=</span> <span class='fl'>4</span>,
-  <span class='no'>...</span>
-)</pre>
+<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span>
+  <span class='va'>object</span>,
+  what <span class='op'>=</span> <span class='st'>"basic"</span>,
+  med <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  SL <span class='op'>=</span> <span class='fl'>0.05</span>,
+  detail <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  digits <span class='op'>=</span> <span class='fl'>4</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -193,14 +196,15 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
-<span class='no'>dat</span> <span class='kw'>&lt;-</span> <span class='no'>sim18cfa0</span>$<span class='no'>dat</span>
-<span class='no'>J</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>ncol</a></span>(<span class='no'>dat</span>)
-<span class='no'>K</span> <span class='kw'>&lt;-</span> <span class='fl'>3</span>
-<span class='no'>Q</span><span class='kw'>&lt;-</span><span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span>(-<span class='fl'>1</span>,<span class='no'>J</span>,<span class='no'>K</span>);
-<span class='no'>Q</span>[<span class='fl'>1</span>:<span class='fl'>2</span>,<span class='fl'>1</span>]<span class='kw'>&lt;-</span><span class='no'>Q</span>[<span class='fl'>9</span>:<span class='fl'>10</span>,<span class='fl'>2</span>]<span class='kw'>&lt;-</span><span class='no'>Q</span>[<span class='fl'>13</span>:<span class='fl'>14</span>,<span class='fl'>3</span>]<span class='kw'>&lt;-</span><span class='fl'>1</span>
+<span class='va'>dat</span> <span class='op'>&lt;-</span> <span class='va'>sim18cfa0</span><span class='op'>$</span><span class='va'>dat</span>
+<span class='va'>J</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>ncol</a></span><span class='op'>(</span><span class='va'>dat</span><span class='op'>)</span>
+<span class='va'>K</span> <span class='op'>&lt;-</span> <span class='fl'>3</span>
+<span class='va'>Q</span><span class='op'>&lt;-</span><span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>1</span>,<span class='va'>J</span>,<span class='va'>K</span><span class='op'>)</span>;
+<span class='va'>Q</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>2</span>,<span class='fl'>1</span><span class='op'>]</span><span class='op'>&lt;-</span><span class='va'>Q</span><span class='op'>[</span><span class='fl'>9</span><span class='op'>:</span><span class='fl'>10</span>,<span class='fl'>2</span><span class='op'>]</span><span class='op'>&lt;-</span><span class='va'>Q</span><span class='op'>[</span><span class='fl'>13</span><span class='op'>:</span><span class='fl'>14</span>,<span class='fl'>3</span><span class='op'>]</span><span class='op'>&lt;-</span><span class='fl'>1</span>
 
-<span class='no'>m0</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='pcfa.html'>pcfa</a></span>(<span class='kw'>dat</span> <span class='kw'>=</span> <span class='no'>dat</span>, <span class='kw'>Q</span> <span class='kw'>=</span> <span class='no'>Q</span>, <span class='kw'>LD</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,<span class='kw'>burn</span> <span class='kw'>=</span> <span class='fl'>1000</span>, <span class='kw'>iter</span> <span class='kw'>=</span> <span class='fl'>1000</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>m0</span>) <span class='co'># summarize basic information</span></div><div class='output co'>#&gt; $N
+<span class='va'>m0</span> <span class='op'>&lt;-</span> <span class='fu'><a href='pcfa.html'>pcfa</a></span><span class='op'>(</span>dat <span class='op'>=</span> <span class='va'>dat</span>, Q <span class='op'>=</span> <span class='va'>Q</span>, LD <span class='op'>=</span> <span class='cn'>FALSE</span>,burn <span class='op'>=</span> <span class='fl'>1000</span>, iter <span class='op'>=</span> <span class='fl'>1000</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m0</span><span class='op'>)</span> <span class='co'># summarize basic information</span>
+</div><div class='output co'>#&gt; $N
 #&gt; [1] 500
 #&gt; 
 #&gt; $J
@@ -229,7 +233,8 @@
 #&gt; F1   1.108979   1.198945
 #&gt; F2   1.009585   1.015587
 #&gt; F3   2.869802   8.396947
-#&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>m0</span>, <span class='kw'>what</span> <span class='kw'>=</span> <span class='st'>'lambda'</span>) <span class='co'>#summarize significant loadings</span></div><div class='output co'>#&gt;       Item F       est         sd     lower     upper sig
+#&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m0</span>, what <span class='op'>=</span> <span class='st'>'lambda'</span><span class='op'>)</span> <span class='co'>#summarize significant loadings</span>
+</div><div class='output co'>#&gt;       Item F       est         sd     lower     upper sig
 #&gt; var1     1 1 0.7132096 0.07559757 0.5826406 0.8762726   1
 #&gt; var2     2 1 0.7151372 0.07469996 0.5815766 0.8624938   1
 #&gt; var3     3 1 0.7206282 0.07661523 0.5728306 0.8625480   1
@@ -249,7 +254,8 @@
 #&gt; var51   15 3 0.7549553 0.08722649 0.6048518 0.9257804   1
 #&gt; var52   16 3 0.8309306 0.09169774 0.6776833 1.0110218   1
 #&gt; var53   17 3 0.7994678 0.10974540 0.6062078 0.9692262   1
-#&gt; var54   18 3 0.7898072 0.11131827 0.5896706 0.9671319   1</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>m0</span>, <span class='kw'>what</span> <span class='kw'>=</span> <span class='st'>'qlambda'</span>) <span class='co'>#summarize significant loadings in pattern/Q-matrix format</span></div><div class='output co'>#&gt;          [,1]      [,2]      [,3]
+#&gt; var54   18 3 0.7898072 0.11131827 0.5896706 0.9671319   1</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m0</span>, what <span class='op'>=</span> <span class='st'>'qlambda'</span><span class='op'>)</span> <span class='co'>#summarize significant loadings in pattern/Q-matrix format</span>
+</div><div class='output co'>#&gt;          [,1]      [,2]      [,3]
 #&gt; I1  0.7132096 0.0000000 0.0000000
 #&gt; I2  0.7151372 0.0000000 0.0000000
 #&gt; I3  0.7206282 0.0000000 0.0000000
@@ -267,7 +273,9 @@
 #&gt; I15 0.0000000 0.0000000 0.7549553
 #&gt; I16 0.0000000 0.0000000 0.8309306
 #&gt; I17 0.0000000 0.0000000 0.7994678
-#&gt; I18 0.0000000 0.0000000 0.7898072</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>m0</span>, <span class='kw'>what</span> <span class='kw'>=</span> <span class='st'>'offpsx'</span>) <span class='co'>#summarize significant LD terms</span></div><div class='output co'>#&gt; NULL</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>m0</span>, <span class='kw'>what</span> <span class='kw'>=</span> <span class='st'>'all'</span>) <span class='co'>#summarize all information</span></div><div class='output co'>#&gt; $N
+#&gt; I18 0.0000000 0.0000000 0.7898072</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m0</span>, what <span class='op'>=</span> <span class='st'>'offpsx'</span><span class='op'>)</span> <span class='co'>#summarize significant LD terms</span>
+</div><div class='output co'>#&gt; NULL</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m0</span>, what <span class='op'>=</span> <span class='st'>'all'</span><span class='op'>)</span> <span class='co'>#summarize all information</span>
+</div><div class='output co'>#&gt; $N
 #&gt; [1] 500
 #&gt; 
 #&gt; $J
@@ -380,7 +388,7 @@
 #&gt; F2  3.0207 0.5128796 2.083158 4.043662   1
 #&gt; F3  3.0207 0.5128796 2.083158 4.043662   1
 #&gt; PSX 0.0000 0.0000000 0.000000 0.000000   0
-#&gt; </div><div class='input'># }
+#&gt; </div><div class='input'><span class='co'># }</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -397,7 +405,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

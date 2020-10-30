@@ -42,6 +42,7 @@
 <meta property="og:title" content="Partially Confirmatory Factor Analysis — pcfa" />
 <meta property="og:description" content="PCFA is a partially confirmatory approach covering a wide range of
 the exploratory-confirmatory continuum in factor analytic models (Chen, Guo, Zhang, &amp;amp; Pan, 2020).
+The PCFA is only for continuous data, while the generalized PCFA (GPCFA) covers both continuous and categorical data.
  There are two major model variants with different constraints for identification. One assumes local
  independence (LI) with a more exploratory tendency, which can be also called the E-step.
  The other allows local dependence (LD) with a more confirmatory tendency, which can be also
@@ -80,7 +81,7 @@ the exploratory-confirmatory continuum in factor analytic models (Chen, Guo, Zha
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">LAWBL</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.0</span>
       </span>
     </div>
 
@@ -104,6 +105,9 @@ the exploratory-confirmatory continuum in factor analytic models (Chen, Guo, Zha
   <ul class="dropdown-menu" role="menu">
     <li>
       <a href="../articles/pcfa-examples.html">pcfa-examples</a>
+    </li>
+    <li>
+      <a href="../articles/gpcfa-examples.html">gpcfa-examples</a>
     </li>
   </ul>
 </li>
@@ -139,6 +143,7 @@ the exploratory-confirmatory continuum in factor analytic models (Chen, Guo, Zha
     <div class="ref-description">
     <p><code>PCFA</code> is a partially confirmatory approach covering a wide range of
 the exploratory-confirmatory continuum in factor analytic models (Chen, Guo, Zhang, &amp; Pan, 2020).
+The PCFA is only for continuous data, while the generalized PCFA (GPCFA) covers both continuous and categorical data.
  There are two major model variants with different constraints for identification. One assumes local
  independence (LI) with a more exploratory tendency, which can be also called the E-step.
  The other allows local dependence (LD) with a more confirmatory tendency, which can be also
@@ -148,26 +153,28 @@ the exploratory-confirmatory continuum in factor analytic models (Chen, Guo, Zha
  and the factorial eigenvalue can be plotted with <code><a href='plot_eigen.html'>plot_eigen</a></code>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>pcfa</span>(
-  <span class='no'>dat</span>,
-  <span class='no'>Q</span>,
-  <span class='kw'>LD</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>PPMC</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>burn</span> <span class='kw'>=</span> <span class='fl'>5000</span>,
-  <span class='kw'>iter</span> <span class='kw'>=</span> <span class='fl'>5000</span>,
-  <span class='kw'>update</span> <span class='kw'>=</span> <span class='fl'>1000</span>,
-  <span class='kw'>missing</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
-  <span class='kw'>rseed</span> <span class='kw'>=</span> <span class='fl'>12345</span>,
-  <span class='kw'>digits</span> <span class='kw'>=</span> <span class='fl'>4</span>,
-  <span class='kw'>alas</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
-)</pre>
+    <pre class="usage"><span class='fu'>pcfa</span><span class='op'>(</span>
+  <span class='va'>dat</span>,
+  <span class='va'>Q</span>,
+  LD <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  cati <span class='op'>=</span> <span class='cn'>NULL</span>,
+  PPMC <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  burn <span class='op'>=</span> <span class='fl'>5000</span>,
+  iter <span class='op'>=</span> <span class='fl'>5000</span>,
+  update <span class='op'>=</span> <span class='fl'>1000</span>,
+  missing <span class='op'>=</span> <span class='cn'>NA</span>,
+  rseed <span class='op'>=</span> <span class='fl'>12345</span>,
+  digits <span class='op'>=</span> <span class='fl'>4</span>,
+  alas <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  verbose <span class='op'>=</span> <span class='cn'>FALSE</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>dat</th>
-      <td><p>A \(N \times J\) <code>matrix</code> or <code>data.frame</code> consisting of the
+      <td><p>A \(N \times J\) data <em>matrix</em> or <em>data.frame</em> consisting of the
 responses of \(N\) individuals to \(J\) items. Only continuous data are supported currently.</p></td>
     </tr>
     <tr>
@@ -181,6 +188,11 @@ without any specified loading (Chen, Guo, Zhang, &amp; Pan, 2020). See <code>Exa
     <tr>
       <th>LD</th>
       <td><p>logical; <code>TRUE</code> for allowing LD (model with LD or C-step).</p></td>
+    </tr>
+    <tr>
+      <th>cati</th>
+      <td><p>The set of categorical (polytomous) items in sequence number (i.e., 1 to \(J\));
+<code>NULL</code> for no and -1 for all items (default is <code>NULL</code>).</p></td>
     </tr>
     <tr>
       <th>PPMC</th>
@@ -200,7 +212,7 @@ without any specified loading (Chen, Guo, Zhang, &amp; Pan, 2020). See <code>Exa
     </tr>
     <tr>
       <th>missing</th>
-      <td><p>Value for missing data (default is <code>NA</code>) (under development).</p></td>
+      <td><p>Value for missing data (default is <code>NA</code>).</p></td>
     </tr>
     <tr>
       <th>rseed</th>
@@ -213,6 +225,13 @@ without any specified loading (Chen, Guo, Zhang, &amp; Pan, 2020). See <code>Exa
     <tr>
       <th>alas</th>
       <td><p>logical; for adaptive Lasso or not. The default is <code>FALSE</code>, which seems slightly stabler.</p></td>
+    </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p>logical; to display the sampling information every <code>update</code> or not.
+*Feigen* for factorial eigenvalue, "*NLA_lg3*" for no. of \(\lambda\) larger than .3,
+*Shrink* for shrinkage, and *Adj PSR* for adjusted PSRF.
+*LD&gt;.2 &gt;.1* are no. of LD terms larger than .2 and .1.</p></td>
     </tr>
     </table>
 
@@ -233,12 +252,13 @@ the posteriors that can be summarized using <code><a href='summary.lawbl.html'>s
 <span class='co'>#  Example 1: Estimation with LI   #</span>
 <span class='co'>####################################</span>
 
-<span class='no'>dat</span> <span class='kw'>&lt;-</span> <span class='no'>sim18cfa1</span>$<span class='no'>dat</span>
-<span class='no'>J</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>ncol</a></span>(<span class='no'>dat</span>)
-<span class='no'>K</span> <span class='kw'>&lt;-</span> <span class='fl'>3</span>
-<span class='no'>Q</span><span class='kw'>&lt;-</span><span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span>(-<span class='fl'>1</span>,<span class='no'>J</span>,<span class='no'>K</span>);
-<span class='no'>Q</span>[<span class='fl'>1</span>:<span class='fl'>2</span>,<span class='fl'>1</span>]<span class='kw'>&lt;-</span><span class='no'>Q</span>[<span class='fl'>9</span>:<span class='fl'>10</span>,<span class='fl'>2</span>]<span class='kw'>&lt;-</span><span class='no'>Q</span>[<span class='fl'>13</span>:<span class='fl'>14</span>,<span class='fl'>3</span>]<span class='kw'>&lt;-</span><span class='fl'>1</span>
-<span class='no'>Q</span></div><div class='output co'>#&gt;       [,1] [,2] [,3]
+<span class='va'>dat</span> <span class='op'>&lt;-</span> <span class='va'>sim18cfa1</span><span class='op'>$</span><span class='va'>dat</span>
+<span class='va'>J</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>ncol</a></span><span class='op'>(</span><span class='va'>dat</span><span class='op'>)</span>
+<span class='va'>K</span> <span class='op'>&lt;-</span> <span class='fl'>3</span>
+<span class='va'>Q</span><span class='op'>&lt;-</span><span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>1</span>,<span class='va'>J</span>,<span class='va'>K</span><span class='op'>)</span>;
+<span class='va'>Q</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>2</span>,<span class='fl'>1</span><span class='op'>]</span><span class='op'>&lt;-</span><span class='va'>Q</span><span class='op'>[</span><span class='fl'>9</span><span class='op'>:</span><span class='fl'>10</span>,<span class='fl'>2</span><span class='op'>]</span><span class='op'>&lt;-</span><span class='va'>Q</span><span class='op'>[</span><span class='fl'>13</span><span class='op'>:</span><span class='fl'>14</span>,<span class='fl'>3</span><span class='op'>]</span><span class='op'>&lt;-</span><span class='fl'>1</span>
+<span class='va'>Q</span>
+</div><div class='output co'>#&gt;       [,1] [,2] [,3]
 #&gt;  [1,]    1   -1   -1
 #&gt;  [2,]    1   -1   -1
 #&gt;  [3,]   -1   -1   -1
@@ -256,8 +276,9 @@ the posteriors that can be summarized using <code><a href='summary.lawbl.html'>s
 #&gt; [15,]   -1   -1   -1
 #&gt; [16,]   -1   -1   -1
 #&gt; [17,]   -1   -1   -1
-#&gt; [18,]   -1   -1   -1</div><div class='input'><span class='no'>m0</span> <span class='kw'>&lt;-</span> <span class='fu'>pcfa</span>(<span class='kw'>dat</span> <span class='kw'>=</span> <span class='no'>dat</span>, <span class='kw'>Q</span> <span class='kw'>=</span> <span class='no'>Q</span>, <span class='kw'>LD</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,<span class='kw'>burn</span> <span class='kw'>=</span> <span class='fl'>1000</span>, <span class='kw'>iter</span> <span class='kw'>=</span> <span class='fl'>1000</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>m0</span>) <span class='co'># summarize basic information</span></div><div class='output co'>#&gt; $N
+#&gt; [18,]   -1   -1   -1</div><div class='input'><span class='va'>m0</span> <span class='op'>&lt;-</span> <span class='fu'>pcfa</span><span class='op'>(</span>dat <span class='op'>=</span> <span class='va'>dat</span>, Q <span class='op'>=</span> <span class='va'>Q</span>, LD <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m0</span><span class='op'>)</span> <span class='co'># summarize basic information</span>
+</div><div class='output co'>#&gt; $N
 #&gt; [1] 500
 #&gt; 
 #&gt; $J
@@ -273,68 +294,73 @@ the posteriors that can be summarized using <code><a href='summary.lawbl.html'>s
 #&gt; [1] FALSE
 #&gt; 
 #&gt; $`Burn in`
-#&gt; [1] 1000
+#&gt; [1] 5000
 #&gt; 
 #&gt; $Iteration
-#&gt; [1] 1000
+#&gt; [1] 5000
 #&gt; 
 #&gt; $`No. of sig lambda`
-#&gt; [1] 23
+#&gt; [1] 24
 #&gt; 
 #&gt; $`Adj. PSR`
 #&gt;    Point est. Upper C.I.
-#&gt; F1   1.240815   1.809868
-#&gt; F2   1.287728   1.986893
-#&gt; F3   1.211756   1.763918
-#&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>m0</span>, <span class='kw'>what</span> <span class='kw'>=</span> <span class='st'>'lambda'</span>) <span class='co'>#summarize significant loadings</span></div><div class='output co'>#&gt;       Item F       est         sd       lower     upper sig
-#&gt; var1     1 1 0.6322639 0.07648500 0.481045840 0.7781675   1
-#&gt; var2     2 1 0.6600763 0.08347573 0.497903739 0.8206087   1
-#&gt; var3     3 1 0.9025356 0.08491108 0.732804521 1.0638966   1
-#&gt; var4     4 1 0.9092650 0.08542165 0.760099113 1.0773152   1
-#&gt; var5     5 1 0.6355668 0.12142862 0.383291632 0.8436551   1
-#&gt; var6     6 1 0.6566113 0.12349769 0.397996588 0.8800632   1
-#&gt; var18   18 1 0.2820228 0.15010748 0.002326382 0.5428930   1
-#&gt; var23    5 2 0.3947471 0.09546164 0.223472825 0.6126997   1
-#&gt; var24    6 2 0.4025233 0.09829888 0.179455453 0.5832987   1
-#&gt; var25    7 2 0.7304012 0.06436148 0.602318986 0.8503856   1
-#&gt; var26    8 2 0.6341750 0.05849776 0.524353406 0.7521323   1
-#&gt; var27    9 2 0.8196437 0.06108358 0.712873523 0.9432036   1
-#&gt; var28   10 2 0.8225157 0.06441270 0.708728612 0.9554128   1
-#&gt; var29   11 2 0.6958852 0.06260122 0.562023190 0.8200892   1
-#&gt; var30   12 2 0.6997449 0.06041724 0.578132343 0.8303693   1
-#&gt; var47   11 3 0.3852286 0.09464164 0.223164972 0.5873377   1
-#&gt; var48   12 3 0.3752705 0.09405357 0.203586768 0.5749404   1
-#&gt; var49   13 3 0.7241304 0.09033567 0.564313467 0.9012510   1
-#&gt; var50   14 3 0.7225850 0.08920329 0.580112357 0.9107763   1
-#&gt; var51   15 3 0.9307828 0.09867094 0.760426682 1.1160452   1
-#&gt; var52   16 3 0.8874406 0.09539132 0.735708650 1.0781340   1
-#&gt; var53   17 3 0.7314842 0.10422864 0.563920302 0.9395408   1
-#&gt; var54   18 3 0.7256233 0.10771381 0.544781401 0.9377102   1</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>m0</span>, <span class='kw'>what</span> <span class='kw'>=</span> <span class='st'>'qlambda'</span>) <span class='co'>#summarize significant loadings in pattern/Q-matrix format</span></div><div class='output co'>#&gt;          [,1]      [,2]      [,3]
-#&gt; I1  0.6322639 0.0000000 0.0000000
-#&gt; I2  0.6600763 0.0000000 0.0000000
-#&gt; I3  0.9025356 0.0000000 0.0000000
-#&gt; I4  0.9092650 0.0000000 0.0000000
-#&gt; I5  0.6355668 0.3947471 0.0000000
-#&gt; I6  0.6566113 0.4025233 0.0000000
-#&gt; I7  0.0000000 0.7304012 0.0000000
-#&gt; I8  0.0000000 0.6341750 0.0000000
-#&gt; I9  0.0000000 0.8196437 0.0000000
-#&gt; I10 0.0000000 0.8225157 0.0000000
-#&gt; I11 0.0000000 0.6958852 0.3852286
-#&gt; I12 0.0000000 0.6997449 0.3752705
-#&gt; I13 0.0000000 0.0000000 0.7241304
-#&gt; I14 0.0000000 0.0000000 0.7225850
-#&gt; I15 0.0000000 0.0000000 0.9307828
-#&gt; I16 0.0000000 0.0000000 0.8874406
-#&gt; I17 0.0000000 0.0000000 0.7314842
-#&gt; I18 0.2820228 0.0000000 0.7256233</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>m0</span>, <span class='kw'>what</span> <span class='kw'>=</span> <span class='st'>'offpsx'</span>) <span class='co'>#summarize significant LD terms</span></div><div class='output co'>#&gt; NULL</div><div class='input'>
+#&gt; F1   1.132559   1.477006
+#&gt; F2   1.032934   1.034946
+#&gt; F3   1.031188   1.035919
+#&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m0</span>, what <span class='op'>=</span> <span class='st'>'lambda'</span><span class='op'>)</span> <span class='co'>#summarize significant loadings</span>
+</div><div class='output co'>#&gt;       Item F       est         sd     lower     upper sig
+#&gt; var1     1 1 0.6218423 0.05881389 0.5134951 0.7449170   1
+#&gt; var2     2 1 0.6383666 0.06268798 0.5221950 0.7614170   1
+#&gt; var3     3 1 0.8789006 0.06823078 0.7570589 1.0243145   1
+#&gt; var4     4 1 0.8831186 0.07056047 0.7568253 1.0305603   1
+#&gt; var5     5 1 0.6179397 0.07004643 0.4819760 0.7586072   1
+#&gt; var6     6 1 0.6373594 0.07210400 0.4970183 0.7841640   1
+#&gt; var17   17 1 0.3263938 0.08548775 0.1439332 0.4769370   1
+#&gt; var18   18 1 0.3452286 0.08687497 0.1668142 0.5028656   1
+#&gt; var23    5 2 0.4255885 0.09921405 0.2390309 0.6189503   1
+#&gt; var24    6 2 0.4341247 0.10125952 0.2319544 0.6194780   1
+#&gt; var25    7 2 0.7299423 0.06154661 0.6168974 0.8600539   1
+#&gt; var26    8 2 0.6277690 0.05987612 0.5084839 0.7450116   1
+#&gt; var27    9 2 0.8113625 0.06345146 0.6884045 0.9369923   1
+#&gt; var28   10 2 0.8135707 0.06407833 0.6893758 0.9394729   1
+#&gt; var29   11 2 0.6861431 0.07206491 0.5550550 0.8458398   1
+#&gt; var30   12 2 0.6906239 0.07088845 0.5491912 0.8444755   1
+#&gt; var47   11 3 0.3741107 0.09920587 0.1671495 0.5696572   1
+#&gt; var48   12 3 0.3672875 0.10010448 0.1666208 0.5657444   1
+#&gt; var49   13 3 0.6924760 0.05917879 0.5823805 0.8100552   1
+#&gt; var50   14 3 0.6930275 0.05876945 0.5730225 0.8041490   1
+#&gt; var51   15 3 0.8921454 0.06629605 0.7728380 1.0323197   1
+#&gt; var52   16 3 0.8492473 0.06375922 0.7196671 0.9706291   1
+#&gt; var53   17 3 0.7092190 0.05992407 0.6009667 0.8374548   1
+#&gt; var54   18 3 0.7039048 0.06144054 0.5871531 0.8252601   1</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m0</span>, what <span class='op'>=</span> <span class='st'>'qlambda'</span><span class='op'>)</span> <span class='co'>#summarize significant loadings in pattern/Q-matrix format</span>
+</div><div class='output co'>#&gt;          [,1]      [,2]      [,3]
+#&gt; I1  0.6218423 0.0000000 0.0000000
+#&gt; I2  0.6383666 0.0000000 0.0000000
+#&gt; I3  0.8789006 0.0000000 0.0000000
+#&gt; I4  0.8831186 0.0000000 0.0000000
+#&gt; I5  0.6179397 0.4255885 0.0000000
+#&gt; I6  0.6373594 0.4341247 0.0000000
+#&gt; I7  0.0000000 0.7299423 0.0000000
+#&gt; I8  0.0000000 0.6277690 0.0000000
+#&gt; I9  0.0000000 0.8113625 0.0000000
+#&gt; I10 0.0000000 0.8135707 0.0000000
+#&gt; I11 0.0000000 0.6861431 0.3741107
+#&gt; I12 0.0000000 0.6906239 0.3672875
+#&gt; I13 0.0000000 0.0000000 0.6924760
+#&gt; I14 0.0000000 0.0000000 0.6930275
+#&gt; I15 0.0000000 0.0000000 0.8921454
+#&gt; I16 0.0000000 0.0000000 0.8492473
+#&gt; I17 0.3263938 0.0000000 0.7092190
+#&gt; I18 0.3452286 0.0000000 0.7039048</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m0</span>, what <span class='op'>=</span> <span class='st'>'offpsx'</span><span class='op'>)</span> <span class='co'>#summarize significant LD terms</span>
+</div><div class='output co'>#&gt; NULL</div><div class='input'>
 <span class='co'>####################################</span>
 <span class='co'>#  Example 2: Estimation with LD   #</span>
 <span class='co'>####################################</span>
 
-<span class='no'>Q</span><span class='kw'>&lt;-</span><span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span>(-<span class='fl'>1</span>,<span class='no'>J</span>,<span class='no'>K</span>);
-<span class='no'>Q</span>[<span class='fl'>1</span>:<span class='fl'>6</span>,<span class='fl'>1</span>]<span class='kw'>&lt;-</span><span class='no'>Q</span>[<span class='fl'>7</span>:<span class='fl'>12</span>,<span class='fl'>2</span>]<span class='kw'>&lt;-</span><span class='no'>Q</span>[<span class='fl'>13</span>:<span class='fl'>18</span>,<span class='fl'>3</span>]<span class='kw'>&lt;-</span><span class='fl'>1</span>
-<span class='no'>Q</span></div><div class='output co'>#&gt;       [,1] [,2] [,3]
+<span class='va'>Q</span><span class='op'>&lt;-</span><span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>1</span>,<span class='va'>J</span>,<span class='va'>K</span><span class='op'>)</span>;
+<span class='va'>Q</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>6</span>,<span class='fl'>1</span><span class='op'>]</span><span class='op'>&lt;-</span><span class='va'>Q</span><span class='op'>[</span><span class='fl'>7</span><span class='op'>:</span><span class='fl'>12</span>,<span class='fl'>2</span><span class='op'>]</span><span class='op'>&lt;-</span><span class='va'>Q</span><span class='op'>[</span><span class='fl'>13</span><span class='op'>:</span><span class='fl'>18</span>,<span class='fl'>3</span><span class='op'>]</span><span class='op'>&lt;-</span><span class='fl'>1</span>
+<span class='va'>Q</span>
+</div><div class='output co'>#&gt;       [,1] [,2] [,3]
 #&gt;  [1,]    1   -1   -1
 #&gt;  [2,]    1   -1   -1
 #&gt;  [3,]    1   -1   -1
@@ -352,8 +378,9 @@ the posteriors that can be summarized using <code><a href='summary.lawbl.html'>s
 #&gt; [15,]   -1   -1    1
 #&gt; [16,]   -1   -1    1
 #&gt; [17,]   -1   -1    1
-#&gt; [18,]   -1   -1    1</div><div class='input'><span class='no'>m1</span> <span class='kw'>&lt;-</span> <span class='fu'>pcfa</span>(<span class='kw'>dat</span> <span class='kw'>=</span> <span class='no'>dat</span>, <span class='kw'>Q</span> <span class='kw'>=</span> <span class='no'>Q</span>,<span class='kw'>burn</span> <span class='kw'>=</span> <span class='fl'>1000</span>, <span class='kw'>iter</span> <span class='kw'>=</span> <span class='fl'>1000</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>m1</span>) <span class='co'># summarize basic information</span></div><div class='output co'>#&gt; $N
+#&gt; [18,]   -1   -1    1</div><div class='input'><span class='va'>m1</span> <span class='op'>&lt;-</span> <span class='fu'>pcfa</span><span class='op'>(</span>dat <span class='op'>=</span> <span class='va'>dat</span>, Q <span class='op'>=</span> <span class='va'>Q</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m1</span><span class='op'>)</span> <span class='co'># summarize basic information</span>
+</div><div class='output co'>#&gt; $N
 #&gt; [1] 500
 #&gt; 
 #&gt; $J
@@ -369,47 +396,49 @@ the posteriors that can be summarized using <code><a href='summary.lawbl.html'>s
 #&gt; [1] TRUE
 #&gt; 
 #&gt; $`Burn in`
-#&gt; [1] 1000
+#&gt; [1] 5000
 #&gt; 
 #&gt; $Iteration
-#&gt; [1] 1000
+#&gt; [1] 5000
 #&gt; 
 #&gt; $`No. of sig lambda`
 #&gt; [1] 24
 #&gt; 
 #&gt; $`Adj. PSR`
 #&gt;    Point est. Upper C.I.
-#&gt; F1   1.070743   1.230802
-#&gt; F2   1.110975   1.394687
-#&gt; F3   1.009564   1.034085
+#&gt; F1   1.019921   1.082172
+#&gt; F2   1.118758   1.434676
+#&gt; F3   1.269957   1.863827
 #&gt; 
 #&gt; $`No. of sig LD terms`
 #&gt; [1] 6
-#&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>m1</span>, <span class='kw'>what</span> <span class='kw'>=</span> <span class='st'>'qlambda'</span>) <span class='co'>#summarize significant loadings in pattern/Q-matrix format</span></div><div class='output co'>#&gt;          [,1]      [,2]      [,3]
-#&gt; I1  0.7509411 0.0000000 0.0000000
-#&gt; I2  0.6813936 0.0000000 0.0000000
-#&gt; I3  0.7922422 0.0000000 0.0000000
-#&gt; I4  0.7689045 0.0000000 0.0000000
-#&gt; I5  0.6728831 0.3473103 0.0000000
-#&gt; I6  0.6919241 0.3526614 0.0000000
-#&gt; I7  0.0000000 0.7569042 0.0000000
-#&gt; I8  0.0000000 0.6349059 0.0000000
-#&gt; I9  0.0000000 0.7406121 0.0000000
-#&gt; I10 0.0000000 0.7418163 0.0000000
-#&gt; I11 0.0000000 0.7341822 0.3399042
-#&gt; I12 0.0000000 0.7426154 0.3251054
-#&gt; I13 0.0000000 0.0000000 0.7107169
-#&gt; I14 0.0000000 0.0000000 0.6884674
-#&gt; I15 0.0000000 0.0000000 0.8007282
-#&gt; I16 0.0000000 0.0000000 0.7607961
-#&gt; I17 0.3172098 0.0000000 0.7127242
-#&gt; I18 0.3257416 0.0000000 0.7231049</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>m1</span>, <span class='kw'>what</span> <span class='kw'>=</span> <span class='st'>'offpsx'</span>) <span class='co'>#summarize significant LD terms</span></div><div class='output co'>#&gt;        row col       est         sd     lower     upper sig
-#&gt; var14   14   1 0.2710355 0.04118050 0.1910537 0.3532721   1
-#&gt; var24    7   2 0.2531845 0.04669585 0.1633123 0.3464047   1
-#&gt; var37    4   3 0.2839852 0.06403869 0.1697131 0.4098167   1
-#&gt; var111  13   8 0.3046336 0.04292341 0.2246645 0.3912058   1
-#&gt; var118  10   9 0.2594980 0.05428821 0.1520387 0.3737294   1
-#&gt; var163  16  15 0.2309577 0.05004079 0.1356811 0.3282657   1</div><div class='input'># }
+#&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m1</span>, what <span class='op'>=</span> <span class='st'>'qlambda'</span><span class='op'>)</span> <span class='co'>#summarize significant loadings in pattern/Q-matrix format</span>
+</div><div class='output co'>#&gt;          [,1]      [,2]      [,3]
+#&gt; I1  0.6905002 0.0000000 0.0000000
+#&gt; I2  0.6652274 0.0000000 0.0000000
+#&gt; I3  0.7985579 0.0000000 0.0000000
+#&gt; I4  0.7812012 0.0000000 0.0000000
+#&gt; I5  0.6711947 0.3595238 0.0000000
+#&gt; I6  0.6853408 0.3717732 0.0000000
+#&gt; I7  0.0000000 0.7652045 0.0000000
+#&gt; I8  0.0000000 0.6433141 0.0000000
+#&gt; I9  0.0000000 0.7512429 0.0000000
+#&gt; I10 0.0000000 0.7534738 0.0000000
+#&gt; I11 0.0000000 0.7235652 0.3356410
+#&gt; I12 0.0000000 0.7356082 0.3178655
+#&gt; I13 0.0000000 0.0000000 0.7246224
+#&gt; I14 0.0000000 0.0000000 0.7005268
+#&gt; I15 0.0000000 0.0000000 0.7729163
+#&gt; I16 0.0000000 0.0000000 0.7298955
+#&gt; I17 0.3263275 0.0000000 0.7252791
+#&gt; I18 0.3415920 0.0000000 0.7216854</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m1</span>, what <span class='op'>=</span> <span class='st'>'offpsx'</span><span class='op'>)</span> <span class='co'>#summarize significant LD terms</span>
+</div><div class='output co'>#&gt;        row col       est         sd      lower     upper sig
+#&gt; var14   14   1 0.2728085 0.05012782 0.16675891 0.3654107   1
+#&gt; var24    7   2 0.2544426 0.04522016 0.16837754 0.3450133   1
+#&gt; var37    4   3 0.2567815 0.07835087 0.09817361 0.4023815   1
+#&gt; var111  13   8 0.2980989 0.04857460 0.20410455 0.3923803   1
+#&gt; var118  10   9 0.2527288 0.06248065 0.12755392 0.3703368   1
+#&gt; var163  16  15 0.2616838 0.06018748 0.14367954 0.3774520   1</div><div class='input'><span class='co'># }</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -426,7 +455,7 @@ the posteriors that can be summarized using <code><a href='summary.lawbl.html'>s
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
