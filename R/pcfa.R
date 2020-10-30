@@ -44,7 +44,7 @@
 #' @param digits Number of significant digits to print when printing numeric values.
 #'
 #' @param verbose logical; to display the sampling information every \code{update} or not.
-#' *Feigen* for factorial eigenvalue, "*NLA_lg3*" for no. of \eqn{\lambda} larger than .3,
+#' *Feigen* for factorial eigenvalue, "*NLA_lg3*" for no. of \eqn{\lambda > .3},
 #' *Shrink* for shrinkage, and *Adj PSR* for adjusted PSRF.
 #' *LD>.2 >.1* are no. of LD terms larger than .2 and .1.
 #'

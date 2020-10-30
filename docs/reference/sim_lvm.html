@@ -254,28 +254,252 @@
     <pre class="examples"><div class='input'>
 <span class='co'># for continuous data with cross-loadings and local dependence effect .3</span>
 <span class='va'>out</span> <span class='op'>&lt;-</span> <span class='fu'>sim_lvm</span><span class='op'>(</span>N<span class='op'>=</span><span class='fl'>1000</span>,K<span class='op'>=</span><span class='fl'>3</span>,ipf<span class='op'>=</span><span class='fl'>6</span>,lam <span class='op'>=</span> <span class='fl'>.7</span>, lac<span class='op'>=</span><span class='fl'>.3</span>,ecr<span class='op'>=</span><span class='fl'>.3</span>,rseed <span class='op'>=</span> <span class='fl'>123</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in sim_lvm(N = 1000, K = 3, ipf = 6, lam = 0.7, lac = 0.3, ecr = 0.3,     rseed = 123): could not find function "sim_lvm"</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>out</span><span class='op'>$</span><span class='va'>dat</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in head(out$dat): object 'out' not found</span></div><div class='input'><span class='va'>out</span><span class='op'>$</span><span class='va'>MLA</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in eval(expr, envir, enclos): object 'out' not found</span></div><div class='input'><span class='va'>out</span><span class='op'>$</span><span class='va'>ofd_ind</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in eval(expr, envir, enclos): object 'out' not found</span></div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>out</span><span class='op'>$</span><span class='va'>dat</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;             [,1]       [,2]       [,3]        [,4]       [,5]         [,6]
+#&gt; [1,] -0.36689395 -0.4881216 -1.7566272 -0.50482295 -0.4684937 -1.297411644
+#&gt; [2,]  1.29615435  1.1647742  0.3647204 -0.03480086  1.3327210  0.849699024
+#&gt; [3,] -1.88314706  0.1651701 -0.4958659 -0.86045126 -0.6903347  0.338318624
+#&gt; [4,] -0.05165739  0.8702513  0.2634152 -0.37815424  0.2265568  0.888059924
+#&gt; [5,]  0.11355713 -1.8976949 -2.5072503 -0.73721254  1.0193241 -0.001280834
+#&gt; [6,] -2.01181093 -0.7932417  0.1727423 -0.29495085 -1.3349318 -0.338248749
+#&gt;            [,7]       [,8]       [,9]      [,10]      [,11]      [,12]
+#&gt; [1,] -0.5173644 -0.4091269 -1.7824866 -0.2460811 -1.0117432 -0.8083742
+#&gt; [2,]  1.5628364  2.4832469  2.2553101  2.1472036  1.4055864  1.7997063
+#&gt; [3,]  2.1703316  1.0343184  0.1287202  0.7294599  0.7892556  0.7092318
+#&gt; [4,]  1.1868684  0.4187861  2.2694918  1.9012874  1.9883522  1.6677417
+#&gt; [5,] -0.4761872 -0.4433155  1.4434187  1.5892937  1.3876958  1.3504176
+#&gt; [6,]  0.7946051  1.9575439  0.5235337  1.2571445  1.2672767  0.8616947
+#&gt;            [,13]      [,14]       [,15]      [,16]        [,17]       [,18]
+#&gt; [1,]  0.67924455  1.3030044  0.91846529 -0.1301423 -0.139432271  0.43771563
+#&gt; [2,]  0.26520885  0.2609328  0.46525357  0.7109910  0.002888877  1.15870865
+#&gt; [3,]  1.03667459 -0.7095409 -0.90312500  0.3296742  0.077149576 -0.77161803
+#&gt; [4,]  0.02234946  0.9213876  1.51360868  1.9036678  0.746768729  1.14153154
+#&gt; [5,] -0.80397103  0.1202811 -0.05229181  1.0703991  0.247518511  0.49762899
+#&gt; [6,]  1.42219402 -0.9986785 -0.44821014 -0.5433925  0.302156652  0.02627775</div><div class='input'><span class='va'>out</span><span class='op'>$</span><span class='va'>MLA</span>
+</div><div class='output co'>#&gt;       [,1] [,2] [,3]
+#&gt;  [1,]  0.7  0.0  0.0
+#&gt;  [2,]  0.7  0.0  0.0
+#&gt;  [3,]  0.7  0.0  0.0
+#&gt;  [4,]  0.7  0.0  0.0
+#&gt;  [5,]  0.7  0.3  0.0
+#&gt;  [6,]  0.7  0.3  0.0
+#&gt;  [7,]  0.0  0.7  0.0
+#&gt;  [8,]  0.0  0.7  0.0
+#&gt;  [9,]  0.0  0.7  0.0
+#&gt; [10,]  0.0  0.7  0.0
+#&gt; [11,]  0.0  0.7  0.3
+#&gt; [12,]  0.0  0.7  0.3
+#&gt; [13,]  0.0  0.0  0.7
+#&gt; [14,]  0.0  0.0  0.7
+#&gt; [15,]  0.0  0.0  0.7
+#&gt; [16,]  0.0  0.0  0.7
+#&gt; [17,]  0.3  0.0  0.7
+#&gt; [18,]  0.3  0.0  0.7</div><div class='input'><span class='va'>out</span><span class='op'>$</span><span class='va'>ofd_ind</span>
+</div><div class='output co'>#&gt;      row col
+#&gt; [1,]  14   1
+#&gt; [2,]   7   2
+#&gt; [3,]   4   3
+#&gt; [4,]  13   8
+#&gt; [5,]  10   9
+#&gt; [6,]  16  15</div><div class='input'>
 <span class='co'># for categorical data with cross-loadings .4</span>
 <span class='va'>out</span> <span class='op'>&lt;-</span> <span class='fu'>sim_lvm</span><span class='op'>(</span>N<span class='op'>=</span><span class='fl'>1000</span>,K<span class='op'>=</span><span class='fl'>3</span>,ipf<span class='op'>=</span><span class='fl'>6</span>,lam <span class='op'>=</span> <span class='fl'>.7</span>, lac<span class='op'>=</span><span class='fl'>.4</span>,cati<span class='op'>=</span><span class='op'>-</span><span class='fl'>1</span>,noc<span class='op'>=</span><span class='fl'>4</span>,rseed <span class='op'>=</span> <span class='fl'>123</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in sim_lvm(N = 1000, K = 3, ipf = 6, lam = 0.7, lac = 0.4, cati = -1,     noc = 4, rseed = 123): could not find function "sim_lvm"</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>out</span><span class='op'>$</span><span class='va'>dat</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in head(out$dat): object 'out' not found</span></div><div class='input'><span class='va'>out</span><span class='op'>$</span><span class='va'>MLA</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in eval(expr, envir, enclos): object 'out' not found</span></div><div class='input'><span class='va'>out</span><span class='op'>$</span><span class='va'>ofd_ind</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in eval(expr, envir, enclos): object 'out' not found</span></div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>out</span><span class='op'>$</span><span class='va'>dat</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12] [,13] [,14]
+#&gt; [1,]    2    2    1    2    2    2    2    3    3     2     2     2     3     3
+#&gt; [2,]    3    3    3    4    4    3    3    3    3     4     4     4     3     3
+#&gt; [3,]    2    3    3    2    2    3    3    4    3     2     3     3     2     3
+#&gt; [4,]    2    3    3    2    3    3    3    3    3     3     4     4     4     3
+#&gt; [5,]    1    3    3    3    3    3    3    3    4     3     3     3     3     2
+#&gt; [6,]    3    3    2    2    2    2    3    3    3     3     3     3     3     3
+#&gt;      [,15] [,16] [,17] [,18]
+#&gt; [1,]     3     3     3     3
+#&gt; [2,]     3     3     3     3
+#&gt; [3,]     2     2     2     2
+#&gt; [4,]     3     4     3     3
+#&gt; [5,]     4     3     3     3
+#&gt; [6,]     2     2     2     2</div><div class='input'><span class='va'>out</span><span class='op'>$</span><span class='va'>MLA</span>
+</div><div class='output co'>#&gt;       [,1] [,2] [,3]
+#&gt;  [1,]  0.7  0.0  0.0
+#&gt;  [2,]  0.7  0.0  0.0
+#&gt;  [3,]  0.7  0.0  0.0
+#&gt;  [4,]  0.7  0.0  0.0
+#&gt;  [5,]  0.7  0.4  0.0
+#&gt;  [6,]  0.7  0.4  0.0
+#&gt;  [7,]  0.0  0.7  0.0
+#&gt;  [8,]  0.0  0.7  0.0
+#&gt;  [9,]  0.0  0.7  0.0
+#&gt; [10,]  0.0  0.7  0.0
+#&gt; [11,]  0.0  0.7  0.4
+#&gt; [12,]  0.0  0.7  0.4
+#&gt; [13,]  0.0  0.0  0.7
+#&gt; [14,]  0.0  0.0  0.7
+#&gt; [15,]  0.0  0.0  0.7
+#&gt; [16,]  0.0  0.0  0.7
+#&gt; [17,]  0.4  0.0  0.7
+#&gt; [18,]  0.4  0.0  0.7</div><div class='input'><span class='va'>out</span><span class='op'>$</span><span class='va'>ofd_ind</span>
+</div><div class='output co'>#&gt;      row col</div><div class='input'>
 <span class='co'># \donttest{</span>
 <span class='va'>dat</span> <span class='op'>&lt;-</span> <span class='va'>out</span><span class='op'>$</span><span class='va'>dat</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in eval(expr, envir, enclos): object 'out' not found</span></div><div class='input'><span class='va'>J</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>ncol</a></span><span class='op'>(</span><span class='va'>dat</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in ncol(dat): object 'dat' not found</span></div><div class='input'><span class='va'>K</span> <span class='op'>&lt;-</span> <span class='fl'>3</span>
+<span class='va'>J</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>ncol</a></span><span class='op'>(</span><span class='va'>dat</span><span class='op'>)</span>
+<span class='va'>K</span> <span class='op'>&lt;-</span> <span class='fl'>3</span>
 <span class='va'>Q</span><span class='op'>&lt;-</span><span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>1</span>,<span class='va'>J</span>,<span class='va'>K</span><span class='op'>)</span>;
-</div><div class='output co'>#&gt; <span class='error'>Error in matrix(-1, J, K): object 'J' not found</span></div><div class='input'><span class='va'>Q</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>2</span>,<span class='fl'>1</span><span class='op'>]</span><span class='op'>&lt;-</span><span class='va'>Q</span><span class='op'>[</span><span class='fl'>9</span><span class='op'>:</span><span class='fl'>10</span>,<span class='fl'>2</span><span class='op'>]</span><span class='op'>&lt;-</span><span class='va'>Q</span><span class='op'>[</span><span class='fl'>13</span><span class='op'>:</span><span class='fl'>14</span>,<span class='fl'>3</span><span class='op'>]</span><span class='op'>&lt;-</span><span class='fl'>1</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in Q[13:14, 3] &lt;- 1: object 'Q' not found</span></div><div class='input'><span class='va'>Q</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in eval(expr, envir, enclos): object 'Q' not found</span></div><div class='input'><span class='va'>m0</span> <span class='op'>&lt;-</span> <span class='fu'><a href='pcfa.html'>pcfa</a></span><span class='op'>(</span>dat <span class='op'>=</span> <span class='va'>dat</span>, cati <span class='op'>=</span> <span class='op'>-</span><span class='fl'>1</span>, Q <span class='op'>=</span> <span class='va'>Q</span>, LD <span class='op'>=</span> <span class='cn'>FALSE</span>,burn <span class='op'>=</span> <span class='fl'>3000</span>, iter <span class='op'>=</span> <span class='fl'>3000</span>,verbose<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in pcfa(dat = dat, cati = -1, Q = Q, LD = FALSE, burn = 3000, iter = 3000,     verbose = TRUE): unused arguments (cati = -1, verbose = TRUE)</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m0</span><span class='op'>)</span> <span class='co'># summarize basic information</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in summary(m0): object 'm0' not found</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m0</span>, what <span class='op'>=</span> <span class='st'>'lambda'</span><span class='op'>)</span> <span class='co'>#summarize significant loadings</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in summary(m0, what = "lambda"): object 'm0' not found</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m0</span>, what <span class='op'>=</span> <span class='st'>'qlambda'</span><span class='op'>)</span> <span class='co'>#summarize significant loadings in pattern/Q-matrix format</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in summary(m0, what = "qlambda"): object 'm0' not found</span></div><div class='input'><span class='co'># }</span>
+<span class='va'>Q</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>2</span>,<span class='fl'>1</span><span class='op'>]</span><span class='op'>&lt;-</span><span class='va'>Q</span><span class='op'>[</span><span class='fl'>9</span><span class='op'>:</span><span class='fl'>10</span>,<span class='fl'>2</span><span class='op'>]</span><span class='op'>&lt;-</span><span class='va'>Q</span><span class='op'>[</span><span class='fl'>13</span><span class='op'>:</span><span class='fl'>14</span>,<span class='fl'>3</span><span class='op'>]</span><span class='op'>&lt;-</span><span class='fl'>1</span>
+<span class='va'>Q</span>
+</div><div class='output co'>#&gt;       [,1] [,2] [,3]
+#&gt;  [1,]    1   -1   -1
+#&gt;  [2,]    1   -1   -1
+#&gt;  [3,]   -1   -1   -1
+#&gt;  [4,]   -1   -1   -1
+#&gt;  [5,]   -1   -1   -1
+#&gt;  [6,]   -1   -1   -1
+#&gt;  [7,]   -1   -1   -1
+#&gt;  [8,]   -1   -1   -1
+#&gt;  [9,]   -1    1   -1
+#&gt; [10,]   -1    1   -1
+#&gt; [11,]   -1   -1   -1
+#&gt; [12,]   -1   -1   -1
+#&gt; [13,]   -1   -1    1
+#&gt; [14,]   -1   -1    1
+#&gt; [15,]   -1   -1   -1
+#&gt; [16,]   -1   -1   -1
+#&gt; [17,]   -1   -1   -1
+#&gt; [18,]   -1   -1   -1</div><div class='input'><span class='va'>m0</span> <span class='op'>&lt;-</span> <span class='fu'><a href='pcfa.html'>pcfa</a></span><span class='op'>(</span>dat <span class='op'>=</span> <span class='va'>dat</span>, cati <span class='op'>=</span> <span class='op'>-</span><span class='fl'>1</span>, Q <span class='op'>=</span> <span class='va'>Q</span>, LD <span class='op'>=</span> <span class='cn'>FALSE</span>,burn <span class='op'>=</span> <span class='fl'>3000</span>, iter <span class='op'>=</span> <span class='fl'>3000</span>,verbose<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; 
+#&gt; Tot. Iter = 1000
+#&gt;          [,1]  [,2]  [,3]
+#&gt; Feigen  3.468 4.136 5.848
+#&gt; NLA_lg3 6.000 8.000 8.000
+#&gt; Shrink  2.595 2.595 2.595
+#&gt; Ave. Thd: -1e+200 -1.859 -0.2993 1.191 1e+200
+#&gt; Acc Rate: 0.3674 0.5848
+#&gt; 
+#&gt; Tot. Iter = 2000
+#&gt;          [,1]  [,2]  [,3]
+#&gt; Feigen  3.387 3.042 3.762
+#&gt; NLA_lg3 8.000 8.000 8.000
+#&gt; Shrink  2.396 2.396 2.396
+#&gt; Ave. Thd: -1e+200 -1.773 -0.2133 1.251 1e+200
+#&gt; Acc Rate: 0.3566 0.5972
+#&gt; 
+#&gt; Tot. Iter = 3000
+#&gt;          [,1]  [,2]  [,3]
+#&gt; Feigen  4.702 3.812 3.029
+#&gt; NLA_lg3 8.000 6.000 6.000
+#&gt; Shrink  2.763 2.763 2.763
+#&gt; Ave. Thd: -1e+200 -1.74 -0.1854 1.304 1e+200
+#&gt; Acc Rate: 0.3516 0.5971
+#&gt; 
+#&gt; Tot. Iter = 4000
+#&gt;          [,1]  [,2]  [,3]
+#&gt; Feigen  4.353 3.241 3.495
+#&gt; NLA_lg3 8.000 7.000 8.000
+#&gt; Shrink  3.452 3.452 3.452
+#&gt; Adj PSR 1.15 1.115 2.194
+#&gt; Ave. Thd: -1e+200 -1.697 -0.1431 1.346 1e+200
+#&gt; Acc Rate: 0.3524 0.5973
+#&gt; 
+#&gt; Tot. Iter = 5000
+#&gt;          [,1]  [,2]  [,3]
+#&gt; Feigen  3.993 3.401 3.081
+#&gt; NLA_lg3 8.000 8.000 8.000
+#&gt; Shrink  2.875 2.875 2.875
+#&gt; Adj PSR 1.364 2.007 1.028
+#&gt; Ave. Thd: -1e+200 -1.674 -0.1312 1.373 1e+200
+#&gt; Acc Rate: 0.3529 0.5988
+#&gt; 
+#&gt; Tot. Iter = 6000
+#&gt;          [,1]  [,2]  [,3]
+#&gt; Feigen  3.221 3.411 3.390
+#&gt; NLA_lg3 8.000 8.000 8.000
+#&gt; Shrink  3.393 3.393 3.393
+#&gt; Adj PSR 1.06 1.51 1.079
+#&gt; Ave. Thd: -1e+200 -1.691 -0.1194 1.4 1e+200
+#&gt; Acc Rate: 0.357 0.5998
+#&gt; 
+#&gt; #Sign change: 0 0 0 0 0 0
+#&gt;    user  system elapsed 
+#&gt;  103.02    0.04  103.41 </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m0</span><span class='op'>)</span> <span class='co'># summarize basic information</span>
+</div><div class='output co'>#&gt; $N
+#&gt; [1] 1000
+#&gt; 
+#&gt; $J
+#&gt; [1] 18
+#&gt; 
+#&gt; $K
+#&gt; [1] 3
+#&gt; 
+#&gt; $`Miss%`
+#&gt; [1] 0
+#&gt; 
+#&gt; $`LD enabled`
+#&gt; [1] FALSE
+#&gt; 
+#&gt; $`Burn in`
+#&gt; [1] 3000
+#&gt; 
+#&gt; $Iteration
+#&gt; [1] 3000
+#&gt; 
+#&gt; $`No. of sig lambda`
+#&gt; [1] 24
+#&gt; 
+#&gt; $`Adj. PSR`
+#&gt;    Point est. Upper C.I.
+#&gt; F1   1.059833   1.244354
+#&gt; F2   1.510243   2.613654
+#&gt; F3   1.078946   1.293420
+#&gt; 
+#&gt; $`Cat Items`
+#&gt;  [1]  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18
+#&gt; 
+#&gt; $`max No. of categories`
+#&gt; [1] 4
+#&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m0</span>, what <span class='op'>=</span> <span class='st'>'lambda'</span><span class='op'>)</span> <span class='co'>#summarize significant loadings</span>
+</div><div class='output co'>#&gt;       Item F       est         sd     lower     upper sig
+#&gt; var1     1 1 0.7982782 0.07215491 0.6607845 0.9413583   1
+#&gt; var2     2 1 0.8068711 0.07266035 0.6618496 0.9349032   1
+#&gt; var3     3 1 0.7392978 0.06488783 0.6174716 0.8666189   1
+#&gt; var4     4 1 0.7509514 0.06225709 0.6388954 0.8777813   1
+#&gt; var5     5 1 0.7311445 0.07026153 0.5964928 0.8645368   1
+#&gt; var6     6 1 0.7595116 0.07142673 0.6253944 0.8914917   1
+#&gt; var17   17 1 0.3960988 0.08388555 0.2289212 0.5541216   1
+#&gt; var18   18 1 0.4258988 0.09004551 0.2261432 0.5697483   1
+#&gt; var23    5 2 0.4012357 0.09462303 0.2166065 0.5650244   1
+#&gt; var24    6 2 0.3668400 0.09501164 0.1844207 0.5303457   1
+#&gt; var25    7 2 0.7181459 0.06814201 0.5844522 0.8597254   1
+#&gt; var26    8 2 0.7235017 0.07300010 0.5894451 0.8784389   1
+#&gt; var27    9 2 0.7354113 0.07259400 0.5909544 0.8804008   1
+#&gt; var28   10 2 0.7488617 0.06758814 0.6159852 0.8827301   1
+#&gt; var29   11 2 0.7376723 0.05511605 0.6405893 0.8496557   1
+#&gt; var30   12 2 0.6789079 0.05366711 0.5747152 0.7840886   1
+#&gt; var47   11 3 0.3756407 0.08056053 0.2147899 0.5366861   1
+#&gt; var48   12 3 0.4183832 0.07776984 0.2651418 0.5691131   1
+#&gt; var49   13 3 0.7691632 0.06841003 0.6447916 0.9132286   1
+#&gt; var50   14 3 0.7394105 0.05726511 0.6303995 0.8479232   1
+#&gt; var51   15 3 0.6973138 0.06318189 0.5845243 0.8268083   1
+#&gt; var52   16 3 0.7218488 0.06353080 0.6092361 0.8569854   1
+#&gt; var53   17 3 0.7004362 0.06527908 0.5801073 0.8243858   1
+#&gt; var54   18 3 0.7095391 0.06567843 0.5892349 0.8421828   1</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m0</span>, what <span class='op'>=</span> <span class='st'>'qlambda'</span><span class='op'>)</span> <span class='co'>#summarize significant loadings in pattern/Q-matrix format</span>
+</div><div class='output co'>#&gt;          [,1]      [,2]      [,3]
+#&gt; I1  0.7982782 0.0000000 0.0000000
+#&gt; I2  0.8068711 0.0000000 0.0000000
+#&gt; I3  0.7392978 0.0000000 0.0000000
+#&gt; I4  0.7509514 0.0000000 0.0000000
+#&gt; I5  0.7311445 0.4012357 0.0000000
+#&gt; I6  0.7595116 0.3668400 0.0000000
+#&gt; I7  0.0000000 0.7181459 0.0000000
+#&gt; I8  0.0000000 0.7235017 0.0000000
+#&gt; I9  0.0000000 0.7354113 0.0000000
+#&gt; I10 0.0000000 0.7488617 0.0000000
+#&gt; I11 0.0000000 0.7376723 0.3756407
+#&gt; I12 0.0000000 0.6789079 0.4183832
+#&gt; I13 0.0000000 0.0000000 0.7691632
+#&gt; I14 0.0000000 0.0000000 0.7394105
+#&gt; I15 0.0000000 0.0000000 0.6973138
+#&gt; I16 0.0000000 0.0000000 0.7218488
+#&gt; I17 0.3960988 0.0000000 0.7004362
+#&gt; I18 0.4258988 0.0000000 0.7095391</div><div class='input'><span class='co'># }</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
