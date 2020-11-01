@@ -7,7 +7,7 @@ Gibbs_MU<-function(y,ome,la,inv.psx, N, J, prior){
    Ycen<-y-la%*%ome
    temp<-rowSums(Ycen)
    mumu<-calsm%*%(inv.psx%*%temp+rep(Sigmu,J)*PMU)
-   mu<-mvrnorm(1,mumu,Sig=calsm)
+   mu<-mvrnorm(1,mumu,Sigma=calsm)
    # mu<-mvrnorm(1,mu=rep(0,J),Sig=calsm)
    # mu<-as.vector(mu+mumu)
 	 return(mu)
