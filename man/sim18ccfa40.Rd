@@ -3,7 +3,7 @@
 \docType{data}
 \name{sim18ccfa40}
 \alias{sim18ccfa40}
-\title{Simulated CCFA data with LI}
+\title{Simulated CCFA data with LI and missingness}
 \format{
 A list with components:
 \describe{
@@ -15,7 +15,7 @@ A list with components:
 sim18ccfa40
 }
 \description{
-Categorical CFA data simulated based on 18 items, 3 factors, 4 categories and local independence;
+Categorical CFA data simulated based on 18 items, 3 factors, 4 categories and local independence, with 10% missingness at random;
  factorial correlation \eqn{\Phi=.3}.
 }
 \keyword{datasets}

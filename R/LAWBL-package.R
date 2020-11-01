@@ -5,17 +5,15 @@
 #'
 #'
 #' @details
-#' Currently, this package includes the Partially Confirmatory Factor Analysis (PCFA),
-#' a partially confirmatory approach covering a wide range of the exploratory-confirmatory
-#'  continuum in factor analytic models (Chen, Guo, Zhang, & Pan, 2020). The PCFA is only for
-#'  continuous data, while the generalized PCFA (GPCFA) covers both continuous and categorical data.
-#'  There are two major model variants with different constraints for identification. One assumes local
-#'  independence (LI) with a more exploratory tendency, which can be also called the E-step.
-#'  The other allows local dependence (LD) with a more confirmatory tendency, which can be also
-#'  called the C-step.
-#'  Parameters are obtained by sampling from the posterior distributions with
-#'  the Markov chain Monte Carlo (MCMC) techniques. Different Bayesian Lasso methods are used to
-#'  regularize the loading pattern and local dependence.
+#' Currently, this package includes the Partially Confirmatory Factor Analysis (PCFA) model for continuous data
+#'  (Chen, Guo, Zhang, & Pan, 2020), the generalized PCFA (GPCFA) model covering continuous, categorical, and mixed-type data,
+#'  and the partially confirmatory item response model (PCIRM) for continuous and dichotomous data with intercept terms (Chen, 2020).
+#'  The three models represent a partially confirmatory approach covering a wide range of the exploratory-confirmatory continuum
+#'  under the context of factor analysis and item response theory. For PCFA, GPCFA, and PCIRM, there are two major model variants
+#'  with different constraints for identification. One assumes local  independence (LI) with a more exploratory tendency,
+#'  which can be also called the E-step. The other allows local dependence (LD) with a more confirmatory tendency, which can be also
+#'  called the C-step. Parameters are obtained by sampling from the posterior distributions with the Markov chain Monte Carlo (MCMC)
+#'  techniques. Different Bayesian Lasso methods are used to regularize the loading pattern and local dependence.
 #'
 #'
 #' @name LAWBL-package
@@ -36,8 +34,11 @@
 #' @references
 #'
 #' Chen, J., Guo, Z., Zhang, L., & Pan, J. (2020). A partially confirmatory approach to scale development
-#'  with the Bayesian Lasso. \emph{Psychological Methods}.
-#'  Advance online publication. DOI:10.1037/met0000293
+#'  with the Bayesian Lasso. \emph{Psychological Methods}. Advance online publication. DOI:10.1037/met0000293
+#'
+#'
+#'Chen, J. (2020). A partially confirmatory approach to the multidimensional item response theory
+#'with the Bayesian Lasso. \emph{Psychometrika}. 85(3), 738-774. DOI:10.1007/s11336-020-09724-3.
 #'
 #' @keywords package
 NULL

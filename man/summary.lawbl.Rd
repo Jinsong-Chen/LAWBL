@@ -20,14 +20,16 @@
 \item{what}{A list of options for what to summarize.
 
 \itemize{
-     \item \code{basic}: Basic information about the model and posteriors.
+    \item \code{basic}: Basic information about the model and posteriors.
     \item \code{lambda}: Loading estimates.
     \item \code{qlambda}: Loading estimates in pattern/Q-matrix format.
     \item \code{eigen}: Factorial eigen value.
     \item \code{dpsx}: Diagonal elements in the residual covariance matrix \code{PSX}.
     \item \code{offpsx}: Off-diagonal elements in \code{PSX}; local dependence terms.
     \item \code{phi}: Factorial correlations.
-    \item \code{shrink}: (Ave) shrinkage for each facor's loadings and LD (if \code{LD} in \code{pcfa} = T).
+    \item \code{thd}: Threshold estimates.
+    \item \code{int}: Intercept estimates (for  \code{\link{pcirm}} only).
+    \item \code{shrink}: (Ave) shrinkage for each factor's loadings and LD (if \code{LD} in \code{pcfa} = T).
     \item \code{all}: All above information.
  }}
 

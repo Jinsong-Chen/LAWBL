@@ -29,32 +29,39 @@ install.packages("LAWBL")
 devtools::install_github("Jinsong-Chen/LAWBL")
 ```
 
-## What can this package do?
+## What can this package do
 
 The long-term goal of **LAWBL** is to provide an analytical framework
 for modeling latent variables with different Bayesian learning methods.
 
 Currently, this package includes the Partially Confirmatory Factor
-Analysis (PCFA), a partially confirmatory approach covering a wide range
-of the exploratory-confirmatory continuum in factor analytic models. The
-PCFA (Chen, Guo, Zhang, & Pan, 2020) is only for continuous data, while
-the generalized PCFA (GPCFA) covers both continuous, categorical, or
-mixed-type data. There are two major model variants with different
-constraints for identification. One assumes local independence (LI) with
-a more exploratory tendency, which can be also called the E-step. The
-other allows local dependence (LD) with a more confirmatory tendency,
-which can be also called the C-step. Parameters are obtained by sampling
-from the posterior distributions with the Markov chain Monte Carlo
-(MCMC) techniques. Different Bayesian Lasso methods are used to
-regularize the loading pattern and local dependence.
+Analysis (PCFA) model for continuous data (Chen, Guo, Zhang, & Pan,
+2020), the generalized PCFA (GPCFA) model covering continuous,
+categorical, and mixed-type data, and the partially confirmatory item
+response model (PCIRM) for continuous and dichotomous data with
+intercept terms (Chen, 2020). The three models represent a partially
+confirmatory approach covering a wide range of the
+exploratory-confirmatory continuum under the context of factor analysis
+and item response theory. For PCFA, GPCFA, and PCIRM, there are two
+major model variants with different constraints for identification. One
+assumes local independence (LI) with a more exploratory tendency, which
+can be also called the E-step. The other allows local dependence (LD)
+with a more confirmatory tendency, which can be also called the C-step.
+Parameters are obtained by sampling from the posterior distributions
+with the Markov chain Monte Carlo (MCMC) techniques. Different Bayesian
+Lasso methods are used to regularize the loading pattern and local
+dependence.
 
 For examples of how to use the package, see vignettes or
-[here](https://jinsong-chen.github.io/LAWBL/articles/pcfa-examples.html)
-for PCFA with continuous data;
-[here](https://jinsong-chen.github.io/LAWBL/articles/gpcfa-examples.html)
-for GPCFA with categorical data.
 
-## How to use this package?
+  - For PCFA with continuous data:
+    [here](https://jinsong-chen.github.io/LAWBL/articles/pcfa-examples.html)
+  - For GPCFA with categorical and mixed-type data:
+    [here](https://jinsong-chen.github.io/LAWBL/articles/gpcfa-examples.html)
+  - For PCIRM with dichotomous data and intercept terms:
+    [here](https://jinsong-chen.github.io/LAWBL/articles/pcirm-examples.html)
+
+## How to use this package in brief
 
   - To estimate the E-step (when only a few loadings can be specified,
     e.g., 2 per factor), use *m \<- pcfa(dat=dat,Q=Q,LD=F)*
@@ -76,3 +83,7 @@ Chen, J., Guo, Z., Zhang, L., & Pan, J. (2020). A partially confirmatory
 approach to scale development with the Bayesian Lasso. *Psychological
 Methods*. Advance online publication.
 <http://dx.doi.org/10.1037/met0000293>
+
+Chen, J. (2020). A partially confirmatory approach to the
+multidimensional item response theory with the Bayesian Lasso.
+*Psychometrika*. 85(3), 738-774. <DOI:10.1007/s11336-020-09724-3>.

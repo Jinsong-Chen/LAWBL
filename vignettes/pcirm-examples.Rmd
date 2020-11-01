@@ -1,0 +1,91 @@
+---
+title: "pcirm-examples"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{pcirm-examples}
+  %\VignetteEncoding{UTF-8}
+  <!-- \usepackage[utf8]{inputenc} -->
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+**Note: the estimation process can be time consuming depending on the computing power. You can same some time by reducing the length of the chains.**
+
+## Dichotomous Data with Local Dependence and Minor Trait:
+
+1) Load the package, obtain the data, loading pattern (*qlam*), and no. of factors/traits.
+
+```{r}
+library(LAWBL)
+dat <- sim24ccfa21$dat
+head(dat)
+J <- ncol(dat) # no. of items
+qlam <- sim24ccfa21$qlam
+qlam
+K <- ncol(qlam) # no. of factors
+
+```
+
+2) PCIRM with primary loadings and three traits specified. Longer chain is suggested for stabler performance (*burn=iter=5,000* by default).
+
+```{r}
+ipf <- 8
+Q<-matrix(-1,J,K-1); # -1 for unspecified items
+for (k in 1:(K-1)){
+  tmp<-(k-1)*ipf
+  Q[(tmp+1):(tmp+len),k]<-1
+}
+Q
+m0<-pcirm(dat = dat,Q=  Q,LD = TRUE,cati = -1,burn = 2000,iter = 2000,update = 1000,verbose = TRUE)
+summary(m0)
+summary(m0, what = 'qlambda')
+summary(m0, what = 'offpsx') #summarize significant LD terms
+summary(m0,what='int')
+summary(m0,what='eigen')
+
+#plotting factorial eigenvalue
+plot_eigen(m0) # trace
+plot_eigen(m0, what='density') #density
+plot_eigen(m0, what='APSR') #adj, PSRF
+```
+
+3) PCIRM-LI with four traits and two cross-loadings specified based on results from previous step. Longer chain is suggested for stabler performance.
+
+```{r eval=FALSE}
+Q<-cbind(Q,-1);
+Q[c(15:16),K] <- 1
+
+m1<-pcirm(dat = dat,Q=  Q,LD = FALSE, cati = -1,burn = 4000,iter = 4000,update = 1000,verbose = TRUE)
+summary(m1)
+summary(m1, what = 'qlambda') #close to qlam
+```
+
+4) PCIRM with four traits and four cross-loadings specified based on results from previous step. Longer chain is suggested for stabler performance.
+
+```{r eval=FALSE}
+tmp<-summary(m1, what="qlambda")
+Q<-matrix(-1,J,K)
+Q[tmp!=0]<-1
+Q
+
+m2<-pcirm(dat = dat,Q=  Q,LD = TRUE,cati = -1,burn = 4000,iter = 4000,update = 1000,verbose = TRUE)
+summary(m2)
+summary(m2, what = 'qlambda')
+summary(m2, what = 'offpsx') #summarize significant LD terms
+summary(m2,what='int')
+summary(m2,what='eigen')
+
+#plotting factorial eigenvalue
+plot_eigen(m2) # trace
+plot_eigen(m2, what='density') #density
+plot_eigen(m2, what='APSR') #adj, PSRF
+```
+

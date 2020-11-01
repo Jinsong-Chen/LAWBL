@@ -13,20 +13,20 @@ editor_options:
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#R"
 )
 ```
 
 **Note: the estimation process can be time consuming depending on the computing power. You can same some time by reducing the length of the chains.**
 
-## Categorical Data w/o Local Dependence:
+## Categorical Data with Missingness but no Local Dependence:
 
 1) Load the package, obtain the data, loading pattern (*qlam*), and setup the design matrix Q.
 
 ```{r}
 library(LAWBL)
 dat <- sim18ccfa40$dat
-head(dat)
+head(dat) #10% missingness at random
 J <- ncol(dat) # no. of items
 K <- 3 # no. of factors
 qlam <- sim18ccfa40$qlam
@@ -53,7 +53,7 @@ summary(m0, what = 'qlambda')
 summary(m0,what='eigen') 
 
 #thresholds for categorical items
-summary(m0,what='threshold')
+summary(m0,what='thd')
 
 #plotting factorial eigenvalue
 plot_eigen(m0) # trace
@@ -76,7 +76,7 @@ summary(m1)
 summary(m1, what = 'qlambda')
 summary(m1, what = 'offpsx') #summarize significant LD terms
 summary(m1,what='eigen')
-summary(m1,what='threshold')
+summary(m1,what='thd')
 
 #plotting factorial eigenvalue
 # par(mar = rep(2, 4))
@@ -97,7 +97,7 @@ summary(m2)
 summary(m2, what = 'qlambda') 
 summary(m2, what = 'offpsx')
 summary(m2,what='eigen')
-summary(m2,what='threshold')
+summary(m2,what='thd')
 
 plot_eigen(m2) # Eigens' traces are excellent without regularization of the loadings
 ```
@@ -127,7 +127,7 @@ m0 <- pcfa(dat = dat, Q = Q,LD = FALSE, cati = -1,burn = 4000, iter = 4000,verbo
 summary(m0)
 summary(m0, what = 'qlambda')
 summary(m0,what='eigen')
-summary(m0,what='threshold')
+summary(m0,what='thd')
 
 plot_eigen(m0) # trace
 plot_eigen(m0, what='APSR')
@@ -147,7 +147,7 @@ summary(m1)
 summary(m1, what = 'qlambda')
 summary(m1,what='eigen')
 summary(m1, what = 'offpsx')
-summary(m1,what='threshold')
+summary(m1,what='thd')
 ```
 
 4) **CFA-LD:** Configure the Q matrix for a CCFA model with local dependence (i.e. without any unspecified loading) based on results from the C-step. Results are better than, but similar to the C-step.
@@ -162,5 +162,5 @@ summary(m2)
 summary(m2, what = 'qlambda') 
 summary(m2,what='eigen')
 summary(m2, what = 'offpsx')
-summary(m2,what='threshold')
+summary(m2,what='thd')
 ```
