@@ -5,7 +5,7 @@
 
 [![Project Status: Active ? The project has reached a stable, usable
 state and is being actively
-developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
+developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/)
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/LAWBL)](https://cran.r-project.org/package=LAWBL)
 
 ## How to cite the package
@@ -88,8 +88,8 @@ For examples of how to use the package, see vignettes or
 Chen, J., Guo, Z., Zhang, L., & Pan, J. (2020). A partially confirmatory
 approach to scale development with the Bayesian Lasso. *Psychological
 Methods*. Advance online publication.
-<http://dx.doi.org/10.1037/met0000293>
+<http://dx.doi.org/10.1037/met0000293>.
 
 Chen, J. (2020). A partially confirmatory approach to the
 multidimensional item response theory with the Bayesian Lasso.
-*Psychometrika*. 85(3), 738-774. <DOI:10.1007/s11336-020-09724-3>.
+*Psychometrika*. 85(3), 738-774. DOI: 10.1007/s11336-020-09724-3.
