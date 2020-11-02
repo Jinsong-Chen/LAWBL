@@ -1,4 +1,4 @@
-#' @title Partially Confirmatory Factor Analysis
+#' @title (Generalized) Partially Confirmatory Factor Analysis
 #'
 #' @description \code{PCFA} is a partially confirmatory approach covering a wide range of
 #' the exploratory-confirmatory continuum in factor analytic models (Chen, Guo, Zhang, & Pan, 2020).
@@ -14,13 +14,13 @@
 #' @name pcfa
 #'
 #' @param dat A \eqn{N \times J} data \emph{matrix} or \emph{data.frame} consisting of the
-#'     responses of \eqn{N} individuals to \eqn{J} items. Only continuous data are supported currently.
+#'     responses of \eqn{N} individuals to \eqn{J} items.
 #'
 #' @param Q A \eqn{J \times K} design matrix for the loading pattern with \eqn{K} factors and \eqn{J} items.
 #' Elements are 1, -1, and 0 for specified, unspecified, and zero-fixed loadings, respectively. For models with
 #' LI or the E-step, one can specify a few (e.g., 2) loadings per factor. For models with LD or the C-step, the
 #' sufficient condition of one specified loading per item is suggested, although there can be a few items
-#' without any specified loading (Chen, Guo, Zhang, & Pan, 2020). See \code{Examples}.
+#' without any specified loading. See \code{Examples}.
 #'
 #' @param LD logical; \code{TRUE} for allowing LD (model with LD or C-step).
 #'
@@ -37,7 +37,7 @@
 #'
 #' @param missing Value for missing data (default is \code{NA}).
 #'
-#' @param alas logical; for adaptive Lasso or not. The default is \code{FALSE}, which seems slightly stabler.
+#' @param alas logical; for adaptive Lasso or not. The default is \code{FALSE}.
 #'
 #' @param rseed An integer for the random seed.
 #'
@@ -61,8 +61,7 @@
 #' @references
 #'
 #' Chen, J., Guo, Z., Zhang, L., & Pan, J. (2020). A partially confirmatory approach to scale development
-#'  with the Bayesian Lasso. \emph{Psychological Methods}.
-#'  Advance online publication. DOI:10.1037/met0000293
+#'  with the Bayesian Lasso. \emph{Psychological Methods}. Advance online publication. DOI: 10.1037/met0000293.
 #'
 #' @importFrom MASS mvrnorm
 #'
@@ -70,33 +69,36 @@
 #'
 #' @examples
 #' \donttest{
-#'####################################
-#'#  Example 1: Estimation with LI   #
-#'####################################
+#'#####################################################
+#'#  Example 1: Estimation with continuous data & LD  #
+#'#####################################################
 #'
 #' dat <- sim18cfa1$dat
 #' J <- ncol(dat)
 #' K <- 3
 #' Q<-matrix(-1,J,K);
-#' Q[1:2,1]<-Q[9:10,2]<-Q[13:14,3]<-1
+#' Q[1:6,1]<-Q[7:12,2]<-Q[13:18,3]<-1
 #' Q
-#' m0 <- pcfa(dat = dat, Q = Q, LD = FALSE)
+#' m0 <- pcfa(dat = dat, Q = Q, LD = TRUE,burn = 5000, iter = 5000,verbose=TRUE)
 #' summary(m0) # summarize basic information
 #' summary(m0, what = 'lambda') #summarize significant loadings
 #' summary(m0, what = 'qlambda') #summarize significant loadings in pattern/Q-matrix format
 #' summary(m0, what = 'offpsx') #summarize significant LD terms
 #'
-#'####################################
-#'#  Example 2: Estimation with LD   #
-#'####################################
-#'
+#'######################################################
+#'#  Example 1: Estimation with categorical data & LI  #
+#'######################################################
+#' dat <- sim18ccfa40$dat
+#' J <- ncol(dat)
+#' K <- 3
 #' Q<-matrix(-1,J,K);
-#' Q[1:6,1]<-Q[7:12,2]<-Q[13:18,3]<-1
+#' Q[1:2,1]<-Q[7:8,2]<-Q[13:14,3]<-1
 #' Q
-#' m1 <- pcfa(dat = dat, Q = Q)
+#' m1 <- pcfa(dat = dat, Q = Q,LD = FALSE,cati=-1,burn = 3000, iter = 3000,verbose=TRUE)
 #' summary(m1) # summarize basic information
 #' summary(m1, what = 'qlambda') #summarize significant loadings in pattern/Q-matrix format
 #' summary(m1, what = 'offpsx') #summarize significant LD terms
+#' summary(m1,what='thd') #thresholds for categorical items
 #' }
 pcfa <- function(dat, Q, LD = TRUE,cati = NULL, PPMC = FALSE, burn = 5000, iter = 5000, update = 1000, missing = NA, rseed = 12345,
     digits = 4, alas = FALSE, verbose = FALSE) {

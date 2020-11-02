@@ -22,13 +22,13 @@ pcirm(
 }
 \arguments{
 \item{dat}{A \eqn{N \times J} data \emph{matrix} or \emph{data.frame} consisting of the
-responses of \eqn{N} individuals to \eqn{J} items. Only continuous data are supported currently.}
+responses of \eqn{N} individuals to \eqn{J} items. Only continuous and dichotomous data are supported.}
 
 \item{Q}{A \eqn{J \times K} design matrix for the loading pattern with \eqn{K} factors and \eqn{J} items.
 Elements are 1, -1, and 0 for specified, unspecified, and zero-fixed loadings, respectively. For models with
 LI or the E-step, one can specify a few (e.g., 2) loadings per factor. For models with LD or the C-step, the
 sufficient condition of one specified loading per item is suggested, although there can be a few items
-without any specified loading (Chen, Guo, Zhang, & Pan, 2020). See \code{Examples}.}
+without any specified loading. See \code{Examples}.}
 
 \item{LD}{logical; \code{TRUE} for allowing LD (model with LD or C-step).}
 
@@ -49,7 +49,7 @@ without any specified loading (Chen, Guo, Zhang, & Pan, 2020). See \code{Example
 
 \item{digits}{Number of significant digits to print when printing numeric values.}
 
-\item{alas}{logical; for adaptive Lasso or not. The default is \code{FALSE}, which seems slightly stabler.}
+\item{alas}{logical; for adaptive Lasso or not. The default is \code{FALSE}.}
 
 \item{verbose}{logical; to display the sampling information every \code{update} or not.
 
@@ -81,16 +81,16 @@ which estimates the intercept for continuous and dichotomous data. Similar to PC
 \examples{
 \donttest{
 ####################################
-#  Example 1: Estimation with LI   #
+#  Example 1: Estimation with LD   #
 ####################################
 
-dat <- sim18cfa1$dat
+dat <- sim24ccfa21$dat
 J <- ncol(dat)
 K <- 3
 Q<-matrix(-1,J,K);
 Q[1:2,1]<-Q[9:10,2]<-Q[13:14,3]<-1
 Q
-m0 <- pcfa(dat = dat, Q = Q, LD = FALSE)
+m0 <- pcirm(dat = dat, Q = Q, LD = TRUE, cati = -1, burn = 2000,iter = 2000,verbose = TRUE)
 summary(m0) # summarize basic information
 summary(m0, what = 'lambda') #summarize significant loadings
 summary(m0, what = 'qlambda') #summarize significant loadings in pattern/Q-matrix format
@@ -100,10 +100,10 @@ summary(m0, what = 'offpsx') #summarize significant LD terms
 #  Example 2: Estimation with LD   #
 ####################################
 
-Q<-matrix(-1,J,K);
-Q[1:6,1]<-Q[7:12,2]<-Q[13:18,3]<-1
+Q<-cbind(Q,-1);
+Q[15:16,4]<-1
 Q
-m1 <- pcfa(dat = dat, Q = Q)
+m1 <- pcirm(dat = dat, Q = Q, LD = FALSE, cati = -1, burn = 2000,iter = 2000,verbose = TRUE)
 summary(m1) # summarize basic information
 summary(m1, what = 'qlambda') #summarize significant loadings in pattern/Q-matrix format
 summary(m1, what = 'offpsx') #summarize significant LD terms

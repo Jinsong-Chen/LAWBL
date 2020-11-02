@@ -55,13 +55,12 @@ dat <- sim18cfa0$dat
 J <- ncol(dat)
 K <- 3
 Q<-matrix(-1,J,K);
-Q[1:2,1]<-Q[9:10,2]<-Q[13:14,3]<-1
+Q[1:2,1]<-Q[7:8,2]<-Q[13:14,3]<-1
 
 m0 <- pcfa(dat = dat, Q = Q, LD = FALSE,burn = 1000, iter = 1000)
 summary(m0) # summarize basic information
 summary(m0, what = 'lambda') #summarize significant loadings
 summary(m0, what = 'qlambda') #summarize significant loadings in pattern/Q-matrix format
 summary(m0, what = 'offpsx') #summarize significant LD terms
-summary(m0, what = 'all') #summarize all information
 }
 }

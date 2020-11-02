@@ -42,14 +42,13 @@
 #' J <- ncol(dat)
 #' K <- 3
 #' Q<-matrix(-1,J,K);
-#' Q[1:2,1]<-Q[9:10,2]<-Q[13:14,3]<-1
+#' Q[1:2,1]<-Q[7:8,2]<-Q[13:14,3]<-1
 #'
 #' m0 <- pcfa(dat = dat, Q = Q, LD = FALSE,burn = 1000, iter = 1000)
 #' summary(m0) # summarize basic information
 #' summary(m0, what = 'lambda') #summarize significant loadings
 #' summary(m0, what = 'qlambda') #summarize significant loadings in pattern/Q-matrix format
 #' summary(m0, what = 'offpsx') #summarize significant LD terms
-#' summary(m0, what = 'all') #summarize all information
 #' }
 
 summary.lawbl <- function(object, what = "basic", med = FALSE, SL = 0.05, detail = FALSE, digits = 4, ...) {
@@ -186,7 +185,7 @@ summary.lawbl <- function(object, what = "basic", med = FALSE, SL = 0.05, detail
 
     if(!is.null(object$MU)){
         MU <- result(object$MU, med, SL)
-        row.names(MU) <- paste0("I", 1:Jp)
+        row.names(MU) <- paste0("I", 1:J)
     }else{
         MU <- NULL
     }

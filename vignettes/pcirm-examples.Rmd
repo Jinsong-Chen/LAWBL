@@ -44,7 +44,7 @@ for (k in 1:(K-1)){
   Q[(tmp+1):(tmp+ipf),k]<-1
 }
 Q
-m0<-pcirm(dat = dat,Q=  Q,LD = TRUE,cati = -1,burn = 2000,iter = 2000,update = 1000,verbose = TRUE)
+m0<-pcirm(dat = dat,Q=  Q,LD = TRUE,cati = -1,burn = 2000,iter = 2000,verbose = TRUE)
 summary(m0)
 summary(m0, what = 'qlambda')
 summary(m0, what = 'offpsx') #summarize significant LD terms
@@ -63,7 +63,7 @@ plot_eigen(m0, what='APSR') #adj, PSRF
 Q<-cbind(Q,-1);
 Q[c(15:16),K] <- 1
 
-m1<-pcirm(dat = dat,Q=  Q,LD = FALSE, cati = -1,burn = 4000,iter = 4000,update = 1000,verbose = TRUE)
+m1<-pcirm(dat = dat,Q=  Q,LD = FALSE, cati = -1,burn = 4000,iter = 4000,verbose = TRUE)
 summary(m1)
 summary(m1, what = 'qlambda') #close to qlam
 ```
@@ -76,7 +76,7 @@ Q<-matrix(-1,J,K)
 Q[tmp!=0]<-1
 Q
 
-m2<-pcirm(dat = dat,Q=  Q,LD = TRUE,cati = -1,burn = 4000,iter = 4000,update = 1000,verbose = TRUE)
+m2<-pcirm(dat = dat,Q=  Q,LD = TRUE,cati = -1,burn = 4000,iter = 4000,verbose = TRUE)
 summary(m2)
 summary(m2, what = 'qlambda')
 summary(m2, what = 'offpsx') #summarize significant LD terms

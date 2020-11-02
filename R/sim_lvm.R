@@ -47,6 +47,8 @@
 #'
 #' @param zero_it Surplus items with zero loading.
 #'
+#' @param digits Number of significant digits to print when printing numeric values.
+#'
 #' @return An object of class \code{list} containing the data, loading, and factorial correlation matrix.
 #'
 #'
@@ -57,38 +59,31 @@
 #' @examples
 #'
 #' # for continuous data with cross-loadings and local dependence effect .3
-#' out <- sim_lvm(N=1000,K=3,ipf=6,lam = .7, lac=.3,ecr=.3,rseed = 123)
-#' head(out$dat)
+#' out <- sim_lvm(N=1000,K=3,ipf=6,lam = .7, lac=.3,ecr=.3)
+#' summary(out$dat)
 #' out$MLA
 #' out$ofd_ind
 #'
-#' # for categorical data with cross-loadings .4
-#' out <- sim_lvm(N=1000,K=3,ipf=6,lam = .7, lac=.4,cati=-1,noc=4,rseed = 123)
-#' head(out$dat)
+#' # for categorical data with cross-loadings .4 and 10% missingness
+#' out <- sim_lvm(N=1000,K=3,ipf=6,lam = .7, lac=.4,cati=-1,noc=4,misp=.1)
+#' summary(out$dat)
 #' out$MLA
 #' out$ofd_ind
 #'
-#' \donttest{
-#' dat <- out$dat
-#' J <- ncol(dat)
-#' K <- 3
-#' Q<-matrix(-1,J,K);
-#' Q[1:2,1]<-Q[9:10,2]<-Q[13:14,3]<-1
-#' Q
-#' m0 <- pcfa(dat = dat, cati = -1, Q = Q, LD = FALSE,burn = 3000, iter = 3000,verbose=TRUE)
-#' summary(m0) # summarize basic information
-#' summary(m0, what = 'lambda') #summarize significant loadings
-#' summary(m0, what = 'qlambda') #summarize significant loadings in pattern/Q-matrix format
-#' }
 sim_lvm <- function(N = 1000, K = 3, ipf = 8, cpf = 2, lam = 0.7, lac = 0.3, phi = 0.5, ph1 = -1,
         ecr = .0, ome_out = FALSE,cati = NULL, noc = c(4), misp = 0, rseed = 333,
-        necw=K,necb=K,add_ind=c(),add_la=.5,add_phi=0,zero_it=0) {
+        necw=K,necb=K,add_ind=c(),add_la=.5,add_phi=0,zero_it=0,digits = 4) {
 
     if (exists(".Random.seed", .GlobalEnv))
         oldseed <- .GlobalEnv$.Random.seed else oldseed <- NULL
         set.seed(rseed)
     set.seed <- rseed
-    # options(digits = 4)
+
+    oo <- options()       # code line i
+    on.exit(options(oo))  # code line i+1
+    # old_digits <- getOption("digits")
+    options(digits = digits)
+
     PHI <- matrix(phi, K, K)
     diag(PHI) <- 1
     if (ph1 > -1 && ph1 < 1) PHI[1,2] <- PHI[2,1]<-ph1
