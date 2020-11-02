@@ -39,10 +39,7 @@ K <- ncol(qlam) # no. of factors
 ```{r}
 ipf <- 8
 Q<-matrix(-1,J,K-1); # -1 for unspecified items
-for (k in 1:(K-1)){
-  tmp<-(k-1)*ipf
-  Q[(tmp+1):(tmp+ipf),k]<-1
-}
+Q[1:8,1]<-Q[9:16,2]<-Q[17:24,3]<-1
 Q
 m0<-pcirm(dat = dat,Q=  Q,LD = TRUE,cati = -1,burn = 2000,iter = 2000,verbose = TRUE)
 summary(m0)

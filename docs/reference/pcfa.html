@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Partially Confirmatory Factor Analysis — pcfa • LAWBL</title>
+<title>(Generalized) Partially Confirmatory Factor Analysis — pcfa • LAWBL</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,7 @@
 
 
 
-<meta property="og:title" content="Partially Confirmatory Factor Analysis — pcfa" />
+<meta property="og:title" content="(Generalized) Partially Confirmatory Factor Analysis — pcfa" />
 <meta property="og:description" content="PCFA is a partially confirmatory approach covering a wide range of
 the exploratory-confirmatory continuum in factor analytic models (Chen, Guo, Zhang, &amp;amp; Pan, 2020).
 The PCFA is only for continuous data, while the generalized PCFA (GPCFA) covers both continuous and categorical data.
@@ -138,7 +138,7 @@ The PCFA is only for continuous data, while the generalized PCFA (GPCFA) covers 
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Partially Confirmatory Factor Analysis</h1>
+    <h1>(Generalized) Partially Confirmatory Factor Analysis</h1>
     <small class="dont-index">Source: <a href='https://github.com/Jinsong-Chen/LAWBL/blob/master/R/pcfa.R'><code>R/pcfa.R</code></a></small>
     <div class="hidden name"><code>pcfa.Rd</code></div>
     </div>
@@ -178,7 +178,7 @@ The PCFA is only for continuous data, while the generalized PCFA (GPCFA) covers 
     <tr>
       <th>dat</th>
       <td><p>A \(N \times J\) data <em>matrix</em> or <em>data.frame</em> consisting of the
-responses of \(N\) individuals to \(J\) items. Only continuous data are supported currently.</p></td>
+responses of \(N\) individuals to \(J\) items.</p></td>
     </tr>
     <tr>
       <th>Q</th>
@@ -186,7 +186,7 @@ responses of \(N\) individuals to \(J\) items. Only continuous data are supporte
 Elements are 1, -1, and 0 for specified, unspecified, and zero-fixed loadings, respectively. For models with
 LI or the E-step, one can specify a few (e.g., 2) loadings per factor. For models with LD or the C-step, the
 sufficient condition of one specified loading per item is suggested, although there can be a few items
-without any specified loading (Chen, Guo, Zhang, &amp; Pan, 2020). See <code>Examples</code>.</p></td>
+without any specified loading. See <code>Examples</code>.</p></td>
     </tr>
     <tr>
       <th>LD</th>
@@ -227,7 +227,7 @@ without any specified loading (Chen, Guo, Zhang, &amp; Pan, 2020). See <code>Exa
     </tr>
     <tr>
       <th>alas</th>
-      <td><p>logical; for adaptive Lasso or not. The default is <code>FALSE</code>, which seems slightly stabler.</p></td>
+      <td><p>logical; for adaptive Lasso or not. The default is <code>FALSE</code>.</p></td>
     </tr>
     <tr>
       <th>verbose</th>
@@ -251,143 +251,22 @@ the posteriors that can be summarized using <code><a href='summary.lawbl.html'>s
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     <p>Chen, J., Guo, Z., Zhang, L., &amp; Pan, J. (2020). A partially confirmatory approach to scale development
- with the Bayesian Lasso. <em>Psychological Methods</em>.
- Advance online publication. DOI:10.1037/met0000293</p>
+ with the Bayesian Lasso. <em>Psychological Methods</em>. Advance online publication. DOI: 10.1037/met0000293.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
-<span class='co'>####################################</span>
-<span class='co'>#  Example 1: Estimation with LI   #</span>
-<span class='co'>####################################</span>
+<span class='co'>#####################################################</span>
+<span class='co'>#  Example 1: Estimation with continuous data &amp; LD  #</span>
+<span class='co'>#####################################################</span>
 
 <span class='va'>dat</span> <span class='op'>&lt;-</span> <span class='va'>sim18cfa1</span><span class='op'>$</span><span class='va'>dat</span>
 <span class='va'>J</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>ncol</a></span><span class='op'>(</span><span class='va'>dat</span><span class='op'>)</span>
 <span class='va'>K</span> <span class='op'>&lt;-</span> <span class='fl'>3</span>
 <span class='va'>Q</span><span class='op'>&lt;-</span><span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>1</span>,<span class='va'>J</span>,<span class='va'>K</span><span class='op'>)</span>;
-<span class='va'>Q</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>2</span>,<span class='fl'>1</span><span class='op'>]</span><span class='op'>&lt;-</span><span class='va'>Q</span><span class='op'>[</span><span class='fl'>9</span><span class='op'>:</span><span class='fl'>10</span>,<span class='fl'>2</span><span class='op'>]</span><span class='op'>&lt;-</span><span class='va'>Q</span><span class='op'>[</span><span class='fl'>13</span><span class='op'>:</span><span class='fl'>14</span>,<span class='fl'>3</span><span class='op'>]</span><span class='op'>&lt;-</span><span class='fl'>1</span>
-<span class='va'>Q</span>
-</div><div class='output co'>#&gt;       [,1] [,2] [,3]
-#&gt;  [1,]    1   -1   -1
-#&gt;  [2,]    1   -1   -1
-#&gt;  [3,]   -1   -1   -1
-#&gt;  [4,]   -1   -1   -1
-#&gt;  [5,]   -1   -1   -1
-#&gt;  [6,]   -1   -1   -1
-#&gt;  [7,]   -1   -1   -1
-#&gt;  [8,]   -1   -1   -1
-#&gt;  [9,]   -1    1   -1
-#&gt; [10,]   -1    1   -1
-#&gt; [11,]   -1   -1   -1
-#&gt; [12,]   -1   -1   -1
-#&gt; [13,]   -1   -1    1
-#&gt; [14,]   -1   -1    1
-#&gt; [15,]   -1   -1   -1
-#&gt; [16,]   -1   -1   -1
-#&gt; [17,]   -1   -1   -1
-#&gt; [18,]   -1   -1   -1</div><div class='input'><span class='va'>m0</span> <span class='op'>&lt;-</span> <span class='fu'>pcfa</span><span class='op'>(</span>dat <span class='op'>=</span> <span class='va'>dat</span>, Q <span class='op'>=</span> <span class='va'>Q</span>, LD <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m0</span><span class='op'>)</span> <span class='co'># summarize basic information</span>
-</div><div class='output co'>#&gt; $N
-#&gt; [1] 1000
-#&gt; 
-#&gt; $J
-#&gt; [1] 18
-#&gt; 
-#&gt; $K
-#&gt; [1] 3
-#&gt; 
-#&gt; $`Miss%`
-#&gt; [1] 0
-#&gt; 
-#&gt; $`LD enabled`
-#&gt; [1] FALSE
-#&gt; 
-#&gt; $`Burn in`
-#&gt; [1] 5000
-#&gt; 
-#&gt; $Iteration
-#&gt; [1] 5000
-#&gt; 
-#&gt; $`No. of sig lambda`
-#&gt; [1] 24
-#&gt; 
-#&gt; $`Adj. PSR`
-#&gt;    Point est. Upper C.I.
-#&gt; F1   1.020896   1.095994
-#&gt; F2   1.366068   2.207132
-#&gt; F3   1.033023   1.091168
-#&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m0</span>, what <span class='op'>=</span> <span class='st'>'lambda'</span><span class='op'>)</span> <span class='co'>#summarize significant loadings</span>
-</div><div class='output co'>#&gt;       Item F       est         sd      lower     upper sig
-#&gt; var1     1 1 0.6823035 0.07073808 0.54899356 0.8323660   1
-#&gt; var2     2 1 0.6859118 0.07071041 0.55228126 0.8318734   1
-#&gt; var3     3 1 0.9023841 0.08948767 0.70872624 1.0718473   1
-#&gt; var4     4 1 0.8751598 0.08628161 0.69100012 1.0388933   1
-#&gt; var5     5 1 0.7111464 0.07351279 0.58054074 0.8612567   1
-#&gt; var6     6 1 0.7306655 0.07437293 0.59033593 0.8777524   1
-#&gt; var17   17 1 0.3213983 0.09826327 0.11600496 0.5190424   1
-#&gt; var18   18 1 0.3414977 0.09756148 0.13037509 0.5295699   1
-#&gt; var23    5 2 0.2445881 0.10044092 0.03499408 0.4348215   1
-#&gt; var24    6 2 0.2224391 0.10183027 0.01509840 0.4196578   1
-#&gt; var25    7 2 0.6097788 0.07538802 0.47271494 0.7657608   1
-#&gt; var26    8 2 0.5992284 0.07160314 0.46738557 0.7453782   1
-#&gt; var27    9 2 0.8713781 0.09602151 0.71155996 1.0685804   1
-#&gt; var28   10 2 0.9102360 0.09605361 0.74387818 1.1109094   1
-#&gt; var29   11 2 0.6457283 0.07706906 0.49406204 0.7917918   1
-#&gt; var30   12 2 0.6583718 0.07867359 0.51522931 0.8200805   1
-#&gt; var47   11 3 0.2791487 0.10187503 0.07171180 0.4531849   1
-#&gt; var48   12 3 0.2938125 0.10352699 0.08590065 0.4749748   1
-#&gt; var49   13 3 0.6760728 0.07397181 0.53439753 0.8256898   1
-#&gt; var50   14 3 0.5923485 0.06880536 0.45946588 0.7276771   1
-#&gt; var51   15 3 0.8719171 0.08435527 0.71865693 1.0527674   1
-#&gt; var52   16 3 0.8939878 0.08592217 0.74112391 1.0799171   1
-#&gt; var53   17 3 0.6446634 0.07617622 0.48698461 0.7792120   1
-#&gt; var54   18 3 0.6339845 0.07695066 0.48351238 0.7790726   1</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m0</span>, what <span class='op'>=</span> <span class='st'>'qlambda'</span><span class='op'>)</span> <span class='co'>#summarize significant loadings in pattern/Q-matrix format</span>
-</div><div class='output co'>#&gt;          [,1]      [,2]      [,3]
-#&gt; I1  0.6823035 0.0000000 0.0000000
-#&gt; I2  0.6859118 0.0000000 0.0000000
-#&gt; I3  0.9023841 0.0000000 0.0000000
-#&gt; I4  0.8751598 0.0000000 0.0000000
-#&gt; I5  0.7111464 0.2445881 0.0000000
-#&gt; I6  0.7306655 0.2224391 0.0000000
-#&gt; I7  0.0000000 0.6097788 0.0000000
-#&gt; I8  0.0000000 0.5992284 0.0000000
-#&gt; I9  0.0000000 0.8713781 0.0000000
-#&gt; I10 0.0000000 0.9102360 0.0000000
-#&gt; I11 0.0000000 0.6457283 0.2791487
-#&gt; I12 0.0000000 0.6583718 0.2938125
-#&gt; I13 0.0000000 0.0000000 0.6760728
-#&gt; I14 0.0000000 0.0000000 0.5923485
-#&gt; I15 0.0000000 0.0000000 0.8719171
-#&gt; I16 0.0000000 0.0000000 0.8939878
-#&gt; I17 0.3213983 0.0000000 0.6446634
-#&gt; I18 0.3414977 0.0000000 0.6339845</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m0</span>, what <span class='op'>=</span> <span class='st'>'offpsx'</span><span class='op'>)</span> <span class='co'>#summarize significant LD terms</span>
-</div><div class='output co'>#&gt; NULL</div><div class='input'>
-<span class='co'>####################################</span>
-<span class='co'>#  Example 2: Estimation with LD   #</span>
-<span class='co'>####################################</span>
-
-<span class='va'>Q</span><span class='op'>&lt;-</span><span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>1</span>,<span class='va'>J</span>,<span class='va'>K</span><span class='op'>)</span>;
 <span class='va'>Q</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>6</span>,<span class='fl'>1</span><span class='op'>]</span><span class='op'>&lt;-</span><span class='va'>Q</span><span class='op'>[</span><span class='fl'>7</span><span class='op'>:</span><span class='fl'>12</span>,<span class='fl'>2</span><span class='op'>]</span><span class='op'>&lt;-</span><span class='va'>Q</span><span class='op'>[</span><span class='fl'>13</span><span class='op'>:</span><span class='fl'>18</span>,<span class='fl'>3</span><span class='op'>]</span><span class='op'>&lt;-</span><span class='fl'>1</span>
-<span class='va'>Q</span>
-</div><div class='output co'>#&gt;       [,1] [,2] [,3]
-#&gt;  [1,]    1   -1   -1
-#&gt;  [2,]    1   -1   -1
-#&gt;  [3,]    1   -1   -1
-#&gt;  [4,]    1   -1   -1
-#&gt;  [5,]    1   -1   -1
-#&gt;  [6,]    1   -1   -1
-#&gt;  [7,]   -1    1   -1
-#&gt;  [8,]   -1    1   -1
-#&gt;  [9,]   -1    1   -1
-#&gt; [10,]   -1    1   -1
-#&gt; [11,]   -1    1   -1
-#&gt; [12,]   -1    1   -1
-#&gt; [13,]   -1   -1    1
-#&gt; [14,]   -1   -1    1
-#&gt; [15,]   -1   -1    1
-#&gt; [16,]   -1   -1    1
-#&gt; [17,]   -1   -1    1
-#&gt; [18,]   -1   -1    1</div><div class='input'><span class='va'>m1</span> <span class='op'>&lt;-</span> <span class='fu'>pcfa</span><span class='op'>(</span>dat <span class='op'>=</span> <span class='va'>dat</span>, Q <span class='op'>=</span> <span class='va'>Q</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m1</span><span class='op'>)</span> <span class='co'># summarize basic information</span>
+
+<span class='va'>m0</span> <span class='op'>&lt;-</span> <span class='fu'>pcfa</span><span class='op'>(</span>dat <span class='op'>=</span> <span class='va'>dat</span>, Q <span class='op'>=</span> <span class='va'>Q</span>, LD <span class='op'>=</span> <span class='cn'>TRUE</span>,burn <span class='op'>=</span> <span class='fl'>2000</span>, iter <span class='op'>=</span> <span class='fl'>2000</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m0</span><span class='op'>)</span> <span class='co'># summarize basic information</span>
 </div><div class='output co'>#&gt; $N
 #&gt; [1] 1000
 #&gt; 
@@ -404,49 +283,135 @@ the posteriors that can be summarized using <code><a href='summary.lawbl.html'>s
 #&gt; [1] TRUE
 #&gt; 
 #&gt; $`Burn in`
-#&gt; [1] 5000
+#&gt; [1] 2000
 #&gt; 
 #&gt; $Iteration
-#&gt; [1] 5000
+#&gt; [1] 2000
 #&gt; 
 #&gt; $`No. of sig lambda`
-#&gt; [1] 21
+#&gt; [1] 24
 #&gt; 
 #&gt; $`Adj. PSR`
 #&gt;    Point est. Upper C.I.
-#&gt; F1   1.022491   1.024425
-#&gt; F2   1.052765   1.195116
-#&gt; F3   1.003639   1.018012
+#&gt; F1   2.193393   4.445878
+#&gt; F2   1.203207   1.700812
+#&gt; F3   1.436850   2.565249
 #&gt; 
 #&gt; $`No. of sig LD terms`
 #&gt; [1] 6
+#&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m0</span>, what <span class='op'>=</span> <span class='st'>'qlambda'</span><span class='op'>)</span> <span class='co'>#summarize significant loadings in pattern/Q-matrix format</span>
+</div><div class='output co'>#&gt;          [,1]      [,2]      [,3]
+#&gt; I1  0.7036118 0.0000000 0.0000000
+#&gt; I2  0.6862158 0.0000000 0.0000000
+#&gt; I3  0.7835280 0.0000000 0.0000000
+#&gt; I4  0.7505059 0.0000000 0.0000000
+#&gt; I5  0.7463606 0.2200309 0.0000000
+#&gt; I6  0.7257408 0.2314947 0.0000000
+#&gt; I7  0.0000000 0.7393253 0.0000000
+#&gt; I8  0.0000000 0.6561589 0.0000000
+#&gt; I9  0.0000000 0.7008701 0.0000000
+#&gt; I10 0.0000000 0.7393145 0.0000000
+#&gt; I11 0.0000000 0.7190930 0.2330106
+#&gt; I12 0.0000000 0.7244310 0.2437869
+#&gt; I13 0.0000000 0.0000000 0.7280235
+#&gt; I14 0.0000000 0.0000000 0.6575205
+#&gt; I15 0.0000000 0.0000000 0.7525031
+#&gt; I16 0.0000000 0.0000000 0.7822139
+#&gt; I17 0.2690860 0.0000000 0.7026052
+#&gt; I18 0.2785155 0.0000000 0.6905182</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m0</span>, what <span class='op'>=</span> <span class='st'>'offpsx'</span><span class='op'>)</span> <span class='co'>#summarize significant LD terms</span>
+</div><div class='output co'>#&gt;        row col       est         sd     lower     upper sig
+#&gt; var14   14   1 0.2901300 0.03390459 0.2212839 0.3548186   1
+#&gt; var24    7   2 0.2792458 0.03735051 0.2090881 0.3535239   1
+#&gt; var37    4   3 0.2659270 0.06342171 0.1465965 0.3824661   1
+#&gt; var111  13   8 0.2863126 0.04244308 0.1960572 0.3630370   1
+#&gt; var118  10   9 0.2873007 0.05345650 0.1955810 0.4058363   1
+#&gt; var163  16  15 0.2457947 0.05136563 0.1448529 0.3517192   1</div><div class='input'>
+<span class='co'>######################################################</span>
+<span class='co'>#  Example 1: Estimation with categorical data &amp; LI  #</span>
+<span class='co'>######################################################</span>
+<span class='va'>dat</span> <span class='op'>&lt;-</span> <span class='va'>sim18ccfa40</span><span class='op'>$</span><span class='va'>dat</span>
+<span class='va'>J</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>ncol</a></span><span class='op'>(</span><span class='va'>dat</span><span class='op'>)</span>
+<span class='va'>K</span> <span class='op'>&lt;-</span> <span class='fl'>3</span>
+<span class='va'>Q</span><span class='op'>&lt;-</span><span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>1</span>,<span class='va'>J</span>,<span class='va'>K</span><span class='op'>)</span>;
+<span class='va'>Q</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>2</span>,<span class='fl'>1</span><span class='op'>]</span><span class='op'>&lt;-</span><span class='va'>Q</span><span class='op'>[</span><span class='fl'>7</span><span class='op'>:</span><span class='fl'>8</span>,<span class='fl'>2</span><span class='op'>]</span><span class='op'>&lt;-</span><span class='va'>Q</span><span class='op'>[</span><span class='fl'>13</span><span class='op'>:</span><span class='fl'>14</span>,<span class='fl'>3</span><span class='op'>]</span><span class='op'>&lt;-</span><span class='fl'>1</span>
+
+<span class='va'>m1</span> <span class='op'>&lt;-</span> <span class='fu'>pcfa</span><span class='op'>(</span>dat <span class='op'>=</span> <span class='va'>dat</span>, Q <span class='op'>=</span> <span class='va'>Q</span>,LD <span class='op'>=</span> <span class='cn'>FALSE</span>,cati<span class='op'>=</span><span class='op'>-</span><span class='fl'>1</span>,burn <span class='op'>=</span> <span class='fl'>2000</span>, iter <span class='op'>=</span> <span class='fl'>2000</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m1</span><span class='op'>)</span> <span class='co'># summarize basic information</span>
+</div><div class='output co'>#&gt; $N
+#&gt; [1] 1000
+#&gt; 
+#&gt; $J
+#&gt; [1] 18
+#&gt; 
+#&gt; $K
+#&gt; [1] 3
+#&gt; 
+#&gt; $`Miss%`
+#&gt; [1] 10.12778
+#&gt; 
+#&gt; $`LD enabled`
+#&gt; [1] FALSE
+#&gt; 
+#&gt; $`Burn in`
+#&gt; [1] 2000
+#&gt; 
+#&gt; $Iteration
+#&gt; [1] 2000
+#&gt; 
+#&gt; $`No. of sig lambda`
+#&gt; [1] 24
+#&gt; 
+#&gt; $`Adj. PSR`
+#&gt;    Point est. Upper C.I.
+#&gt; F1   1.189139   1.647913
+#&gt; F2   1.023254   1.056057
+#&gt; F3   2.351752   4.897786
+#&gt; 
+#&gt; $`Cat Items`
+#&gt;  [1]  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18
+#&gt; 
+#&gt; $`max No. of categories`
+#&gt; [1] 4
 #&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m1</span>, what <span class='op'>=</span> <span class='st'>'qlambda'</span><span class='op'>)</span> <span class='co'>#summarize significant loadings in pattern/Q-matrix format</span>
 </div><div class='output co'>#&gt;          [,1]      [,2]      [,3]
-#&gt; I1  0.7080049 0.0000000 0.0000000
-#&gt; I2  0.7156364 0.0000000 0.0000000
-#&gt; I3  0.7456512 0.0000000 0.0000000
-#&gt; I4  0.7194150 0.0000000 0.0000000
-#&gt; I5  0.7631656 0.0000000 0.0000000
-#&gt; I6  0.7470119 0.2130088 0.0000000
-#&gt; I7  0.0000000 0.7466830 0.0000000
-#&gt; I8  0.0000000 0.6387746 0.0000000
-#&gt; I9  0.0000000 0.7029578 0.0000000
-#&gt; I10 0.0000000 0.7463125 0.0000000
-#&gt; I11 0.0000000 0.7627909 0.0000000
-#&gt; I12 0.0000000 0.7680904 0.0000000
-#&gt; I13 0.0000000 0.0000000 0.7491191
-#&gt; I14 0.0000000 0.0000000 0.6881314
-#&gt; I15 0.0000000 0.0000000 0.7134234
-#&gt; I16 0.0000000 0.0000000 0.7443122
-#&gt; I17 0.2613409 0.0000000 0.7073008
-#&gt; I18 0.2620075 0.0000000 0.6907499</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m1</span>, what <span class='op'>=</span> <span class='st'>'offpsx'</span><span class='op'>)</span> <span class='co'>#summarize significant LD terms</span>
-</div><div class='output co'>#&gt;        row col       est         sd     lower     upper sig
-#&gt; var14   14   1 0.2755861 0.03573670 0.2036052 0.3432464   1
-#&gt; var24    7   2 0.2727970 0.03925801 0.1976261 0.3516715   1
-#&gt; var37    4   3 0.2969177 0.04441451 0.2058291 0.3846609   1
-#&gt; var111  13   8 0.2901256 0.04131129 0.2023568 0.3640477   1
-#&gt; var118  10   9 0.3023453 0.05692644 0.1876921 0.4080570   1
-#&gt; var163  16  15 0.2780553 0.06073809 0.1575662 0.3954573   1</div><div class='input'><span class='co'># }</span>
+#&gt; I1  0.7560948 0.0000000 0.0000000
+#&gt; I2  0.8121163 0.0000000 0.0000000
+#&gt; I3  0.7149637 0.0000000 0.0000000
+#&gt; I4  0.7044037 0.0000000 0.0000000
+#&gt; I5  0.7696414 0.2385538 0.0000000
+#&gt; I6  0.7796088 0.2447085 0.0000000
+#&gt; I7  0.0000000 0.7476601 0.0000000
+#&gt; I8  0.0000000 0.7683220 0.0000000
+#&gt; I9  0.0000000 0.7244088 0.0000000
+#&gt; I10 0.0000000 0.5693661 0.0000000
+#&gt; I11 0.0000000 0.7256961 0.0000000
+#&gt; I12 0.0000000 0.7554918 0.2285913
+#&gt; I13 0.0000000 0.0000000 0.7965503
+#&gt; I14 0.0000000 0.0000000 0.7719113
+#&gt; I15 0.0000000 0.0000000 0.7449871
+#&gt; I16 0.0000000 0.1424523 0.6757960
+#&gt; I17 0.2691775 0.0000000 0.7089297
+#&gt; I18 0.2463353 0.0000000 0.7011446</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m1</span>, what <span class='op'>=</span> <span class='st'>'offpsx'</span><span class='op'>)</span> <span class='co'>#summarize significant LD terms</span>
+</div><div class='output co'>#&gt; NULL</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m1</span>,what<span class='op'>=</span><span class='st'>'thd'</span><span class='op'>)</span> <span class='co'>#thresholds for categorical items</span>
+</div><div class='output co'>#&gt;          [,1]          [,2]     [,3]
+#&gt; I1  -1.536265  0.0300125080 1.459293
+#&gt; I2  -1.535312 -0.0024606915 1.465380
+#&gt; I3  -1.493873  0.0347530853 1.425522
+#&gt; I4  -1.491429  0.0768993754 1.568178
+#&gt; I5  -1.570437  0.0039925671 1.528687
+#&gt; I6  -1.604694 -0.0052620599 1.548088
+#&gt; I7  -1.563636 -0.0035336577 1.519256
+#&gt; I8  -1.617804 -0.0624325388 1.510015
+#&gt; I9  -1.448811  0.0003825297 1.506687
+#&gt; I10 -1.512226 -0.0413081556 1.513763
+#&gt; I11 -1.602153  0.0012068198 1.445792
+#&gt; I12 -1.583043 -0.0544269007 1.518181
+#&gt; I13 -1.451689  0.0620793269 1.556996
+#&gt; I14 -1.455277 -0.0966455093 1.473252
+#&gt; I15 -1.492610 -0.0066140790 1.470633
+#&gt; I16 -1.493476 -0.0036092522 1.435829
+#&gt; I17 -1.500341  0.0442967789 1.445724
+#&gt; I18 -1.525298  0.0372342319 1.457815</div><div class='input'><span class='co'># }</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

@@ -88,11 +88,10 @@ dat <- sim24ccfa21$dat
 J <- ncol(dat)
 K <- 3
 Q<-matrix(-1,J,K);
-Q[1:2,1]<-Q[9:10,2]<-Q[13:14,3]<-1
-Q
-m0 <- pcirm(dat = dat, Q = Q, LD = TRUE, cati = -1, burn = 2000,iter = 2000,verbose = TRUE)
+Q[1:8,1]<-Q[9:16,2]<-Q[17:24,3]<-1
+
+m0 <- pcirm(dat = dat, Q = Q, LD = TRUE, cati = -1, burn = 2000,iter = 2000)
 summary(m0) # summarize basic information
-summary(m0, what = 'lambda') #summarize significant loadings
 summary(m0, what = 'qlambda') #summarize significant loadings in pattern/Q-matrix format
 summary(m0, what = 'offpsx') #summarize significant LD terms
 
@@ -102,8 +101,8 @@ summary(m0, what = 'offpsx') #summarize significant LD terms
 
 Q<-cbind(Q,-1);
 Q[15:16,4]<-1
-Q
-m1 <- pcirm(dat = dat, Q = Q, LD = FALSE, cati = -1, burn = 2000,iter = 2000,verbose = TRUE)
+
+m1 <- pcirm(dat = dat, Q = Q, LD = FALSE, cati = -1, burn = 2000,iter = 2000)
 summary(m1) # summarize basic information
 summary(m1, what = 'qlambda') #summarize significant loadings in pattern/Q-matrix format
 summary(m1, what = 'offpsx') #summarize significant LD terms

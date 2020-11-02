@@ -205,7 +205,7 @@
 <span class='va'>J</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>ncol</a></span><span class='op'>(</span><span class='va'>dat</span><span class='op'>)</span>
 <span class='va'>K</span> <span class='op'>&lt;-</span> <span class='fl'>3</span>
 <span class='va'>Q</span><span class='op'>&lt;-</span><span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>1</span>,<span class='va'>J</span>,<span class='va'>K</span><span class='op'>)</span>;
-<span class='va'>Q</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>2</span>,<span class='fl'>1</span><span class='op'>]</span><span class='op'>&lt;-</span><span class='va'>Q</span><span class='op'>[</span><span class='fl'>9</span><span class='op'>:</span><span class='fl'>10</span>,<span class='fl'>2</span><span class='op'>]</span><span class='op'>&lt;-</span><span class='va'>Q</span><span class='op'>[</span><span class='fl'>13</span><span class='op'>:</span><span class='fl'>14</span>,<span class='fl'>3</span><span class='op'>]</span><span class='op'>&lt;-</span><span class='fl'>1</span>
+<span class='va'>Q</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>2</span>,<span class='fl'>1</span><span class='op'>]</span><span class='op'>&lt;-</span><span class='va'>Q</span><span class='op'>[</span><span class='fl'>7</span><span class='op'>:</span><span class='fl'>8</span>,<span class='fl'>2</span><span class='op'>]</span><span class='op'>&lt;-</span><span class='va'>Q</span><span class='op'>[</span><span class='fl'>13</span><span class='op'>:</span><span class='fl'>14</span>,<span class='fl'>3</span><span class='op'>]</span><span class='op'>&lt;-</span><span class='fl'>1</span>
 
 <span class='va'>m0</span> <span class='op'>&lt;-</span> <span class='fu'><a href='pcfa.html'>pcfa</a></span><span class='op'>(</span>dat <span class='op'>=</span> <span class='va'>dat</span>, Q <span class='op'>=</span> <span class='va'>Q</span>, LD <span class='op'>=</span> <span class='cn'>FALSE</span>,burn <span class='op'>=</span> <span class='fl'>1000</span>, iter <span class='op'>=</span> <span class='fl'>1000</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m0</span><span class='op'>)</span> <span class='co'># summarize basic information</span>
@@ -231,173 +231,55 @@
 #&gt; [1] 1000
 #&gt; 
 #&gt; $`No. of sig lambda`
-#&gt; [1] 22
+#&gt; [1] 20
 #&gt; 
 #&gt; $`Adj. PSR`
 #&gt;    Point est. Upper C.I.
-#&gt; F1   1.072878   1.201632
-#&gt; F2   2.484116   7.247529
-#&gt; F3   1.030576   1.131831
+#&gt; F1   1.786925   3.860107
+#&gt; F2   1.216101   1.725925
+#&gt; F3   1.531601   3.100957
 #&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m0</span>, what <span class='op'>=</span> <span class='st'>'lambda'</span><span class='op'>)</span> <span class='co'>#summarize significant loadings</span>
-</div><div class='output co'>#&gt;       Item F       est         sd       lower     upper sig
-#&gt; var1     1 1 0.7380810 0.06628118 0.628051125 0.8731824   1
-#&gt; var2     2 1 0.7770108 0.07463361 0.654304394 0.9207123   1
-#&gt; var3     3 1 0.7538982 0.07103708 0.636941141 0.8961474   1
-#&gt; var4     4 1 0.6924366 0.06427519 0.580317325 0.8224172   1
-#&gt; var5     5 1 0.7519420 0.06526289 0.636548078 0.8742827   1
-#&gt; var6     6 1 0.7467335 0.06530851 0.629215154 0.8669389   1
-#&gt; var17   17 1 0.2731530 0.07289758 0.113970562 0.3984249   1
-#&gt; var18   18 1 0.2801235 0.07352431 0.126351423 0.4097882   1
-#&gt; var23    5 2 0.2289749 0.09316069 0.005585078 0.3702318   1
-#&gt; var24    6 2 0.2427417 0.09454963 0.043129190 0.4063930   1
-#&gt; var25    7 2 0.7697333 0.08835142 0.614122188 0.9295117   1
-#&gt; var26    8 2 0.7689378 0.09071653 0.621257701 0.9484193   1
-#&gt; var27    9 2 0.7711148 0.08814999 0.631163178 0.9419877   1
-#&gt; var28   10 2 0.6957037 0.07704221 0.550888909 0.8382743   1
-#&gt; var29   11 2 0.7367116 0.09195786 0.578555492 0.9289098   1
-#&gt; var30   12 2 0.7497902 0.09358578 0.571542096 0.9244531   1
-#&gt; var49   13 3 0.7348116 0.05721002 0.621609825 0.8375784   1
-#&gt; var50   14 3 0.7647557 0.05930961 0.649196208 0.8755927   1
-#&gt; var51   15 3 0.7561532 0.06015950 0.649150458 0.8874273   1
-#&gt; var52   16 3 0.7108223 0.06337808 0.588784788 0.8324290   1
-#&gt; var53   17 3 0.7047157 0.05364273 0.598700591 0.8016899   1
-#&gt; var54   18 3 0.7099413 0.05282302 0.614491281 0.8091791   1</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m0</span>, what <span class='op'>=</span> <span class='st'>'qlambda'</span><span class='op'>)</span> <span class='co'>#summarize significant loadings in pattern/Q-matrix format</span>
+</div><div class='output co'>#&gt;       Item F       est         sd      lower     upper sig
+#&gt; var1     1 1 0.7389272 0.08509317 0.58605278 0.9108594   1
+#&gt; var2     2 1 0.7798104 0.08671655 0.63621637 0.9566822   1
+#&gt; var3     3 1 0.7546501 0.08632634 0.61599997 0.9539889   1
+#&gt; var4     4 1 0.6964697 0.07836373 0.56402424 0.8644828   1
+#&gt; var5     5 1 0.7537004 0.08639961 0.59832343 0.9096751   1
+#&gt; var6     6 1 0.7528286 0.08371548 0.60373188 0.9032052   1
+#&gt; var25    7 2 0.7739907 0.07989901 0.62839370 0.9282863   1
+#&gt; var26    8 2 0.7799826 0.07900484 0.64040462 0.9313014   1
+#&gt; var27    9 2 0.7660520 0.07525168 0.64074251 0.9225442   1
+#&gt; var28   10 2 0.7026166 0.07250606 0.57897172 0.8485507   1
+#&gt; var29   11 2 0.7826122 0.06751288 0.65742989 0.9149613   1
+#&gt; var30   12 2 0.7957693 0.07105310 0.66369582 0.9262337   1
+#&gt; var47   11 3 0.1824270 0.10984032 0.02338258 0.4153187   1
+#&gt; var48   12 3 0.1877502 0.11083291 0.03312712 0.4319404   1
+#&gt; var49   13 3 0.7059281 0.09247914 0.55843858 0.8936570   1
+#&gt; var50   14 3 0.7378874 0.09698283 0.59122988 0.9329396   1
+#&gt; var51   15 3 0.7227175 0.09685810 0.58018214 0.9251605   1
+#&gt; var52   16 3 0.6789860 0.09316008 0.54372650 0.8798640   1
+#&gt; var53   17 3 0.6725952 0.09647909 0.52415897 0.8704844   1
+#&gt; var54   18 3 0.6753587 0.09590525 0.54306683 0.8866462   1</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m0</span>, what <span class='op'>=</span> <span class='st'>'qlambda'</span><span class='op'>)</span> <span class='co'>#summarize significant loadings in pattern/Q-matrix format</span>
 </div><div class='output co'>#&gt;          [,1]      [,2]      [,3]
-#&gt; I1  0.7380810 0.0000000 0.0000000
-#&gt; I2  0.7770108 0.0000000 0.0000000
-#&gt; I3  0.7538982 0.0000000 0.0000000
-#&gt; I4  0.6924366 0.0000000 0.0000000
-#&gt; I5  0.7519420 0.2289749 0.0000000
-#&gt; I6  0.7467335 0.2427417 0.0000000
-#&gt; I7  0.0000000 0.7697333 0.0000000
-#&gt; I8  0.0000000 0.7689378 0.0000000
-#&gt; I9  0.0000000 0.7711148 0.0000000
-#&gt; I10 0.0000000 0.6957037 0.0000000
-#&gt; I11 0.0000000 0.7367116 0.0000000
-#&gt; I12 0.0000000 0.7497902 0.0000000
-#&gt; I13 0.0000000 0.0000000 0.7348116
-#&gt; I14 0.0000000 0.0000000 0.7647557
-#&gt; I15 0.0000000 0.0000000 0.7561532
-#&gt; I16 0.0000000 0.0000000 0.7108223
-#&gt; I17 0.2731530 0.0000000 0.7047157
-#&gt; I18 0.2801235 0.0000000 0.7099413</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m0</span>, what <span class='op'>=</span> <span class='st'>'offpsx'</span><span class='op'>)</span> <span class='co'>#summarize significant LD terms</span>
-</div><div class='output co'>#&gt; NULL</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m0</span>, what <span class='op'>=</span> <span class='st'>'all'</span><span class='op'>)</span> <span class='co'>#summarize all information</span>
-</div><div class='output co'>#&gt; $N
-#&gt; [1] 1000
-#&gt; 
-#&gt; $J
-#&gt; [1] 18
-#&gt; 
-#&gt; $K
-#&gt; [1] 3
-#&gt; 
-#&gt; $`Miss%`
-#&gt; [1] 0
-#&gt; 
-#&gt; $`LD enabled`
-#&gt; [1] FALSE
-#&gt; 
-#&gt; $`Burn in`
-#&gt; [1] 1000
-#&gt; 
-#&gt; $Iteration
-#&gt; [1] 1000
-#&gt; 
-#&gt; $`No. of sig lambda`
-#&gt; [1] 22
-#&gt; 
-#&gt; $`Adj. PSR`
-#&gt;    Point est. Upper C.I.
-#&gt; F1   1.072878   1.201632
-#&gt; F2   2.484116   7.247529
-#&gt; F3   1.030576   1.131831
-#&gt; 
-#&gt; $lambda
-#&gt;       Item F       est         sd       lower     upper sig
-#&gt; var1     1 1 0.7380810 0.06628118 0.628051125 0.8731824   1
-#&gt; var2     2 1 0.7770108 0.07463361 0.654304394 0.9207123   1
-#&gt; var3     3 1 0.7538982 0.07103708 0.636941141 0.8961474   1
-#&gt; var4     4 1 0.6924366 0.06427519 0.580317325 0.8224172   1
-#&gt; var5     5 1 0.7519420 0.06526289 0.636548078 0.8742827   1
-#&gt; var6     6 1 0.7467335 0.06530851 0.629215154 0.8669389   1
-#&gt; var17   17 1 0.2731530 0.07289758 0.113970562 0.3984249   1
-#&gt; var18   18 1 0.2801235 0.07352431 0.126351423 0.4097882   1
-#&gt; var23    5 2 0.2289749 0.09316069 0.005585078 0.3702318   1
-#&gt; var24    6 2 0.2427417 0.09454963 0.043129190 0.4063930   1
-#&gt; var25    7 2 0.7697333 0.08835142 0.614122188 0.9295117   1
-#&gt; var26    8 2 0.7689378 0.09071653 0.621257701 0.9484193   1
-#&gt; var27    9 2 0.7711148 0.08814999 0.631163178 0.9419877   1
-#&gt; var28   10 2 0.6957037 0.07704221 0.550888909 0.8382743   1
-#&gt; var29   11 2 0.7367116 0.09195786 0.578555492 0.9289098   1
-#&gt; var30   12 2 0.7497902 0.09358578 0.571542096 0.9244531   1
-#&gt; var49   13 3 0.7348116 0.05721002 0.621609825 0.8375784   1
-#&gt; var50   14 3 0.7647557 0.05930961 0.649196208 0.8755927   1
-#&gt; var51   15 3 0.7561532 0.06015950 0.649150458 0.8874273   1
-#&gt; var52   16 3 0.7108223 0.06337808 0.588784788 0.8324290   1
-#&gt; var53   17 3 0.7047157 0.05364273 0.598700591 0.8016899   1
-#&gt; var54   18 3 0.7099413 0.05282302 0.614491281 0.8091791   1
-#&gt; 
-#&gt; $qlambda
-#&gt;          [,1]      [,2]      [,3]
-#&gt; I1  0.7380810 0.0000000 0.0000000
-#&gt; I2  0.7770108 0.0000000 0.0000000
-#&gt; I3  0.7538982 0.0000000 0.0000000
-#&gt; I4  0.6924366 0.0000000 0.0000000
-#&gt; I5  0.7519420 0.2289749 0.0000000
-#&gt; I6  0.7467335 0.2427417 0.0000000
-#&gt; I7  0.0000000 0.7697333 0.0000000
-#&gt; I8  0.0000000 0.7689378 0.0000000
-#&gt; I9  0.0000000 0.7711148 0.0000000
-#&gt; I10 0.0000000 0.6957037 0.0000000
-#&gt; I11 0.0000000 0.7367116 0.0000000
-#&gt; I12 0.0000000 0.7497902 0.0000000
-#&gt; I13 0.0000000 0.0000000 0.7348116
-#&gt; I14 0.0000000 0.0000000 0.7647557
-#&gt; I15 0.0000000 0.0000000 0.7561532
-#&gt; I16 0.0000000 0.0000000 0.7108223
-#&gt; I17 0.2731530 0.0000000 0.7047157
-#&gt; I18 0.2801235 0.0000000 0.7099413
-#&gt; 
-#&gt; $eigen
-#&gt;         est        sd    lower    upper sig
-#&gt; F1 3.585394 0.5650524 2.760307 4.781705   1
-#&gt; F2 3.656334 0.7488019 2.462118 5.047279   1
-#&gt; F3 3.468136 0.4567995 2.649537 4.390786   1
-#&gt; 
-#&gt; $dpsx
-#&gt;           est         sd     lower     upper sig
-#&gt; I1  0.4947443 0.02537462 0.4453227 0.5450595   1
-#&gt; I2  0.4747848 0.02407605 0.4234813 0.5165734   1
-#&gt; I3  0.4939726 0.02461745 0.4491618 0.5444413   1
-#&gt; I4  0.5324665 0.02597862 0.4834027 0.5826305   1
-#&gt; I5  0.2054844 0.01290521 0.1825830 0.2333936   1
-#&gt; I6  0.2216360 0.01338865 0.1970645 0.2476119   1
-#&gt; I7  0.5168719 0.02575559 0.4692324 0.5708618   1
-#&gt; I8  0.5144858 0.02619169 0.4688390 0.5690687   1
-#&gt; I9  0.4839741 0.02486998 0.4341564 0.5303802   1
-#&gt; I10 0.5443913 0.02685778 0.4945853 0.5957864   1
-#&gt; I11 0.2306706 0.01380884 0.2027840 0.2553676   1
-#&gt; I12 0.2115242 0.01339669 0.1842514 0.2362673   1
-#&gt; I13 0.4871659 0.02541251 0.4392566 0.5377029   1
-#&gt; I14 0.4947683 0.02522876 0.4460933 0.5459318   1
-#&gt; I15 0.4798667 0.02424535 0.4319277 0.5244874   1
-#&gt; I16 0.5082189 0.02659450 0.4608719 0.5666127   1
-#&gt; I17 0.2258619 0.01316764 0.2025199 0.2539956   1
-#&gt; I18 0.2112309 0.01279172 0.1872675 0.2372608   1
-#&gt; 
-#&gt; $phi
-#&gt;      row col       est        sd     lower     upper sig
-#&gt; var1   2   1 0.5691858 0.1467611 0.2246361 0.7551931   1
-#&gt; var2   3   1 0.5229470 0.1116751 0.3203469 0.7075037   1
-#&gt; var3   3   2 0.5707190 0.1152208 0.3676309 0.7669323   1
-#&gt; 
-#&gt; $shrink
-#&gt;          est        sd   lower    upper sig
-#&gt; F1  3.381835 0.5067763 2.46928 4.357771   1
-#&gt; F2  3.381835 0.5067763 2.46928 4.357771   1
-#&gt; F3  3.381835 0.5067763 2.46928 4.357771   1
-#&gt; PSX 0.000000 0.0000000 0.00000 0.000000   0
-#&gt; </div><div class='input'><span class='co'># }</span>
+#&gt; I1  0.7389272 0.0000000 0.0000000
+#&gt; I2  0.7798104 0.0000000 0.0000000
+#&gt; I3  0.7546501 0.0000000 0.0000000
+#&gt; I4  0.6964697 0.0000000 0.0000000
+#&gt; I5  0.7537004 0.0000000 0.0000000
+#&gt; I6  0.7528286 0.0000000 0.0000000
+#&gt; I7  0.0000000 0.7739907 0.0000000
+#&gt; I8  0.0000000 0.7799826 0.0000000
+#&gt; I9  0.0000000 0.7660520 0.0000000
+#&gt; I10 0.0000000 0.7026166 0.0000000
+#&gt; I11 0.0000000 0.7826122 0.1824270
+#&gt; I12 0.0000000 0.7957693 0.1877502
+#&gt; I13 0.0000000 0.0000000 0.7059281
+#&gt; I14 0.0000000 0.0000000 0.7378874
+#&gt; I15 0.0000000 0.0000000 0.7227175
+#&gt; I16 0.0000000 0.0000000 0.6789860
+#&gt; I17 0.0000000 0.0000000 0.6725952
+#&gt; I18 0.0000000 0.0000000 0.6753587</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m0</span>, what <span class='op'>=</span> <span class='st'>'offpsx'</span><span class='op'>)</span> <span class='co'>#summarize significant LD terms</span>
+</div><div class='output co'>#&gt; NULL</div><div class='input'><span class='co'># }</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
