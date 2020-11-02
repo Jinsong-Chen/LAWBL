@@ -15,3 +15,12 @@
 * Added - sim_lvm
 * Updated - vignettes
 * Updated - Documents & references
+
+
+# LAWBL 1.3.0
+
+* Added - PCIRM
+* Added - datasets
+* Fixed - bugs
+* Updated - vignettes for PCFA, GPCFA, and PCIRM
+* Updated - Documents & references
