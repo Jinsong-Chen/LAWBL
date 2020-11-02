@@ -3,11 +3,11 @@
 \docType{data}
 \name{sim18ccfa41}
 \alias{sim18ccfa41}
-\title{Simulated CCFA data with LD}
+\title{Simulated CCFA data with LD and missingness}
 \format{
 A list with components:
 \describe{
-\item{\code{dat}}{A dataset with simulated responses of 500 individuals to 18 items}
+\item{\code{dat}}{A dataset with simulated responses of 1000 individuals to 18 items}
 \item{\code{qlam}}{Loading pattern and values used to simulated the data}
 \item{\code{LD}}{Local dependence between items (LD effect = .3)}
 }
@@ -16,7 +16,7 @@ A list with components:
 sim18ccfa41
 }
 \description{
-Categorical CFA data simulated based on 18 items, 3 factors, 4 categories,
- and local dependence; factorial correlation \eqn{\Phi=.3}.
+Categorical CFA data simulated based on 18 items, 3 factors, and 4 categories
+with local dependence and  10% missingness at random; factorial correlation \eqn{\Phi=.3}.
 }
 \keyword{datasets}

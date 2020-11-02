@@ -3,7 +3,7 @@
 \docType{data}
 \name{sim24ccfa21}
 \alias{sim24ccfa21}
-\title{Simulated CCFA data (dichotomous) with LD}
+\title{Simulated CCFA data (dichotomous) with LD and a minor factor/trait}
 \format{
 A list with components:
 \describe{
@@ -18,5 +18,6 @@ sim24ccfa21
 \description{
 Categorical CFA data simulated based on 24 items, 4 factors, 2 categories
  and local dependence; factorial correlation \eqn{\Phi=.3}.
+ The last factor/trait is minor (measured by cross-loadings only).
 }
 \keyword{datasets}

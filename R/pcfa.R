@@ -31,7 +31,7 @@
 #'
 #' @param burn Number of burn-in iterations before posterior sampling.
 #'
-#' @param iter Number of formal iterations for posterior sampling.
+#' @param iter Number of formal iterations for posterior sampling (> 0).
 #'
 #' @param update Number of iterations to update the sampling information.
 #'
@@ -106,6 +106,9 @@ pcfa <- function(dat, Q, LD = TRUE,cati = NULL, PPMC = FALSE, burn = 5000, iter 
 
     if (nrow(Q) != ncol(dat))
         stop("The numbers of items in data and Q are unequal.", call. = FALSE)
+
+    if (iter == 0)
+        stop("Parameter iter must be larger than zero.", call. = FALSE)
 
     if (exists(".Random.seed", .GlobalEnv))
         oldseed <- .GlobalEnv$.Random.seed else oldseed <- NULL

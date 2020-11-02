@@ -8,6 +8,12 @@ state and is being actively
 developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/LAWBL)](https://cran.r-project.org/package=LAWBL)
 
+## How to cite the package
+
+Chen, J. (2020). LAWBL: Latent (variable) analysis with Bayesian
+learning (R package version 1.3.0). Retrieved from
+<https://CRAN.R-project.org/package=LAWBL>
+
 ## Installation
 
 1)  Install the stable version from [CRAN](https://CRAN.R-project.org)

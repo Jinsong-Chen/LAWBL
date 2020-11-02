@@ -1,11 +1,8 @@
-# data generation for cfa & ccfa with cross loadings & err. covariance library(MASS)
-# N=1000;K=3;ipf=6;cpf=2;lam=.7;lac=.0;phi=.3;misp=0;necb=K;necw=K;rseed = 333
-# ecr=.3;add_ind=c(1,2,9,10);add_la=.5;add_phi=0;cati=-1;noc=c(2);ph1 = -1
-
 #' @title Simulating data with Latent Variable Modeling
 #'
-#' @description \code{sim_lvm} can simulate data based on factor analytic models
-#'  with different loading patterns and residual covariance (local dependence) structures.
+#' @description \code{sim_lvm} can simulate data based on factor analysis or
+#' item response models with different response formats (continuous or categorical),
+#' loading patterns and residual covariance (local dependence) structures.
 #'
 #' @name sim_lvm
 #'
@@ -40,7 +37,7 @@
 #'
 #' @param necb Number of between-factor local dependence.
 #'
-#' @param necw Number of withinn-factor local dependence.
+#' @param necw Number of within-factor local dependence.
 #'
 #' @param add_ind (Additional) minor factor with cross-loadings.
 #'

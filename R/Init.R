@@ -47,14 +47,16 @@ init <- function(y, const) {
 
     # #Hyperparameters of Gamma distribution for the shrinkage parameter
     prior$a_gams <- 1
-    prior$b_gams <- 0.1
+    prior$b_gams <- .1
     prior$a_gaml_sq <- 1
-    prior$b_gaml_sq <- 0.1
+    prior$b_gaml_sq <- .1
 
     # initial values
     LA <- matrix(0, J, K)
-    LA[Q == 1] <- 0.5
-    # LA[Q==-1] <- .1 LA <- matrix(runif(J * K), J, K) LA[Q == 0] <- 0
+    LA[Q == 1] <- .7
+    LA[Q == -1] <- .1
+    # LA <- matrix(runif(J * K), J, K)
+    # LA[Q == 0] <- 0
 
     PHI <- matrix(0.1, K, K)
     diag(PHI[, ]) <- 1

@@ -39,7 +39,7 @@ without any specified loading (Chen, Guo, Zhang, & Pan, 2020). See \code{Example
 
 \item{burn}{Number of burn-in iterations before posterior sampling.}
 
-\item{iter}{Number of formal iterations for posterior sampling.}
+\item{iter}{Number of formal iterations for posterior sampling (> 0).}
 
 \item{update}{Number of iterations to update the sampling information.}
 

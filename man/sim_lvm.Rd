@@ -57,7 +57,7 @@ sim_lvm(
 
 \item{rseed}{An integer for the random seed.}
 
-\item{necw}{Number of withinn-factor local dependence.}
+\item{necw}{Number of within-factor local dependence.}
 
 \item{necb}{Number of between-factor local dependence.}
 
@@ -73,8 +73,9 @@ sim_lvm(
 An object of class \code{list} containing the data, loading, and factorial correlation matrix.
 }
 \description{
-\code{sim_lvm} can simulate data based on factor analytic models
- with different loading patterns and residual covariance (local dependence) structures.
+\code{sim_lvm} can simulate data based on factor analysis or
+item response models with different response formats (continuous or categorical),
+loading patterns and residual covariance (local dependence) structures.
 }
 \examples{
 
