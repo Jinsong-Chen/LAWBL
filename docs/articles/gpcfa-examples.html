@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">LAWBL</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.0</span>
       </span>
     </div>
 
@@ -58,6 +58,9 @@
     </li>
     <li>
       <a href="../articles/gpcfa-examples.html">gpcfa-examples</a>
+    </li>
+    <li>
+      <a href="../articles/pcirm-examples.html">pcirm-examples</a>
     </li>
   </ul>
 </li>
@@ -97,212 +100,264 @@
     
     
 <p><strong>Note: the estimation process can be time consuming depending on the computing power. You can same some time by reducing the length of the chains.</strong></p>
-<div id="categorical-data-wo-local-dependence" class="section level2">
+<div id="categorical-data-with-missingness-but-no-local-dependence" class="section level2">
 <h2 class="hasAnchor">
-<a href="#categorical-data-wo-local-dependence" class="anchor"></a>Categorical Data w/o Local Dependence:</h2>
+<a href="#categorical-data-with-missingness-but-no-local-dependence" class="anchor"></a>Categorical Data with Missingness but no Local Dependence:</h2>
 <ol style="list-style-type: decimal">
 <li>Load the package, obtain the data, loading pattern (<em>qlam</em>), and setup the design matrix Q.</li>
 </ol>
-<div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/Jinsong-Chen/LAWBL">LAWBL</a></span><span class="op">)</span>
-<span class="va">dat</span> <span class="op">&lt;-</span> <span class="va">sim18ccfa40</span><span class="op">$</span><span class="va">dat</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span>
-<span class="co">#&gt;      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12] [,13] [,14]</span>
-<span class="co">#&gt; [1,]    2    2    3    2    2    2    1    1    2     2     1     1     1     1</span>
-<span class="co">#&gt; [2,]    2    3    2    3    3    3    2    3    2     3     3     3     3     3</span>
-<span class="co">#&gt; [3,]    3    4    2    2    3    3    2    2    3     3     3     3     2     2</span>
-<span class="co">#&gt; [4,]    3    3    3    2    3    3    3    4    3     2     2     3     3     3</span>
-<span class="co">#&gt; [5,]    1    2    2    3    1    1    1    2    2     1     1     1     2     2</span>
-<span class="co">#&gt; [6,]    3    4    3    3    3    3    3    2    3     3     2     2     3     3</span>
-<span class="co">#&gt;      [,15] [,16] [,17] [,18]</span>
-<span class="co">#&gt; [1,]     1     1     2     1</span>
-<span class="co">#&gt; [2,]     3     2     3     3</span>
-<span class="co">#&gt; [3,]     2     2     3     2</span>
-<span class="co">#&gt; [4,]     3     3     3     3</span>
-<span class="co">#&gt; [5,]     2     1     1     1</span>
-<span class="co">#&gt; [6,]     4     3     4     3</span>
-<span class="va">J</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span> <span class="co"># no. of items</span>
-<span class="va">K</span> <span class="op">&lt;-</span> <span class="fl">3</span> <span class="co"># no. of factors</span>
-<span class="va">qlam</span> <span class="op">&lt;-</span> <span class="va">sim18ccfa40</span><span class="op">$</span><span class="va">qlam</span>
-<span class="va">qlam</span>
-<span class="co">#&gt;       [,1] [,2] [,3]</span>
-<span class="co">#&gt;  [1,]  0.7  0.0  0.0</span>
-<span class="co">#&gt;  [2,]  0.7  0.0  0.0</span>
-<span class="co">#&gt;  [3,]  0.7  0.0  0.0</span>
-<span class="co">#&gt;  [4,]  0.7  0.0  0.0</span>
-<span class="co">#&gt;  [5,]  0.7  0.3  0.0</span>
-<span class="co">#&gt;  [6,]  0.7  0.3  0.0</span>
-<span class="co">#&gt;  [7,]  0.0  0.7  0.0</span>
-<span class="co">#&gt;  [8,]  0.0  0.7  0.0</span>
-<span class="co">#&gt;  [9,]  0.0  0.7  0.0</span>
-<span class="co">#&gt; [10,]  0.0  0.7  0.0</span>
-<span class="co">#&gt; [11,]  0.0  0.7  0.3</span>
-<span class="co">#&gt; [12,]  0.0  0.7  0.3</span>
-<span class="co">#&gt; [13,]  0.0  0.0  0.7</span>
-<span class="co">#&gt; [14,]  0.0  0.0  0.7</span>
-<span class="co">#&gt; [15,]  0.0  0.0  0.7</span>
-<span class="co">#&gt; [16,]  0.0  0.0  0.7</span>
-<span class="co">#&gt; [17,]  0.3  0.0  0.7</span>
-<span class="co">#&gt; [18,]  0.3  0.0  0.7</span>
-
-<span class="va">Q</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>,<span class="va">J</span>,<span class="va">K</span><span class="op">)</span>; <span class="co"># -1 for unspecified items</span>
-<span class="va">Q</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>,<span class="fl">1</span><span class="op">]</span><span class="op">&lt;-</span><span class="va">Q</span><span class="op">[</span><span class="fl">7</span><span class="op">:</span><span class="fl">8</span>,<span class="fl">2</span><span class="op">]</span><span class="op">&lt;-</span><span class="va">Q</span><span class="op">[</span><span class="fl">13</span><span class="op">:</span><span class="fl">14</span>,<span class="fl">3</span><span class="op">]</span><span class="op">&lt;-</span><span class="fl">1</span> <span class="co"># 1 for specified items</span>
-<span class="va">Q</span>
-<span class="co">#&gt;       [,1] [,2] [,3]</span>
-<span class="co">#&gt;  [1,]    1   -1   -1</span>
-<span class="co">#&gt;  [2,]    1   -1   -1</span>
-<span class="co">#&gt;  [3,]   -1   -1   -1</span>
-<span class="co">#&gt;  [4,]   -1   -1   -1</span>
-<span class="co">#&gt;  [5,]   -1   -1   -1</span>
-<span class="co">#&gt;  [6,]   -1   -1   -1</span>
-<span class="co">#&gt;  [7,]   -1    1   -1</span>
-<span class="co">#&gt;  [8,]   -1    1   -1</span>
-<span class="co">#&gt;  [9,]   -1   -1   -1</span>
-<span class="co">#&gt; [10,]   -1   -1   -1</span>
-<span class="co">#&gt; [11,]   -1   -1   -1</span>
-<span class="co">#&gt; [12,]   -1   -1   -1</span>
-<span class="co">#&gt; [13,]   -1   -1    1</span>
-<span class="co">#&gt; [14,]   -1   -1    1</span>
-<span class="co">#&gt; [15,]   -1   -1   -1</span>
-<span class="co">#&gt; [16,]   -1   -1   -1</span>
-<span class="co">#&gt; [17,]   -1   -1   -1</span>
-<span class="co">#&gt; [18,]   -1   -1   -1</span></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">library</span>(LAWBL)</span>
+<span id="cb1-2"><a href="#cb1-2"></a>dat &lt;-<span class="st"> </span>sim18ccfa40<span class="op">$</span>dat</span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="kw">dim</span>(dat)</span>
+<span id="cb1-4"><a href="#cb1-4"></a>R<span class="op">&gt;</span><span class="st"> </span>[<span class="dv">1</span>] <span class="dv">1000</span>   <span class="dv">18</span></span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="kw">summary</span>(dat) <span class="co">#10% missingness at random</span></span>
+<span id="cb1-6"><a href="#cb1-6"></a>R<span class="op">&gt;</span><span class="st">        </span>V1              V2              V3              V4       </span>
+<span id="cb1-7"><a href="#cb1-7"></a>R<span class="op">&gt;</span><span class="st">  </span>Min.   <span class="op">:</span><span class="fl">1.000</span>   Min.   <span class="op">:</span><span class="fl">1.000</span>   Min.   <span class="op">:</span><span class="fl">1.000</span>   Min.   <span class="op">:</span><span class="fl">1.000</span>  </span>
+<span id="cb1-8"><a href="#cb1-8"></a>R<span class="op">&gt;</span><span class="st">  </span>1st Qu.<span class="op">:</span><span class="fl">2.000</span>   1st Qu.<span class="op">:</span><span class="fl">2.000</span>   1st Qu.<span class="op">:</span><span class="fl">2.000</span>   1st Qu.<span class="op">:</span><span class="fl">2.000</span>  </span>
+<span id="cb1-9"><a href="#cb1-9"></a>R<span class="op">&gt;</span><span class="st">  </span>Median <span class="op">:</span><span class="fl">2.000</span>   Median <span class="op">:</span><span class="fl">2.000</span>   Median <span class="op">:</span><span class="fl">2.000</span>   Median <span class="op">:</span><span class="fl">2.000</span>  </span>
+<span id="cb1-10"><a href="#cb1-10"></a>R<span class="op">&gt;</span><span class="st">  </span>Mean   <span class="op">:</span><span class="fl">2.507</span>   Mean   <span class="op">:</span><span class="fl">2.508</span>   Mean   <span class="op">:</span><span class="fl">2.498</span>   Mean   <span class="op">:</span><span class="fl">2.464</span>  </span>
+<span id="cb1-11"><a href="#cb1-11"></a>R<span class="op">&gt;</span><span class="st">  </span>3rd Qu.<span class="op">:</span><span class="fl">3.000</span>   3rd Qu.<span class="op">:</span><span class="fl">3.000</span>   3rd Qu.<span class="op">:</span><span class="fl">3.000</span>   3rd Qu.<span class="op">:</span><span class="fl">3.000</span>  </span>
+<span id="cb1-12"><a href="#cb1-12"></a>R<span class="op">&gt;</span><span class="st">  </span>Max.   <span class="op">:</span><span class="fl">4.000</span>   Max.   <span class="op">:</span><span class="fl">4.000</span>   Max.   <span class="op">:</span><span class="fl">4.000</span>   Max.   <span class="op">:</span><span class="fl">4.000</span>  </span>
+<span id="cb1-13"><a href="#cb1-13"></a>R<span class="op">&gt;</span><span class="st">  </span>NA<span class="st">'s   :91      NA'</span>s   <span class="op">:</span><span class="dv">92</span>      NA<span class="st">'s   :93      NA'</span>s   <span class="op">:</span><span class="dv">104</span>    </span>
+<span id="cb1-14"><a href="#cb1-14"></a>R<span class="op">&gt;</span><span class="st">        </span>V5              V6              V7              V8       </span>
+<span id="cb1-15"><a href="#cb1-15"></a>R<span class="op">&gt;</span><span class="st">  </span>Min.   <span class="op">:</span><span class="fl">1.000</span>   Min.   <span class="op">:</span><span class="fl">1.000</span>   Min.   <span class="op">:</span><span class="fl">1.000</span>   Min.   <span class="op">:</span><span class="fl">1.000</span>  </span>
+<span id="cb1-16"><a href="#cb1-16"></a>R<span class="op">&gt;</span><span class="st">  </span>1st Qu.<span class="op">:</span><span class="fl">2.000</span>   1st Qu.<span class="op">:</span><span class="fl">2.000</span>   1st Qu.<span class="op">:</span><span class="fl">2.000</span>   1st Qu.<span class="op">:</span><span class="fl">2.000</span>  </span>
+<span id="cb1-17"><a href="#cb1-17"></a>R<span class="op">&gt;</span><span class="st">  </span>Median <span class="op">:</span><span class="fl">3.000</span>   Median <span class="op">:</span><span class="fl">3.000</span>   Median <span class="op">:</span><span class="fl">3.000</span>   Median <span class="op">:</span><span class="fl">3.000</span>  </span>
+<span id="cb1-18"><a href="#cb1-18"></a>R<span class="op">&gt;</span><span class="st">  </span>Mean   <span class="op">:</span><span class="fl">2.511</span>   Mean   <span class="op">:</span><span class="fl">2.506</span>   Mean   <span class="op">:</span><span class="fl">2.511</span>   Mean   <span class="op">:</span><span class="fl">2.537</span>  </span>
+<span id="cb1-19"><a href="#cb1-19"></a>R<span class="op">&gt;</span><span class="st">  </span>3rd Qu.<span class="op">:</span><span class="fl">3.000</span>   3rd Qu.<span class="op">:</span><span class="fl">3.000</span>   3rd Qu.<span class="op">:</span><span class="fl">3.000</span>   3rd Qu.<span class="op">:</span><span class="fl">3.000</span>  </span>
+<span id="cb1-20"><a href="#cb1-20"></a>R<span class="op">&gt;</span><span class="st">  </span>Max.   <span class="op">:</span><span class="fl">4.000</span>   Max.   <span class="op">:</span><span class="fl">4.000</span>   Max.   <span class="op">:</span><span class="fl">4.000</span>   Max.   <span class="op">:</span><span class="fl">4.000</span>  </span>
+<span id="cb1-21"><a href="#cb1-21"></a>R<span class="op">&gt;</span><span class="st">  </span>NA<span class="st">'s   :105     NA'</span>s   <span class="op">:</span><span class="dv">119</span>     NA<span class="st">'s   :115     NA'</span>s   <span class="op">:</span><span class="dv">108</span>    </span>
+<span id="cb1-22"><a href="#cb1-22"></a>R<span class="op">&gt;</span><span class="st">        </span>V9             V10             V11            V12             V13       </span>
+<span id="cb1-23"><a href="#cb1-23"></a>R<span class="op">&gt;</span><span class="st">  </span>Min.   <span class="op">:</span><span class="fl">1.000</span>   Min.   <span class="op">:</span><span class="fl">1.000</span>   Min.   <span class="op">:</span><span class="fl">1.00</span>   Min.   <span class="op">:</span><span class="fl">1.000</span>   Min.   <span class="op">:</span><span class="fl">1.000</span>  </span>
+<span id="cb1-24"><a href="#cb1-24"></a>R<span class="op">&gt;</span><span class="st">  </span>1st Qu.<span class="op">:</span><span class="fl">2.000</span>   1st Qu.<span class="op">:</span><span class="fl">2.000</span>   1st Qu.<span class="op">:</span><span class="fl">2.00</span>   1st Qu.<span class="op">:</span><span class="fl">2.000</span>   1st Qu.<span class="op">:</span><span class="fl">2.000</span>  </span>
+<span id="cb1-25"><a href="#cb1-25"></a>R<span class="op">&gt;</span><span class="st">  </span>Median <span class="op">:</span><span class="fl">3.000</span>   Median <span class="op">:</span><span class="fl">3.000</span>   Median <span class="op">:</span><span class="fl">3.00</span>   Median <span class="op">:</span><span class="fl">3.000</span>   Median <span class="op">:</span><span class="fl">2.000</span>  </span>
+<span id="cb1-26"><a href="#cb1-26"></a>R<span class="op">&gt;</span><span class="st">  </span>Mean   <span class="op">:</span><span class="fl">2.507</span>   Mean   <span class="op">:</span><span class="fl">2.518</span>   Mean   <span class="op">:</span><span class="fl">2.52</span>   Mean   <span class="op">:</span><span class="fl">2.524</span>   Mean   <span class="op">:</span><span class="fl">2.459</span>  </span>
+<span id="cb1-27"><a href="#cb1-27"></a>R<span class="op">&gt;</span><span class="st">  </span>3rd Qu.<span class="op">:</span><span class="fl">3.000</span>   3rd Qu.<span class="op">:</span><span class="fl">3.000</span>   3rd Qu.<span class="op">:</span><span class="fl">3.00</span>   3rd Qu.<span class="op">:</span><span class="fl">3.000</span>   3rd Qu.<span class="op">:</span><span class="fl">3.000</span>  </span>
+<span id="cb1-28"><a href="#cb1-28"></a>R<span class="op">&gt;</span><span class="st">  </span>Max.   <span class="op">:</span><span class="fl">4.000</span>   Max.   <span class="op">:</span><span class="fl">4.000</span>   Max.   <span class="op">:</span><span class="fl">4.00</span>   Max.   <span class="op">:</span><span class="fl">4.000</span>   Max.   <span class="op">:</span><span class="fl">4.000</span>  </span>
+<span id="cb1-29"><a href="#cb1-29"></a>R<span class="op">&gt;</span><span class="st">  </span>NA<span class="st">'s   :102     NA'</span>s   <span class="op">:</span><span class="dv">99</span>      NA<span class="st">'s   :92     NA'</span>s   <span class="op">:</span><span class="dv">100</span>     NA<span class="st">'s   :103    </span></span>
+<span id="cb1-30"><a href="#cb1-30"></a><span class="st">R&gt;       V14             V15             V16             V17             V18      </span></span>
+<span id="cb1-31"><a href="#cb1-31"></a><span class="st">R&gt;  Min.   :1.000   Min.   :1.000   Min.   :1.000   Min.   :1.000   Min.   :1.00  </span></span>
+<span id="cb1-32"><a href="#cb1-32"></a><span class="st">R&gt;  1st Qu.:2.000   1st Qu.:2.000   1st Qu.:2.000   1st Qu.:2.000   1st Qu.:2.00  </span></span>
+<span id="cb1-33"><a href="#cb1-33"></a><span class="st">R&gt;  Median :3.000   Median :3.000   Median :3.000   Median :2.000   Median :2.00  </span></span>
+<span id="cb1-34"><a href="#cb1-34"></a><span class="st">R&gt;  Mean   :2.544   Mean   :2.501   Mean   :2.508   Mean   :2.485   Mean   :2.49  </span></span>
+<span id="cb1-35"><a href="#cb1-35"></a><span class="st">R&gt;  3rd Qu.:3.000   3rd Qu.:3.000   3rd Qu.:3.000   3rd Qu.:3.000   3rd Qu.:3.00  </span></span>
+<span id="cb1-36"><a href="#cb1-36"></a><span class="st">R&gt;  Max.   :4.000   Max.   :4.000   Max.   :4.000   Max.   :4.000   Max.   :4.00  </span></span>
+<span id="cb1-37"><a href="#cb1-37"></a><span class="st">R&gt;  NA'</span>s   <span class="op">:</span><span class="dv">96</span>      NA<span class="st">'s   :114     NA'</span>s   <span class="op">:</span><span class="dv">96</span>      NA<span class="st">'s   :84      NA'</span>s   <span class="op">:</span><span class="dv">110</span></span>
+<span id="cb1-38"><a href="#cb1-38"></a>J &lt;-<span class="st"> </span><span class="kw">ncol</span>(dat) <span class="co"># no. of items</span></span>
+<span id="cb1-39"><a href="#cb1-39"></a>K &lt;-<span class="st"> </span><span class="dv">3</span> <span class="co"># no. of factors</span></span>
+<span id="cb1-40"><a href="#cb1-40"></a>qlam &lt;-<span class="st"> </span>sim18ccfa40<span class="op">$</span>qlam</span>
+<span id="cb1-41"><a href="#cb1-41"></a>qlam</span>
+<span id="cb1-42"><a href="#cb1-42"></a>R<span class="op">&gt;</span><span class="st">       </span>[,<span class="dv">1</span>] [,<span class="dv">2</span>] [,<span class="dv">3</span>]</span>
+<span id="cb1-43"><a href="#cb1-43"></a>R<span class="op">&gt;</span><span class="st">  </span>[<span class="dv">1</span>,]  <span class="fl">0.7</span>  <span class="fl">0.0</span>  <span class="fl">0.0</span></span>
+<span id="cb1-44"><a href="#cb1-44"></a>R<span class="op">&gt;</span><span class="st">  </span>[<span class="dv">2</span>,]  <span class="fl">0.7</span>  <span class="fl">0.0</span>  <span class="fl">0.0</span></span>
+<span id="cb1-45"><a href="#cb1-45"></a>R<span class="op">&gt;</span><span class="st">  </span>[<span class="dv">3</span>,]  <span class="fl">0.7</span>  <span class="fl">0.0</span>  <span class="fl">0.0</span></span>
+<span id="cb1-46"><a href="#cb1-46"></a>R<span class="op">&gt;</span><span class="st">  </span>[<span class="dv">4</span>,]  <span class="fl">0.7</span>  <span class="fl">0.0</span>  <span class="fl">0.0</span></span>
+<span id="cb1-47"><a href="#cb1-47"></a>R<span class="op">&gt;</span><span class="st">  </span>[<span class="dv">5</span>,]  <span class="fl">0.7</span>  <span class="fl">0.3</span>  <span class="fl">0.0</span></span>
+<span id="cb1-48"><a href="#cb1-48"></a>R<span class="op">&gt;</span><span class="st">  </span>[<span class="dv">6</span>,]  <span class="fl">0.7</span>  <span class="fl">0.3</span>  <span class="fl">0.0</span></span>
+<span id="cb1-49"><a href="#cb1-49"></a>R<span class="op">&gt;</span><span class="st">  </span>[<span class="dv">7</span>,]  <span class="fl">0.0</span>  <span class="fl">0.7</span>  <span class="fl">0.0</span></span>
+<span id="cb1-50"><a href="#cb1-50"></a>R<span class="op">&gt;</span><span class="st">  </span>[<span class="dv">8</span>,]  <span class="fl">0.0</span>  <span class="fl">0.7</span>  <span class="fl">0.0</span></span>
+<span id="cb1-51"><a href="#cb1-51"></a>R<span class="op">&gt;</span><span class="st">  </span>[<span class="dv">9</span>,]  <span class="fl">0.0</span>  <span class="fl">0.7</span>  <span class="fl">0.0</span></span>
+<span id="cb1-52"><a href="#cb1-52"></a>R<span class="op">&gt;</span><span class="st"> </span>[<span class="dv">10</span>,]  <span class="fl">0.0</span>  <span class="fl">0.7</span>  <span class="fl">0.0</span></span>
+<span id="cb1-53"><a href="#cb1-53"></a>R<span class="op">&gt;</span><span class="st"> </span>[<span class="dv">11</span>,]  <span class="fl">0.0</span>  <span class="fl">0.7</span>  <span class="fl">0.3</span></span>
+<span id="cb1-54"><a href="#cb1-54"></a>R<span class="op">&gt;</span><span class="st"> </span>[<span class="dv">12</span>,]  <span class="fl">0.0</span>  <span class="fl">0.7</span>  <span class="fl">0.3</span></span>
+<span id="cb1-55"><a href="#cb1-55"></a>R<span class="op">&gt;</span><span class="st"> </span>[<span class="dv">13</span>,]  <span class="fl">0.0</span>  <span class="fl">0.0</span>  <span class="fl">0.7</span></span>
+<span id="cb1-56"><a href="#cb1-56"></a>R<span class="op">&gt;</span><span class="st"> </span>[<span class="dv">14</span>,]  <span class="fl">0.0</span>  <span class="fl">0.0</span>  <span class="fl">0.7</span></span>
+<span id="cb1-57"><a href="#cb1-57"></a>R<span class="op">&gt;</span><span class="st"> </span>[<span class="dv">15</span>,]  <span class="fl">0.0</span>  <span class="fl">0.0</span>  <span class="fl">0.7</span></span>
+<span id="cb1-58"><a href="#cb1-58"></a>R<span class="op">&gt;</span><span class="st"> </span>[<span class="dv">16</span>,]  <span class="fl">0.0</span>  <span class="fl">0.0</span>  <span class="fl">0.7</span></span>
+<span id="cb1-59"><a href="#cb1-59"></a>R<span class="op">&gt;</span><span class="st"> </span>[<span class="dv">17</span>,]  <span class="fl">0.3</span>  <span class="fl">0.0</span>  <span class="fl">0.7</span></span>
+<span id="cb1-60"><a href="#cb1-60"></a>R<span class="op">&gt;</span><span class="st"> </span>[<span class="dv">18</span>,]  <span class="fl">0.3</span>  <span class="fl">0.0</span>  <span class="fl">0.7</span></span>
+<span id="cb1-61"><a href="#cb1-61"></a></span>
+<span id="cb1-62"><a href="#cb1-62"></a>Q&lt;-<span class="kw">matrix</span>(<span class="op">-</span><span class="dv">1</span>,J,K); <span class="co"># -1 for unspecified items</span></span>
+<span id="cb1-63"><a href="#cb1-63"></a>Q[<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>,<span class="dv">1</span>]&lt;-Q[<span class="dv">7</span><span class="op">:</span><span class="dv">8</span>,<span class="dv">2</span>]&lt;-Q[<span class="dv">13</span><span class="op">:</span><span class="dv">14</span>,<span class="dv">3</span>]&lt;-<span class="dv">1</span> <span class="co"># 1 for specified items</span></span>
+<span id="cb1-64"><a href="#cb1-64"></a>Q</span>
+<span id="cb1-65"><a href="#cb1-65"></a>R<span class="op">&gt;</span><span class="st">       </span>[,<span class="dv">1</span>] [,<span class="dv">2</span>] [,<span class="dv">3</span>]</span>
+<span id="cb1-66"><a href="#cb1-66"></a>R<span class="op">&gt;</span><span class="st">  </span>[<span class="dv">1</span>,]    <span class="dv">1</span>   <span class="dv">-1</span>   <span class="dv">-1</span></span>
+<span id="cb1-67"><a href="#cb1-67"></a>R<span class="op">&gt;</span><span class="st">  </span>[<span class="dv">2</span>,]    <span class="dv">1</span>   <span class="dv">-1</span>   <span class="dv">-1</span></span>
+<span id="cb1-68"><a href="#cb1-68"></a>R<span class="op">&gt;</span><span class="st">  </span>[<span class="dv">3</span>,]   <span class="dv">-1</span>   <span class="dv">-1</span>   <span class="dv">-1</span></span>
+<span id="cb1-69"><a href="#cb1-69"></a>R<span class="op">&gt;</span><span class="st">  </span>[<span class="dv">4</span>,]   <span class="dv">-1</span>   <span class="dv">-1</span>   <span class="dv">-1</span></span>
+<span id="cb1-70"><a href="#cb1-70"></a>R<span class="op">&gt;</span><span class="st">  </span>[<span class="dv">5</span>,]   <span class="dv">-1</span>   <span class="dv">-1</span>   <span class="dv">-1</span></span>
+<span id="cb1-71"><a href="#cb1-71"></a>R<span class="op">&gt;</span><span class="st">  </span>[<span class="dv">6</span>,]   <span class="dv">-1</span>   <span class="dv">-1</span>   <span class="dv">-1</span></span>
+<span id="cb1-72"><a href="#cb1-72"></a>R<span class="op">&gt;</span><span class="st">  </span>[<span class="dv">7</span>,]   <span class="dv">-1</span>    <span class="dv">1</span>   <span class="dv">-1</span></span>
+<span id="cb1-73"><a href="#cb1-73"></a>R<span class="op">&gt;</span><span class="st">  </span>[<span class="dv">8</span>,]   <span class="dv">-1</span>    <span class="dv">1</span>   <span class="dv">-1</span></span>
+<span id="cb1-74"><a href="#cb1-74"></a>R<span class="op">&gt;</span><span class="st">  </span>[<span class="dv">9</span>,]   <span class="dv">-1</span>   <span class="dv">-1</span>   <span class="dv">-1</span></span>
+<span id="cb1-75"><a href="#cb1-75"></a>R<span class="op">&gt;</span><span class="st"> </span>[<span class="dv">10</span>,]   <span class="dv">-1</span>   <span class="dv">-1</span>   <span class="dv">-1</span></span>
+<span id="cb1-76"><a href="#cb1-76"></a>R<span class="op">&gt;</span><span class="st"> </span>[<span class="dv">11</span>,]   <span class="dv">-1</span>   <span class="dv">-1</span>   <span class="dv">-1</span></span>
+<span id="cb1-77"><a href="#cb1-77"></a>R<span class="op">&gt;</span><span class="st"> </span>[<span class="dv">12</span>,]   <span class="dv">-1</span>   <span class="dv">-1</span>   <span class="dv">-1</span></span>
+<span id="cb1-78"><a href="#cb1-78"></a>R<span class="op">&gt;</span><span class="st"> </span>[<span class="dv">13</span>,]   <span class="dv">-1</span>   <span class="dv">-1</span>    <span class="dv">1</span></span>
+<span id="cb1-79"><a href="#cb1-79"></a>R<span class="op">&gt;</span><span class="st"> </span>[<span class="dv">14</span>,]   <span class="dv">-1</span>   <span class="dv">-1</span>    <span class="dv">1</span></span>
+<span id="cb1-80"><a href="#cb1-80"></a>R<span class="op">&gt;</span><span class="st"> </span>[<span class="dv">15</span>,]   <span class="dv">-1</span>   <span class="dv">-1</span>   <span class="dv">-1</span></span>
+<span id="cb1-81"><a href="#cb1-81"></a>R<span class="op">&gt;</span><span class="st"> </span>[<span class="dv">16</span>,]   <span class="dv">-1</span>   <span class="dv">-1</span>   <span class="dv">-1</span></span>
+<span id="cb1-82"><a href="#cb1-82"></a>R<span class="op">&gt;</span><span class="st"> </span>[<span class="dv">17</span>,]   <span class="dv">-1</span>   <span class="dv">-1</span>   <span class="dv">-1</span></span>
+<span id="cb1-83"><a href="#cb1-83"></a>R<span class="op">&gt;</span><span class="st"> </span>[<span class="dv">18</span>,]   <span class="dv">-1</span>   <span class="dv">-1</span>   <span class="dv">-1</span></span></code></pre></div>
 <ol start="2" style="list-style-type: decimal">
 <li>
-<strong>E-step:</strong> Estimate with the GPCFA-LI model (E-step) by setting <em>LD=F</em>. Only a few loadings need to be specified in Q (e.g., 2 per factor). Longer chain is suggested for stabler performance (<em>burn=iter=5,000</em> by default).</li>
+<strong>E-step:</strong> Estimate with the GPCFA-LI model (E-step) by setting <em>LD=F</em>. Only a few loadings need to be specified in Q (e.g., 2 per factor). Longer chain is suggested for more accurate and stable estimation.</li>
 </ol>
-<div class="sourceCode" id="cb2"><pre class="downlit">
-<span class="va">m0</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pcfa.html">pcfa</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">dat</span>, Q <span class="op">=</span> <span class="va">Q</span>,LD <span class="op">=</span> <span class="cn">FALSE</span>, cati <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>,burn <span class="op">=</span> <span class="fl">2000</span>, iter <span class="op">=</span> <span class="fl">2000</span>,verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Tot. Iter = 1000</span>
-<span class="co">#&gt;          [,1]  [,2]  [,3]</span>
-<span class="co">#&gt; Feigen  2.767 3.216 3.030</span>
-<span class="co">#&gt; NLA_lg3 7.000 8.000 8.000</span>
-<span class="co">#&gt; Shrink  3.694 3.694 3.694</span>
-<span class="co">#&gt; Ave. Thd: -1e+200 -1.449 0.01407 1.616 1e+200</span>
-<span class="co">#&gt; Acc Rate: 0.515 0.5483</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Tot. Iter = 2000</span>
-<span class="co">#&gt;          [,1]  [,2]  [,3]</span>
-<span class="co">#&gt; Feigen  2.542 5.487 4.405</span>
-<span class="co">#&gt; NLA_lg3 6.000 8.000 7.000</span>
-<span class="co">#&gt; Shrink  3.486 3.486 3.486</span>
-<span class="co">#&gt; Ave. Thd: -1e+200 -1.527 -0.02694 1.539 1e+200</span>
-<span class="co">#&gt; Acc Rate: 0.5191 0.555</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Tot. Iter = 3000</span>
-<span class="co">#&gt;          [,1]  [,2]  [,3]</span>
-<span class="co">#&gt; Feigen  3.243 2.129 3.626</span>
-<span class="co">#&gt; NLA_lg3 6.000 7.000 9.000</span>
-<span class="co">#&gt; Shrink  3.417 3.417 3.417</span>
-<span class="co">#&gt; Adj PSR 1.235 1.036 1.812</span>
-<span class="co">#&gt; Ave. Thd: -1e+200 -1.538 0.001356 1.577 1e+200</span>
-<span class="co">#&gt; Acc Rate: 0.5128 0.5545</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Tot. Iter = 4000</span>
-<span class="co">#&gt;          [,1]  [,2]  [,3]</span>
-<span class="co">#&gt; Feigen  4.281 3.653 4.562</span>
-<span class="co">#&gt; NLA_lg3 7.000 7.000 8.000</span>
-<span class="co">#&gt; Shrink  3.341 3.341 3.341</span>
-<span class="co">#&gt; Adj PSR 1.002 1.024 1.257</span>
-<span class="co">#&gt; Ave. Thd: -1e+200 -1.5 -0.008524 1.589 1e+200</span>
-<span class="co">#&gt; Acc Rate: 0.5133 0.5548</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; #Sign change: 0 0 0 0 0 0</span>
-<span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   40.74    0.02   40.78</span>
-
-<span class="co"># summarize basic information</span>
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">m0</span><span class="op">)</span>
-<span class="co">#&gt; $N</span>
-<span class="co">#&gt; [1] 500</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $J</span>
-<span class="co">#&gt; [1] 18</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $K</span>
-<span class="co">#&gt; [1] 3</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $`Miss%`</span>
-<span class="co">#&gt; [1] 0</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $`LD enabled`</span>
-<span class="co">#&gt; [1] FALSE</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $`Burn in`</span>
-<span class="co">#&gt; [1] 2000</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $Iteration</span>
-<span class="co">#&gt; [1] 2000</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $`No. of sig lambda`</span>
-<span class="co">#&gt; [1] 23</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $`Adj. PSR`</span>
-<span class="co">#&gt;    Point est. Upper C.I.</span>
-<span class="co">#&gt; F1   1.001969   1.011749</span>
-<span class="co">#&gt; F2   1.023965   1.076504</span>
-<span class="co">#&gt; F3   1.257485   1.904784</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $`Cat Items`</span>
-<span class="co">#&gt;  [1]  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $`max No. of categories`</span>
-<span class="co">#&gt; [1] 4</span>
-
-<span class="co">#summarize significant loadings in pattern/Q-matrix format</span>
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">m0</span>, what <span class="op">=</span> <span class="st">'qlambda'</span><span class="op">)</span> 
-<span class="co">#&gt;          [,1]      [,2]      [,3]</span>
-<span class="co">#&gt; I1  0.6201923 0.0000000 0.0000000</span>
-<span class="co">#&gt; I2  0.7768669 0.0000000 0.0000000</span>
-<span class="co">#&gt; I3  0.6882255 0.0000000 0.0000000</span>
-<span class="co">#&gt; I4  0.6264071 0.0000000 0.0000000</span>
-<span class="co">#&gt; I5  0.7318262 0.2713602 0.0000000</span>
-<span class="co">#&gt; I6  0.6940781 0.3153947 0.0000000</span>
-<span class="co">#&gt; I7  0.0000000 0.7175681 0.0000000</span>
-<span class="co">#&gt; I8  0.0000000 0.7910802 0.0000000</span>
-<span class="co">#&gt; I9  0.0000000 0.7074406 0.0000000</span>
-<span class="co">#&gt; I10 0.0000000 0.7296847 0.0000000</span>
-<span class="co">#&gt; I11 0.0000000 0.7023052 0.2288282</span>
-<span class="co">#&gt; I12 0.0000000 0.7012889 0.3003277</span>
-<span class="co">#&gt; I13 0.0000000 0.0000000 0.7871597</span>
-<span class="co">#&gt; I14 0.0000000 0.0000000 0.6780440</span>
-<span class="co">#&gt; I15 0.0000000 0.0000000 0.6865478</span>
-<span class="co">#&gt; I16 0.0000000 0.0000000 0.7551998</span>
-<span class="co">#&gt; I17 0.2447575 0.0000000 0.7534516</span>
-<span class="co">#&gt; I18 0.0000000 0.0000000 0.6963927</span>
-
-<span class="co">#factorial eigenvalue</span>
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">m0</span>,what<span class="op">=</span><span class="st">'eigen'</span><span class="op">)</span> 
-<span class="co">#&gt;         est        sd    lower    upper sig</span>
-<span class="co">#&gt; F1 3.204144 0.6399956 2.168233 4.500684   1</span>
-<span class="co">#&gt; F2 3.541276 0.6921085 2.265590 4.880854   1</span>
-<span class="co">#&gt; F3 3.511818 0.8460433 1.929814 5.227845   1</span>
-
-<span class="co">#thresholds for categorical items</span>
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">m0</span>,what<span class="op">=</span><span class="st">'threshold'</span><span class="op">)</span>
-<span class="co">#&gt;            [,1]        [,2]     [,3]</span>
-<span class="co">#&gt;  [1,] -1.703755 -0.06213722 1.587785</span>
-<span class="co">#&gt;  [2,] -1.636790 -0.10196876 1.623557</span>
-<span class="co">#&gt;  [3,] -1.518298 -0.05611896 1.538222</span>
-<span class="co">#&gt;  [4,] -1.565048 -0.08862435 1.544393</span>
-<span class="co">#&gt;  [5,] -1.543011 -0.02891165 1.404319</span>
-<span class="co">#&gt;  [6,] -1.578542 -0.06895461 1.564910</span>
-<span class="co">#&gt;  [7,] -1.517269 -0.03758055 1.410427</span>
-<span class="co">#&gt;  [8,] -1.465859 -0.03500043 1.567852</span>
-<span class="co">#&gt;  [9,] -1.533704 -0.06161427 1.546053</span>
-<span class="co">#&gt; [10,] -1.424619 -0.01744482 1.475085</span>
-<span class="co">#&gt; [11,] -1.489506 -0.02963514 1.655170</span>
-<span class="co">#&gt; [12,] -1.575674  0.01591969 1.475730</span>
-<span class="co">#&gt; [13,] -1.461899 -0.01618010 1.496939</span>
-<span class="co">#&gt; [14,] -1.603563  0.04369185 1.834124</span>
-<span class="co">#&gt; [15,] -1.463062 -0.01161572 1.446435</span>
-<span class="co">#&gt; [16,] -1.483610 -0.05127774 1.542001</span>
-<span class="co">#&gt; [17,] -1.550598  0.01166313 1.563012</span>
-<span class="co">#&gt; [18,] -1.440383 -0.01353951 1.535058</span>
-
-<span class="co">#plotting factorial eigenvalue</span>
-<span class="fu"><a href="../reference/plot_eigen.html">plot_eigen</a></span><span class="op">(</span><span class="va">m0</span><span class="op">)</span> <span class="co"># trace</span></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>m0 &lt;-<span class="st"> </span><span class="kw">pcfa</span>(<span class="dt">dat =</span> dat, <span class="dt">Q =</span> Q,<span class="dt">LD =</span> <span class="ot">FALSE</span>, <span class="dt">cati =</span> <span class="dv">-1</span>,<span class="dt">burn =</span> <span class="dv">4000</span>, <span class="dt">iter =</span> <span class="dv">4000</span>,<span class="dt">verbose =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb2-2"><a href="#cb2-2"></a>R<span class="op">&gt;</span><span class="st"> </span></span>
+<span id="cb2-3"><a href="#cb2-3"></a>R<span class="op">&gt;</span><span class="st"> </span>Tot. Iter =<span class="st"> </span><span class="dv">1000</span></span>
+<span id="cb2-4"><a href="#cb2-4"></a>R<span class="op">&gt;</span><span class="st">          </span>[,<span class="dv">1</span>]  [,<span class="dv">2</span>]  [,<span class="dv">3</span>]</span>
+<span id="cb2-5"><a href="#cb2-5"></a>R<span class="op">&gt;</span><span class="st"> </span>Feigen  <span class="fl">3.101</span> <span class="fl">3.475</span> <span class="fl">3.909</span></span>
+<span id="cb2-6"><a href="#cb2-6"></a>R<span class="op">&gt;</span><span class="st"> </span>NLA_lg3 <span class="fl">7.000</span> <span class="fl">8.000</span> <span class="fl">7.000</span></span>
+<span id="cb2-7"><a href="#cb2-7"></a>R<span class="op">&gt;</span><span class="st"> </span>Shrink  <span class="fl">2.362</span> <span class="fl">2.362</span> <span class="fl">2.362</span></span>
+<span id="cb2-8"><a href="#cb2-8"></a>R<span class="op">&gt;</span><span class="st"> </span>Ave. Thd<span class="op">:</span><span class="st"> </span><span class="fl">-1e+200</span> <span class="fl">-1.526</span> <span class="fl">-0.01894</span> <span class="fl">1.499</span> <span class="fl">1e+200</span></span>
+<span id="cb2-9"><a href="#cb2-9"></a>R<span class="op">&gt;</span><span class="st"> </span>Acc Rate<span class="op">:</span><span class="st"> </span><span class="fl">0.4042</span></span>
+<span id="cb2-10"><a href="#cb2-10"></a>R<span class="op">&gt;</span><span class="st"> </span></span>
+<span id="cb2-11"><a href="#cb2-11"></a>R<span class="op">&gt;</span><span class="st"> </span>Tot. Iter =<span class="st"> </span><span class="dv">2000</span></span>
+<span id="cb2-12"><a href="#cb2-12"></a>R<span class="op">&gt;</span><span class="st">          </span>[,<span class="dv">1</span>]  [,<span class="dv">2</span>]  [,<span class="dv">3</span>]</span>
+<span id="cb2-13"><a href="#cb2-13"></a>R<span class="op">&gt;</span><span class="st"> </span>Feigen  <span class="fl">3.553</span> <span class="fl">3.602</span> <span class="fl">2.425</span></span>
+<span id="cb2-14"><a href="#cb2-14"></a>R<span class="op">&gt;</span><span class="st"> </span>NLA_lg3 <span class="fl">8.000</span> <span class="fl">7.000</span> <span class="fl">6.000</span></span>
+<span id="cb2-15"><a href="#cb2-15"></a>R<span class="op">&gt;</span><span class="st"> </span>Shrink  <span class="fl">3.544</span> <span class="fl">3.544</span> <span class="fl">3.544</span></span>
+<span id="cb2-16"><a href="#cb2-16"></a>R<span class="op">&gt;</span><span class="st"> </span>Ave. Thd<span class="op">:</span><span class="st"> </span><span class="fl">-1e+200</span> <span class="fl">-1.559</span> <span class="fl">-0.04247</span> <span class="fl">1.476</span> <span class="fl">1e+200</span></span>
+<span id="cb2-17"><a href="#cb2-17"></a>R<span class="op">&gt;</span><span class="st"> </span>Acc Rate<span class="op">:</span><span class="st"> </span><span class="fl">0.3896</span></span>
+<span id="cb2-18"><a href="#cb2-18"></a>R<span class="op">&gt;</span><span class="st"> </span></span>
+<span id="cb2-19"><a href="#cb2-19"></a>R<span class="op">&gt;</span><span class="st"> </span>Tot. Iter =<span class="st"> </span><span class="dv">3000</span></span>
+<span id="cb2-20"><a href="#cb2-20"></a>R<span class="op">&gt;</span><span class="st">          </span>[,<span class="dv">1</span>]  [,<span class="dv">2</span>]  [,<span class="dv">3</span>]</span>
+<span id="cb2-21"><a href="#cb2-21"></a>R<span class="op">&gt;</span><span class="st"> </span>Feigen  <span class="fl">3.881</span> <span class="fl">3.097</span> <span class="fl">2.745</span></span>
+<span id="cb2-22"><a href="#cb2-22"></a>R<span class="op">&gt;</span><span class="st"> </span>NLA_lg3 <span class="fl">8.000</span> <span class="fl">7.000</span> <span class="fl">7.000</span></span>
+<span id="cb2-23"><a href="#cb2-23"></a>R<span class="op">&gt;</span><span class="st"> </span>Shrink  <span class="fl">3.088</span> <span class="fl">3.088</span> <span class="fl">3.088</span></span>
+<span id="cb2-24"><a href="#cb2-24"></a>R<span class="op">&gt;</span><span class="st"> </span>Ave. Thd<span class="op">:</span><span class="st"> </span><span class="fl">-1e+200</span> <span class="fl">-1.516</span> <span class="fl">-0.006757</span> <span class="fl">1.503</span> <span class="fl">1e+200</span></span>
+<span id="cb2-25"><a href="#cb2-25"></a>R<span class="op">&gt;</span><span class="st"> </span>Acc Rate<span class="op">:</span><span class="st"> </span><span class="fl">0.3936</span></span>
+<span id="cb2-26"><a href="#cb2-26"></a>R<span class="op">&gt;</span><span class="st"> </span></span>
+<span id="cb2-27"><a href="#cb2-27"></a>R<span class="op">&gt;</span><span class="st"> </span>Tot. Iter =<span class="st"> </span><span class="dv">4000</span></span>
+<span id="cb2-28"><a href="#cb2-28"></a>R<span class="op">&gt;</span><span class="st">          </span>[,<span class="dv">1</span>]  [,<span class="dv">2</span>]  [,<span class="dv">3</span>]</span>
+<span id="cb2-29"><a href="#cb2-29"></a>R<span class="op">&gt;</span><span class="st"> </span>Feigen  <span class="fl">3.648</span> <span class="fl">2.940</span> <span class="fl">3.397</span></span>
+<span id="cb2-30"><a href="#cb2-30"></a>R<span class="op">&gt;</span><span class="st"> </span>NLA_lg3 <span class="fl">7.000</span> <span class="fl">8.000</span> <span class="fl">7.000</span></span>
+<span id="cb2-31"><a href="#cb2-31"></a>R<span class="op">&gt;</span><span class="st"> </span>Shrink  <span class="fl">2.433</span> <span class="fl">2.433</span> <span class="fl">2.433</span></span>
+<span id="cb2-32"><a href="#cb2-32"></a>R<span class="op">&gt;</span><span class="st"> </span>Ave. Thd<span class="op">:</span><span class="st"> </span><span class="fl">-1e+200</span> <span class="fl">-1.501</span> <span class="fl">0.02512</span> <span class="fl">1.533</span> <span class="fl">1e+200</span></span>
+<span id="cb2-33"><a href="#cb2-33"></a>R<span class="op">&gt;</span><span class="st"> </span>Acc Rate<span class="op">:</span><span class="st"> </span><span class="fl">0.3902</span></span>
+<span id="cb2-34"><a href="#cb2-34"></a>R<span class="op">&gt;</span><span class="st"> </span></span>
+<span id="cb2-35"><a href="#cb2-35"></a>R<span class="op">&gt;</span><span class="st"> </span>Tot. Iter =<span class="st"> </span><span class="dv">5000</span></span>
+<span id="cb2-36"><a href="#cb2-36"></a>R<span class="op">&gt;</span><span class="st">          </span>[,<span class="dv">1</span>]  [,<span class="dv">2</span>]  [,<span class="dv">3</span>]</span>
+<span id="cb2-37"><a href="#cb2-37"></a>R<span class="op">&gt;</span><span class="st"> </span>Feigen  <span class="fl">2.889</span> <span class="fl">3.298</span> <span class="fl">3.416</span></span>
+<span id="cb2-38"><a href="#cb2-38"></a>R<span class="op">&gt;</span><span class="st"> </span>NLA_lg3 <span class="fl">8.000</span> <span class="fl">6.000</span> <span class="fl">7.000</span></span>
+<span id="cb2-39"><a href="#cb2-39"></a>R<span class="op">&gt;</span><span class="st"> </span>Shrink  <span class="fl">3.472</span> <span class="fl">3.472</span> <span class="fl">3.472</span></span>
+<span id="cb2-40"><a href="#cb2-40"></a>R<span class="op">&gt;</span><span class="st"> </span>Adj PSR <span class="fl">1.043</span> <span class="fl">1.788</span> <span class="fl">1.509</span></span>
+<span id="cb2-41"><a href="#cb2-41"></a>R<span class="op">&gt;</span><span class="st"> </span>Ave. Thd<span class="op">:</span><span class="st"> </span><span class="fl">-1e+200</span> <span class="fl">-1.547</span> <span class="fl">-0.03799</span> <span class="fl">1.46</span> <span class="fl">1e+200</span></span>
+<span id="cb2-42"><a href="#cb2-42"></a>R<span class="op">&gt;</span><span class="st"> </span>Acc Rate<span class="op">:</span><span class="st"> </span><span class="fl">0.3909</span></span>
+<span id="cb2-43"><a href="#cb2-43"></a>R<span class="op">&gt;</span><span class="st"> </span></span>
+<span id="cb2-44"><a href="#cb2-44"></a>R<span class="op">&gt;</span><span class="st"> </span>Tot. Iter =<span class="st"> </span><span class="dv">6000</span></span>
+<span id="cb2-45"><a href="#cb2-45"></a>R<span class="op">&gt;</span><span class="st">          </span>[,<span class="dv">1</span>]  [,<span class="dv">2</span>]  [,<span class="dv">3</span>]</span>
+<span id="cb2-46"><a href="#cb2-46"></a>R<span class="op">&gt;</span><span class="st"> </span>Feigen  <span class="fl">4.237</span> <span class="fl">3.273</span> <span class="fl">3.243</span></span>
+<span id="cb2-47"><a href="#cb2-47"></a>R<span class="op">&gt;</span><span class="st"> </span>NLA_lg3 <span class="fl">8.000</span> <span class="fl">7.000</span> <span class="fl">7.000</span></span>
+<span id="cb2-48"><a href="#cb2-48"></a>R<span class="op">&gt;</span><span class="st"> </span>Shrink  <span class="fl">3.029</span> <span class="fl">3.029</span> <span class="fl">3.029</span></span>
+<span id="cb2-49"><a href="#cb2-49"></a>R<span class="op">&gt;</span><span class="st"> </span>Adj PSR <span class="fl">1.701</span> <span class="fl">1.015</span> <span class="fl">1.128</span></span>
+<span id="cb2-50"><a href="#cb2-50"></a>R<span class="op">&gt;</span><span class="st"> </span>Ave. Thd<span class="op">:</span><span class="st"> </span><span class="fl">-1e+200</span> <span class="fl">-1.553</span> <span class="fl">-0.04764</span> <span class="fl">1.47</span> <span class="fl">1e+200</span></span>
+<span id="cb2-51"><a href="#cb2-51"></a>R<span class="op">&gt;</span><span class="st"> </span>Acc Rate<span class="op">:</span><span class="st"> </span><span class="fl">0.3914</span></span>
+<span id="cb2-52"><a href="#cb2-52"></a>R<span class="op">&gt;</span><span class="st"> </span></span>
+<span id="cb2-53"><a href="#cb2-53"></a>R<span class="op">&gt;</span><span class="st"> </span>Tot. Iter =<span class="st"> </span><span class="dv">7000</span></span>
+<span id="cb2-54"><a href="#cb2-54"></a>R<span class="op">&gt;</span><span class="st">          </span>[,<span class="dv">1</span>]  [,<span class="dv">2</span>]  [,<span class="dv">3</span>]</span>
+<span id="cb2-55"><a href="#cb2-55"></a>R<span class="op">&gt;</span><span class="st"> </span>Feigen  <span class="fl">2.932</span> <span class="fl">3.633</span> <span class="fl">3.070</span></span>
+<span id="cb2-56"><a href="#cb2-56"></a>R<span class="op">&gt;</span><span class="st"> </span>NLA_lg3 <span class="fl">8.000</span> <span class="fl">8.000</span> <span class="fl">6.000</span></span>
+<span id="cb2-57"><a href="#cb2-57"></a>R<span class="op">&gt;</span><span class="st"> </span>Shrink  <span class="fl">3.733</span> <span class="fl">3.733</span> <span class="fl">3.733</span></span>
+<span id="cb2-58"><a href="#cb2-58"></a>R<span class="op">&gt;</span><span class="st"> </span>Adj PSR <span class="fl">1.079</span> <span class="fl">1.102</span> <span class="fl">1.022</span></span>
+<span id="cb2-59"><a href="#cb2-59"></a>R<span class="op">&gt;</span><span class="st"> </span>Ave. Thd<span class="op">:</span><span class="st"> </span><span class="fl">-1e+200</span> <span class="fl">-1.515</span> <span class="fl">0.00617</span> <span class="fl">1.501</span> <span class="fl">1e+200</span></span>
+<span id="cb2-60"><a href="#cb2-60"></a>R<span class="op">&gt;</span><span class="st"> </span>Acc Rate<span class="op">:</span><span class="st"> </span><span class="fl">0.3899</span></span>
+<span id="cb2-61"><a href="#cb2-61"></a>R<span class="op">&gt;</span><span class="st"> </span></span>
+<span id="cb2-62"><a href="#cb2-62"></a>R<span class="op">&gt;</span><span class="st"> </span>Tot. Iter =<span class="st"> </span><span class="dv">8000</span></span>
+<span id="cb2-63"><a href="#cb2-63"></a>R<span class="op">&gt;</span><span class="st">          </span>[,<span class="dv">1</span>]  [,<span class="dv">2</span>]  [,<span class="dv">3</span>]</span>
+<span id="cb2-64"><a href="#cb2-64"></a>R<span class="op">&gt;</span><span class="st"> </span>Feigen  <span class="fl">4.302</span> <span class="fl">2.761</span> <span class="fl">4.454</span></span>
+<span id="cb2-65"><a href="#cb2-65"></a>R<span class="op">&gt;</span><span class="st"> </span>NLA_lg3 <span class="fl">6.000</span> <span class="fl">6.000</span> <span class="fl">7.000</span></span>
+<span id="cb2-66"><a href="#cb2-66"></a>R<span class="op">&gt;</span><span class="st"> </span>Shrink  <span class="fl">2.944</span> <span class="fl">2.944</span> <span class="fl">2.944</span></span>
+<span id="cb2-67"><a href="#cb2-67"></a>R<span class="op">&gt;</span><span class="st"> </span>Adj PSR <span class="fl">1.109</span> <span class="fl">1.785</span> <span class="fl">1.035</span></span>
+<span id="cb2-68"><a href="#cb2-68"></a>R<span class="op">&gt;</span><span class="st"> </span>Ave. Thd<span class="op">:</span><span class="st"> </span><span class="fl">-1e+200</span> <span class="fl">-1.526</span> <span class="fl">0.04138</span> <span class="fl">1.541</span> <span class="fl">1e+200</span></span>
+<span id="cb2-69"><a href="#cb2-69"></a>R<span class="op">&gt;</span><span class="st"> </span>Acc Rate<span class="op">:</span><span class="st"> </span><span class="fl">0.3921</span></span>
+<span id="cb2-70"><a href="#cb2-70"></a>R<span class="op">&gt;</span><span class="st"> </span></span>
+<span id="cb2-71"><a href="#cb2-71"></a>R<span class="op">&gt;</span><span class="st"> </span><span class="co">#Sign change: 0 0 0 0 0 0</span></span>
+<span id="cb2-72"><a href="#cb2-72"></a>R<span class="op">&gt;</span><span class="st">    </span>user  system elapsed </span>
+<span id="cb2-73"><a href="#cb2-73"></a>R<span class="op">&gt;</span><span class="st">  </span><span class="fl">131.06</span>    <span class="fl">0.04</span>  <span class="fl">131.25</span></span>
+<span id="cb2-74"><a href="#cb2-74"></a></span>
+<span id="cb2-75"><a href="#cb2-75"></a><span class="co"># summarize basic information</span></span>
+<span id="cb2-76"><a href="#cb2-76"></a><span class="kw">summary</span>(m0)</span>
+<span id="cb2-77"><a href="#cb2-77"></a>R<span class="op">&gt;</span><span class="st"> </span><span class="er">$</span>N</span>
+<span id="cb2-78"><a href="#cb2-78"></a>R<span class="op">&gt;</span><span class="st"> </span>[<span class="dv">1</span>] <span class="dv">1000</span></span>
+<span id="cb2-79"><a href="#cb2-79"></a>R<span class="op">&gt;</span><span class="st"> </span></span>
+<span id="cb2-80"><a href="#cb2-80"></a>R<span class="op">&gt;</span><span class="st"> </span><span class="er">$</span>J</span>
+<span id="cb2-81"><a href="#cb2-81"></a>R<span class="op">&gt;</span><span class="st"> </span>[<span class="dv">1</span>] <span class="dv">18</span></span>
+<span id="cb2-82"><a href="#cb2-82"></a>R<span class="op">&gt;</span><span class="st"> </span></span>
+<span id="cb2-83"><a href="#cb2-83"></a>R<span class="op">&gt;</span><span class="st"> </span><span class="er">$</span>K</span>
+<span id="cb2-84"><a href="#cb2-84"></a>R<span class="op">&gt;</span><span class="st"> </span>[<span class="dv">1</span>] <span class="dv">3</span></span>
+<span id="cb2-85"><a href="#cb2-85"></a>R<span class="op">&gt;</span><span class="st"> </span></span>
+<span id="cb2-86"><a href="#cb2-86"></a>R<span class="op">&gt;</span><span class="st"> </span><span class="er">$</span><span class="st">`</span><span class="dt">Miss%</span><span class="st">`</span></span>
+<span id="cb2-87"><a href="#cb2-87"></a>R<span class="op">&gt;</span><span class="st"> </span>[<span class="dv">1</span>] <span class="fl">10.12778</span></span>
+<span id="cb2-88"><a href="#cb2-88"></a>R<span class="op">&gt;</span><span class="st"> </span></span>
+<span id="cb2-89"><a href="#cb2-89"></a>R<span class="op">&gt;</span><span class="st"> </span><span class="er">$</span><span class="st">`</span><span class="dt">LD enabled</span><span class="st">`</span></span>
+<span id="cb2-90"><a href="#cb2-90"></a>R<span class="op">&gt;</span><span class="st"> </span>[<span class="dv">1</span>] <span class="ot">FALSE</span></span>
+<span id="cb2-91"><a href="#cb2-91"></a>R<span class="op">&gt;</span><span class="st"> </span></span>
+<span id="cb2-92"><a href="#cb2-92"></a>R<span class="op">&gt;</span><span class="st"> </span><span class="er">$</span><span class="st">`</span><span class="dt">Burn in</span><span class="st">`</span></span>
+<span id="cb2-93"><a href="#cb2-93"></a>R<span class="op">&gt;</span><span class="st"> </span>[<span class="dv">1</span>] <span class="dv">4000</span></span>
+<span id="cb2-94"><a href="#cb2-94"></a>R<span class="op">&gt;</span><span class="st"> </span></span>
+<span id="cb2-95"><a href="#cb2-95"></a>R<span class="op">&gt;</span><span class="st"> </span><span class="er">$</span>Iteration</span>
+<span id="cb2-96"><a href="#cb2-96"></a>R<span class="op">&gt;</span><span class="st"> </span>[<span class="dv">1</span>] <span class="dv">4000</span></span>
+<span id="cb2-97"><a href="#cb2-97"></a>R<span class="op">&gt;</span><span class="st"> </span></span>
+<span id="cb2-98"><a href="#cb2-98"></a>R<span class="op">&gt;</span><span class="st"> </span><span class="er">$</span><span class="st">`</span><span class="dt">No. of sig lambda</span><span class="st">`</span></span>
+<span id="cb2-99"><a href="#cb2-99"></a>R<span class="op">&gt;</span><span class="st"> </span>[<span class="dv">1</span>] <span class="dv">24</span></span>
+<span id="cb2-100"><a href="#cb2-100"></a>R<span class="op">&gt;</span><span class="st"> </span></span>
+<span id="cb2-101"><a href="#cb2-101"></a>R<span class="op">&gt;</span><span class="st"> </span><span class="er">$</span><span class="st">`</span><span class="dt">Adj. PSR</span><span class="st">`</span></span>
+<span id="cb2-102"><a href="#cb2-102"></a>R<span class="op">&gt;</span><span class="st">    </span>Point est. Upper C.I.</span>
+<span id="cb2-103"><a href="#cb2-103"></a>R<span class="op">&gt;</span><span class="st"> </span>F1   <span class="fl">1.108886</span>   <span class="fl">1.405831</span></span>
+<span id="cb2-104"><a href="#cb2-104"></a>R<span class="op">&gt;</span><span class="st"> </span>F2   <span class="fl">1.784670</span>   <span class="fl">4.051676</span></span>
+<span id="cb2-105"><a href="#cb2-105"></a>R<span class="op">&gt;</span><span class="st"> </span>F3   <span class="fl">1.035497</span>   <span class="fl">1.082945</span></span>
+<span id="cb2-106"><a href="#cb2-106"></a>R<span class="op">&gt;</span><span class="st"> </span></span>
+<span id="cb2-107"><a href="#cb2-107"></a>R<span class="op">&gt;</span><span class="st"> </span><span class="er">$</span><span class="st">`</span><span class="dt">Cat Items</span><span class="st">`</span></span>
+<span id="cb2-108"><a href="#cb2-108"></a>R<span class="op">&gt;</span><span class="st">  </span>[<span class="dv">1</span>]  <span class="dv">1</span>  <span class="dv">2</span>  <span class="dv">3</span>  <span class="dv">4</span>  <span class="dv">5</span>  <span class="dv">6</span>  <span class="dv">7</span>  <span class="dv">8</span>  <span class="dv">9</span> <span class="dv">10</span> <span class="dv">11</span> <span class="dv">12</span> <span class="dv">13</span> <span class="dv">14</span> <span class="dv">15</span> <span class="dv">16</span> <span class="dv">17</span> <span class="dv">18</span></span>
+<span id="cb2-109"><a href="#cb2-109"></a>R<span class="op">&gt;</span><span class="st"> </span></span>
+<span id="cb2-110"><a href="#cb2-110"></a>R<span class="op">&gt;</span><span class="st"> </span><span class="er">$</span><span class="st">`</span><span class="dt">max No. of categories</span><span class="st">`</span></span>
+<span id="cb2-111"><a href="#cb2-111"></a>R<span class="op">&gt;</span><span class="st"> </span>[<span class="dv">1</span>] <span class="dv">4</span></span>
+<span id="cb2-112"><a href="#cb2-112"></a></span>
+<span id="cb2-113"><a href="#cb2-113"></a><span class="co">#summarize significant loadings in pattern/Q-matrix format</span></span>
+<span id="cb2-114"><a href="#cb2-114"></a><span class="kw">summary</span>(m0, <span class="dt">what =</span> <span class="st">'qlambda'</span>) </span>
+<span id="cb2-115"><a href="#cb2-115"></a>R<span class="op">&gt;</span><span class="st">          </span>[,<span class="dv">1</span>]      [,<span class="dv">2</span>]      [,<span class="dv">3</span>]</span>
+<span id="cb2-116"><a href="#cb2-116"></a>R<span class="op">&gt;</span><span class="st"> </span>I1  <span class="fl">0.7381249</span> <span class="fl">0.0000000</span> <span class="fl">0.0000000</span></span>
+<span id="cb2-117"><a href="#cb2-117"></a>R<span class="op">&gt;</span><span class="st"> </span>I2  <span class="fl">0.7776746</span> <span class="fl">0.0000000</span> <span class="fl">0.0000000</span></span>
+<span id="cb2-118"><a href="#cb2-118"></a>R<span class="op">&gt;</span><span class="st"> </span>I3  <span class="fl">0.6990915</span> <span class="fl">0.0000000</span> <span class="fl">0.0000000</span></span>
+<span id="cb2-119"><a href="#cb2-119"></a>R<span class="op">&gt;</span><span class="st"> </span>I4  <span class="fl">0.6783889</span> <span class="fl">0.0000000</span> <span class="fl">0.0000000</span></span>
+<span id="cb2-120"><a href="#cb2-120"></a>R<span class="op">&gt;</span><span class="st"> </span>I5  <span class="fl">0.7137389</span> <span class="fl">0.2977824</span> <span class="fl">0.0000000</span></span>
+<span id="cb2-121"><a href="#cb2-121"></a>R<span class="op">&gt;</span><span class="st"> </span>I6  <span class="fl">0.7264195</span> <span class="fl">0.3080917</span> <span class="fl">0.0000000</span></span>
+<span id="cb2-122"><a href="#cb2-122"></a>R<span class="op">&gt;</span><span class="st"> </span>I7  <span class="fl">0.0000000</span> <span class="fl">0.7386629</span> <span class="fl">0.0000000</span></span>
+<span id="cb2-123"><a href="#cb2-123"></a>R<span class="op">&gt;</span><span class="st"> </span>I8  <span class="fl">0.0000000</span> <span class="fl">0.7590228</span> <span class="fl">0.0000000</span></span>
+<span id="cb2-124"><a href="#cb2-124"></a>R<span class="op">&gt;</span><span class="st"> </span>I9  <span class="fl">0.0000000</span> <span class="fl">0.7217489</span> <span class="fl">0.0000000</span></span>
+<span id="cb2-125"><a href="#cb2-125"></a>R<span class="op">&gt;</span><span class="st"> </span>I10 <span class="fl">0.0000000</span> <span class="fl">0.5718830</span> <span class="fl">0.0000000</span></span>
+<span id="cb2-126"><a href="#cb2-126"></a>R<span class="op">&gt;</span><span class="st"> </span>I11 <span class="fl">0.0000000</span> <span class="fl">0.7204989</span> <span class="fl">0.2276490</span></span>
+<span id="cb2-127"><a href="#cb2-127"></a>R<span class="op">&gt;</span><span class="st"> </span>I12 <span class="fl">0.0000000</span> <span class="fl">0.7365822</span> <span class="fl">0.2945911</span></span>
+<span id="cb2-128"><a href="#cb2-128"></a>R<span class="op">&gt;</span><span class="st"> </span>I13 <span class="fl">0.0000000</span> <span class="fl">0.0000000</span> <span class="fl">0.7472289</span></span>
+<span id="cb2-129"><a href="#cb2-129"></a>R<span class="op">&gt;</span><span class="st"> </span>I14 <span class="fl">0.0000000</span> <span class="fl">0.0000000</span> <span class="fl">0.7194530</span></span>
+<span id="cb2-130"><a href="#cb2-130"></a>R<span class="op">&gt;</span><span class="st"> </span>I15 <span class="fl">0.0000000</span> <span class="fl">0.0000000</span> <span class="fl">0.7081503</span></span>
+<span id="cb2-131"><a href="#cb2-131"></a>R<span class="op">&gt;</span><span class="st"> </span>I16 <span class="fl">0.0000000</span> <span class="fl">0.0000000</span> <span class="fl">0.6540163</span></span>
+<span id="cb2-132"><a href="#cb2-132"></a>R<span class="op">&gt;</span><span class="st"> </span>I17 <span class="fl">0.3415034</span> <span class="fl">0.0000000</span> <span class="fl">0.6695875</span></span>
+<span id="cb2-133"><a href="#cb2-133"></a>R<span class="op">&gt;</span><span class="st"> </span>I18 <span class="fl">0.3184458</span> <span class="fl">0.0000000</span> <span class="fl">0.6605329</span></span>
+<span id="cb2-134"><a href="#cb2-134"></a></span>
+<span id="cb2-135"><a href="#cb2-135"></a><span class="co">#factorial eigenvalue</span></span>
+<span id="cb2-136"><a href="#cb2-136"></a><span class="kw">summary</span>(m0,<span class="dt">what=</span><span class="st">'eigen'</span>) </span>
+<span id="cb2-137"><a href="#cb2-137"></a>R<span class="op">&gt;</span><span class="st">         </span>est        sd    lower    upper sig</span>
+<span id="cb2-138"><a href="#cb2-138"></a>R<span class="op">&gt;</span><span class="st"> </span>F1 <span class="fl">3.501184</span> <span class="fl">0.5879934</span> <span class="fl">2.496208</span> <span class="fl">4.631912</span>   <span class="dv">1</span></span>
+<span id="cb2-139"><a href="#cb2-139"></a>R<span class="op">&gt;</span><span class="st"> </span>F2 <span class="fl">3.379566</span> <span class="fl">0.7054664</span> <span class="fl">2.283722</span> <span class="fl">4.857931</span>   <span class="dv">1</span></span>
+<span id="cb2-140"><a href="#cb2-140"></a>R<span class="op">&gt;</span><span class="st"> </span>F3 <span class="fl">3.174507</span> <span class="fl">0.4775790</span> <span class="fl">2.349260</span> <span class="fl">4.223236</span>   <span class="dv">1</span></span>
+<span id="cb2-141"><a href="#cb2-141"></a></span>
+<span id="cb2-142"><a href="#cb2-142"></a><span class="co">#thresholds for categorical items</span></span>
+<span id="cb2-143"><a href="#cb2-143"></a><span class="kw">summary</span>(m0,<span class="dt">what=</span><span class="st">'thd'</span>)</span>
+<span id="cb2-144"><a href="#cb2-144"></a>R<span class="op">&gt;</span><span class="st">          </span>[,<span class="dv">1</span>]         [,<span class="dv">2</span>]     [,<span class="dv">3</span>]</span>
+<span id="cb2-145"><a href="#cb2-145"></a>R<span class="op">&gt;</span><span class="st"> </span>I1  <span class="fl">-1.553454</span>  <span class="fl">0.015878452</span> <span class="fl">1.440567</span></span>
+<span id="cb2-146"><a href="#cb2-146"></a>R<span class="op">&gt;</span><span class="st"> </span>I2  <span class="fl">-1.539768</span> <span class="fl">-0.012573340</span> <span class="fl">1.461716</span></span>
+<span id="cb2-147"><a href="#cb2-147"></a>R<span class="op">&gt;</span><span class="st"> </span>I3  <span class="fl">-1.511913</span>  <span class="fl">0.023891936</span> <span class="fl">1.426482</span></span>
+<span id="cb2-148"><a href="#cb2-148"></a>R<span class="op">&gt;</span><span class="st"> </span>I4  <span class="fl">-1.512254</span>  <span class="fl">0.067393298</span> <span class="fl">1.558297</span></span>
+<span id="cb2-149"><a href="#cb2-149"></a>R<span class="op">&gt;</span><span class="st"> </span>I5  <span class="fl">-1.586040</span> <span class="fl">-0.006776603</span> <span class="fl">1.518887</span></span>
+<span id="cb2-150"><a href="#cb2-150"></a>R<span class="op">&gt;</span><span class="st"> </span>I6  <span class="fl">-1.629241</span> <span class="fl">-0.016202207</span> <span class="fl">1.556667</span></span>
+<span id="cb2-151"><a href="#cb2-151"></a>R<span class="op">&gt;</span><span class="st"> </span>I7  <span class="fl">-1.560804</span> <span class="fl">-0.011248146</span> <span class="fl">1.499078</span></span>
+<span id="cb2-152"><a href="#cb2-152"></a>R<span class="op">&gt;</span><span class="st"> </span>I8  <span class="fl">-1.619156</span> <span class="fl">-0.070969962</span> <span class="fl">1.504542</span></span>
+<span id="cb2-153"><a href="#cb2-153"></a>R<span class="op">&gt;</span><span class="st"> </span>I9  <span class="fl">-1.454513</span> <span class="fl">-0.011007905</span> <span class="fl">1.483230</span></span>
+<span id="cb2-154"><a href="#cb2-154"></a>R<span class="op">&gt;</span><span class="st"> </span>I10 <span class="fl">-1.516675</span> <span class="fl">-0.051425897</span> <span class="fl">1.502894</span></span>
+<span id="cb2-155"><a href="#cb2-155"></a>R<span class="op">&gt;</span><span class="st"> </span>I11 <span class="fl">-1.619650</span> <span class="fl">-0.012181648</span> <span class="fl">1.438586</span></span>
+<span id="cb2-156"><a href="#cb2-156"></a>R<span class="op">&gt;</span><span class="st"> </span>I12 <span class="fl">-1.585262</span> <span class="fl">-0.070288838</span> <span class="fl">1.501057</span></span>
+<span id="cb2-157"><a href="#cb2-157"></a>R<span class="op">&gt;</span><span class="st"> </span>I13 <span class="fl">-1.471394</span>  <span class="fl">0.055313584</span> <span class="fl">1.550810</span></span>
+<span id="cb2-158"><a href="#cb2-158"></a>R<span class="op">&gt;</span><span class="st"> </span>I14 <span class="fl">-1.469130</span> <span class="fl">-0.111134090</span> <span class="fl">1.462524</span></span>
+<span id="cb2-159"><a href="#cb2-159"></a>R<span class="op">&gt;</span><span class="st"> </span>I15 <span class="fl">-1.519536</span> <span class="fl">-0.025014720</span> <span class="fl">1.478228</span></span>
+<span id="cb2-160"><a href="#cb2-160"></a>R<span class="op">&gt;</span><span class="st"> </span>I16 <span class="fl">-1.513947</span> <span class="fl">-0.016046231</span> <span class="fl">1.428234</span></span>
+<span id="cb2-161"><a href="#cb2-161"></a>R<span class="op">&gt;</span><span class="st"> </span>I17 <span class="fl">-1.515011</span>  <span class="fl">0.026888528</span> <span class="fl">1.439322</span></span>
+<span id="cb2-162"><a href="#cb2-162"></a>R<span class="op">&gt;</span><span class="st"> </span>I18 <span class="fl">-1.547962</span>  <span class="fl">0.018831811</span> <span class="fl">1.446523</span></span>
+<span id="cb2-163"><a href="#cb2-163"></a></span>
+<span id="cb2-164"><a href="#cb2-164"></a><span class="co">#plotting factorial eigenvalue</span></span>
+<span id="cb2-165"><a href="#cb2-165"></a><span class="kw">plot_eigen</span>(m0) <span class="co"># trace</span></span></code></pre></div>
 <p><img src="gpcfa-examples_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
 <div class="sourceCode" id="cb3"><pre class="downlit">
 <span class="fu"><a href="../reference/plot_eigen.html">plot_eigen</a></span><span class="op">(</span><span class="va">m0</span>, what<span class="op">=</span><span class="st">'density'</span><span class="op">)</span> <span class="co">#density</span></pre></div>
@@ -312,7 +367,7 @@
 <p><img src="gpcfa-examples_files/figure-html/unnamed-chunk-3-3.png" width="700"></p>
 <ol start="3" style="list-style-type: decimal">
 <li>
-<strong>C-step:</strong> Reconfigure the Q matrix for the C-step with one specified loading per item based on results from the E-step. Estimate with the GPCFA model by setting <em>LD=TRUE</em> (by default). Longer chain is suggested for stabler performance. Results are very close to the E-step, since there’s no LD in the data.</li>
+<strong>C-step:</strong> Reconfigure the Q matrix for the C-step with one specified loading per item based on results from the E-step. Estimate with the GPCFA model by setting <em>LD=TRUE</em> (by default). Longer chain is suggested for more accurate and stable estimation.</li>
 </ol>
 <div class="sourceCode" id="cb5"><pre class="downlit">
 <span class="va">Q</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>,<span class="va">J</span>,<span class="va">K</span><span class="op">)</span>;
@@ -322,45 +377,44 @@
 <span class="co">#alternatively</span>
 <span class="co">#Q[1:6,1]&lt;-Q[7:12,2]&lt;-Q[13:18,3]&lt;-1 # 1 for specified items</span>
 
-<span class="va">m1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pcfa.html">pcfa</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">dat</span>, Q <span class="op">=</span> <span class="va">Q</span>, cati <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>,burn <span class="op">=</span> <span class="fl">2000</span>, iter <span class="op">=</span> <span class="fl">2000</span>,verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="va">m1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pcfa.html">pcfa</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">dat</span>, Q <span class="op">=</span> <span class="va">Q</span>, cati <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>,burn <span class="op">=</span> <span class="fl">4000</span>, iter <span class="op">=</span> <span class="fl">4000</span>,verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">m1</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">m1</span>, what <span class="op">=</span> <span class="st">'qlambda'</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">m1</span>, what <span class="op">=</span> <span class="st">'offpsx'</span><span class="op">)</span> <span class="co">#summarize significant LD terms</span>
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">m1</span>,what<span class="op">=</span><span class="st">'eigen'</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">m1</span>,what<span class="op">=</span><span class="st">'threshold'</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">m1</span>,what<span class="op">=</span><span class="st">'thd'</span><span class="op">)</span>
 
 <span class="co">#plotting factorial eigenvalue</span>
-<span class="co"># par(mar = rep(2, 4))</span>
 <span class="fu"><a href="../reference/plot_eigen.html">plot_eigen</a></span><span class="op">(</span><span class="va">m1</span><span class="op">)</span> <span class="co"># trace</span>
 <span class="fu"><a href="../reference/plot_eigen.html">plot_eigen</a></span><span class="op">(</span><span class="va">m1</span>, what<span class="op">=</span><span class="st">'density'</span><span class="op">)</span> <span class="co">#density</span>
 <span class="fu"><a href="../reference/plot_eigen.html">plot_eigen</a></span><span class="op">(</span><span class="va">m1</span>, what<span class="op">=</span><span class="st">'APSR'</span><span class="op">)</span> <span class="co">#adj, PSRF</span></pre></div>
 <ol start="4" style="list-style-type: decimal">
 <li>
-<strong>CFA-LD:</strong> One can also configure the Q matrix for a CCFA model with local dependence (i.e. without any unspecified loading) based on results from the C-step. Results are also very close.</li>
+<strong>CFA-LD:</strong> One can also configure the Q matrix for a CCFA model with local dependence (i.e. without any unspecified loading) based on results from the C-step.</li>
 </ol>
 <div class="sourceCode" id="cb6"><pre class="downlit">
 <span class="va">Q</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">m1</span>, what<span class="op">=</span><span class="st">"qlambda"</span><span class="op">)</span>
 <span class="va">Q</span><span class="op">[</span><span class="va">Q</span><span class="op">!=</span><span class="fl">0</span><span class="op">]</span><span class="op">&lt;-</span><span class="fl">1</span>
 <span class="va">Q</span>
 
-<span class="va">m2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pcfa.html">pcfa</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">dat</span>, Q <span class="op">=</span> <span class="va">Q</span>, cati <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>,burn <span class="op">=</span> <span class="fl">2000</span>, iter <span class="op">=</span> <span class="fl">2000</span>,verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="va">m2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pcfa.html">pcfa</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">dat</span>, Q <span class="op">=</span> <span class="va">Q</span>, cati <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>,burn <span class="op">=</span> <span class="fl">4000</span>, iter <span class="op">=</span> <span class="fl">4000</span>,verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">m2</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">m2</span>, what <span class="op">=</span> <span class="st">'qlambda'</span><span class="op">)</span> 
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">m2</span>, what <span class="op">=</span> <span class="st">'offpsx'</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">m2</span>,what<span class="op">=</span><span class="st">'eigen'</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">m2</span>,what<span class="op">=</span><span class="st">'threshold'</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">m2</span>,what<span class="op">=</span><span class="st">'thd'</span><span class="op">)</span>
 
 <span class="fu"><a href="../reference/plot_eigen.html">plot_eigen</a></span><span class="op">(</span><span class="va">m2</span><span class="op">)</span> <span class="co"># Eigens' traces are excellent without regularization of the loadings</span></pre></div>
 </div>
-<div id="categorical-data-with-local-dependence" class="section level2">
+<div id="categorical-data-with-missingness-and-local-dependence" class="section level2">
 <h2 class="hasAnchor">
-<a href="#categorical-data-with-local-dependence" class="anchor"></a>Categorical Data with Local Dependence:</h2>
+<a href="#categorical-data-with-missingness-and-local-dependence" class="anchor"></a>Categorical Data with Missingness and Local Dependence:</h2>
 <ol style="list-style-type: decimal">
 <li>Load the the data, loading pattern (<em>qlam</em>), and LD terms, and setup the design matrix Q.</li>
 </ol>
 <div class="sourceCode" id="cb7"><pre class="downlit">
 <span class="va">dat</span> <span class="op">&lt;-</span> <span class="va">sim18ccfa41</span><span class="op">$</span><span class="va">dat</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span> <span class="co">#10% missingness at random</span>
 <span class="va">J</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span> <span class="co"># no. of items</span>
 <span class="va">K</span> <span class="op">&lt;-</span> <span class="fl">3</span> <span class="co"># no. of factors</span>
 <span class="va">sim18ccfa41</span><span class="op">$</span><span class="va">qlam</span>
@@ -378,7 +432,7 @@
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">m0</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">m0</span>, what <span class="op">=</span> <span class="st">'qlambda'</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">m0</span>,what<span class="op">=</span><span class="st">'eigen'</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">m0</span>,what<span class="op">=</span><span class="st">'threshold'</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">m0</span>,what<span class="op">=</span><span class="st">'thd'</span><span class="op">)</span>
 
 <span class="fu"><a href="../reference/plot_eigen.html">plot_eigen</a></span><span class="op">(</span><span class="va">m0</span><span class="op">)</span> <span class="co"># trace</span>
 <span class="fu"><a href="../reference/plot_eigen.html">plot_eigen</a></span><span class="op">(</span><span class="va">m0</span>, what<span class="op">=</span><span class="st">'APSR'</span><span class="op">)</span></pre></div>
@@ -398,7 +452,7 @@
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">m1</span>, what <span class="op">=</span> <span class="st">'qlambda'</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">m1</span>,what<span class="op">=</span><span class="st">'eigen'</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">m1</span>, what <span class="op">=</span> <span class="st">'offpsx'</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">m1</span>,what<span class="op">=</span><span class="st">'threshold'</span><span class="op">)</span></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">m1</span>,what<span class="op">=</span><span class="st">'thd'</span><span class="op">)</span></pre></div>
 <ol start="4" style="list-style-type: decimal">
 <li>
 <strong>CFA-LD:</strong> Configure the Q matrix for a CCFA model with local dependence (i.e. without any unspecified loading) based on results from the C-step. Results are better than, but similar to the C-step.</li>
@@ -413,7 +467,71 @@
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">m2</span>, what <span class="op">=</span> <span class="st">'qlambda'</span><span class="op">)</span> 
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">m2</span>,what<span class="op">=</span><span class="st">'eigen'</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">m2</span>, what <span class="op">=</span> <span class="st">'offpsx'</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">m2</span>,what<span class="op">=</span><span class="st">'threshold'</span><span class="op">)</span></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">m2</span>,what<span class="op">=</span><span class="st">'thd'</span><span class="op">)</span></pre></div>
+</div>
+<div id="mixed-type-data-with-missingness-and-local-dependence" class="section level2">
+<h2 class="hasAnchor">
+<a href="#mixed-type-data-with-missingness-and-local-dependence" class="anchor"></a>Mixed-type Data with Missingness and Local Dependence:</h2>
+<ol style="list-style-type: decimal">
+<li>Load the the data, loading pattern (<em>qlam</em>), and LD terms, and setup the design matrix Q.</li>
+</ol>
+<div class="sourceCode" id="cb11"><pre class="downlit">
+<span class="va">dat</span> <span class="op">&lt;-</span> <span class="va">sim18mcfa41</span><span class="op">$</span><span class="va">dat</span>
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span> <span class="co">#10% missingness at random</span>
+<span class="va">J</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span> <span class="co"># no. of items</span>
+<span class="va">K</span> <span class="op">&lt;-</span> <span class="fl">3</span> <span class="co"># no. of factors</span>
+<span class="va">sim18mcfa41</span><span class="op">$</span><span class="va">qlam</span>
+<span class="va">sim18mcfa41</span><span class="op">$</span><span class="va">LD</span> <span class="co"># effect size = .3</span>
+
+<span class="va">Q</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>,<span class="va">J</span>,<span class="va">K</span><span class="op">)</span>; <span class="co"># -1 for unspecified items</span>
+<span class="va">Q</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>,<span class="fl">1</span><span class="op">]</span><span class="op">&lt;-</span><span class="va">Q</span><span class="op">[</span><span class="fl">7</span><span class="op">:</span><span class="fl">8</span>,<span class="fl">2</span><span class="op">]</span><span class="op">&lt;-</span><span class="va">Q</span><span class="op">[</span><span class="fl">13</span><span class="op">:</span><span class="fl">14</span>,<span class="fl">3</span><span class="op">]</span><span class="op">&lt;-</span><span class="fl">1</span> <span class="co"># 1 for specified items</span>
+<span class="va">Q</span></pre></div>
+<ol start="2" style="list-style-type: decimal">
+<li>
+<strong>E-step:</strong> Estimate with the GPCFA-LI model (E-step) by setting <em>LD=FALSE</em>. Only a few loadings need to be specified in Q (e.g., 2 per factor). The first 12 items are categorical and need to be specified with <em>cati</em>.</li>
+</ol>
+<div class="sourceCode" id="cb12"><pre class="downlit">
+<span class="va">m0</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pcfa.html">pcfa</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">dat</span>, Q <span class="op">=</span> <span class="va">Q</span>,LD <span class="op">=</span> <span class="cn">FALSE</span>, cati <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">12</span><span class="op">)</span>,burn <span class="op">=</span> <span class="fl">4000</span>, iter <span class="op">=</span> <span class="fl">4000</span>,verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">m0</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">m0</span>, what <span class="op">=</span> <span class="st">'qlambda'</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">m0</span>,what<span class="op">=</span><span class="st">'eigen'</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">m0</span>,what<span class="op">=</span><span class="st">'thd'</span><span class="op">)</span> <span class="co"># only for 12 items </span>
+
+<span class="fu"><a href="../reference/plot_eigen.html">plot_eigen</a></span><span class="op">(</span><span class="va">m0</span><span class="op">)</span> <span class="co"># trace</span>
+<span class="fu"><a href="../reference/plot_eigen.html">plot_eigen</a></span><span class="op">(</span><span class="va">m0</span>, what<span class="op">=</span><span class="st">'density'</span><span class="op">)</span>
+<span class="fu"><a href="../reference/plot_eigen.html">plot_eigen</a></span><span class="op">(</span><span class="va">m0</span>, what<span class="op">=</span><span class="st">'APSR'</span><span class="op">)</span></pre></div>
+<ol start="3" style="list-style-type: decimal">
+<li>
+<strong>C-step:</strong> Reconfigure the Q matrix for the C-step with one specified loading per item based on results from the E-step. Estimate with the GPCFA model by setting <em>LD=TRUE</em> (by default). The estimates are more accurate, and the LD terms can be largely recovered.</li>
+</ol>
+<div class="sourceCode" id="cb13"><pre class="downlit">
+<span class="va">Q</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>,<span class="va">J</span>,<span class="va">K</span><span class="op">)</span>;
+<span class="va">tmp</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">m0</span>, what<span class="op">=</span><span class="st">"qlambda"</span><span class="op">)</span>
+<span class="va">cind</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span><span class="op">(</span><span class="va">tmp</span>,<span class="fl">1</span>,<span class="va">which.max</span><span class="op">)</span>
+<span class="va">Q</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="va">J</span><span class="op">)</span>,<span class="va">cind</span><span class="op">)</span><span class="op">]</span><span class="op">&lt;-</span><span class="fl">1</span>
+<span class="va">Q</span>
+
+<span class="va">m1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pcfa.html">pcfa</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">dat</span>, Q <span class="op">=</span> <span class="va">Q</span>, cati <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">12</span><span class="op">)</span>,burn <span class="op">=</span> <span class="fl">4000</span>, iter <span class="op">=</span> <span class="fl">4000</span>,verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">m1</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">m1</span>, what <span class="op">=</span> <span class="st">'qlambda'</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">m1</span>,what<span class="op">=</span><span class="st">'eigen'</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">m1</span>, what <span class="op">=</span> <span class="st">'offpsx'</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">m1</span>,what<span class="op">=</span><span class="st">'thd'</span><span class="op">)</span></pre></div>
+<ol start="4" style="list-style-type: decimal">
+<li>
+<strong>CFA-LD:</strong> Configure the Q matrix for a mix of CFA and CCFA model with local dependence (i.e. without any unspecified loading) based on results from the C-step. Results are better than, but similar to the C-step.</li>
+</ol>
+<div class="sourceCode" id="cb14"><pre class="downlit">
+<span class="va">Q</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">m1</span>, what<span class="op">=</span><span class="st">"qlambda"</span><span class="op">)</span>
+<span class="va">Q</span><span class="op">[</span><span class="va">Q</span><span class="op">!=</span><span class="fl">0</span><span class="op">]</span><span class="op">&lt;-</span><span class="fl">1</span>
+<span class="va">Q</span>
+
+<span class="va">m2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pcfa.html">pcfa</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">dat</span>, Q <span class="op">=</span> <span class="va">Q</span>, cati <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">12</span><span class="op">)</span>,burn <span class="op">=</span> <span class="fl">4000</span>, iter <span class="op">=</span> <span class="fl">4000</span>,verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">m2</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">m2</span>, what <span class="op">=</span> <span class="st">'qlambda'</span><span class="op">)</span> 
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">m2</span>,what<span class="op">=</span><span class="st">'eigen'</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">m2</span>, what <span class="op">=</span> <span class="st">'offpsx'</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">m2</span>,what<span class="op">=</span><span class="st">'thd'</span><span class="op">)</span></pre></div>
 </div>
   </div>
 

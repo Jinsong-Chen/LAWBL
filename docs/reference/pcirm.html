@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Partially Confirmatory Factor Analysis — pcfa • LAWBL</title>
+<title>Partially Confirmatory Item Response Model — pcirm • LAWBL</title>
 
 
 <!-- jquery -->
@@ -39,11 +39,10 @@
 
 
 
-<meta property="og:title" content="Partially Confirmatory Factor Analysis — pcfa" />
-<meta property="og:description" content="PCFA is a partially confirmatory approach covering a wide range of
-the exploratory-confirmatory continuum in factor analytic models (Chen, Guo, Zhang, &amp;amp; Pan, 2020).
-The PCFA is only for continuous data, while the generalized PCFA (GPCFA) covers both continuous and categorical data.
- There are two major model variants with different constraints for identification. One assumes local
+<meta property="og:title" content="Partially Confirmatory Item Response Model — pcirm" />
+<meta property="og:description" content="pcirm is a partially confirmatory approach to item response models (Chen, 2020),
+which estimates the intercept for continuous and dichotomous data. Similar to PCFA and GPCFA,
+ there are two major model variants with different constraints for identification. One assumes local
  independence (LI) with a more exploratory tendency, which can be also called the E-step.
  The other allows local dependence (LD) with a more confirmatory tendency, which can be also
  called the C-step. Parameters are obtained by sampling from the posterior distributions with
@@ -138,16 +137,15 @@ The PCFA is only for continuous data, while the generalized PCFA (GPCFA) covers 
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Partially Confirmatory Factor Analysis</h1>
-    <small class="dont-index">Source: <a href='https://github.com/Jinsong-Chen/LAWBL/blob/master/R/pcfa.R'><code>R/pcfa.R</code></a></small>
-    <div class="hidden name"><code>pcfa.Rd</code></div>
+    <h1>Partially Confirmatory Item Response Model</h1>
+    <small class="dont-index">Source: <a href='https://github.com/Jinsong-Chen/LAWBL/blob/master/R/pcirm.R'><code>R/pcirm.R</code></a></small>
+    <div class="hidden name"><code>pcirm.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p><code>PCFA</code> is a partially confirmatory approach covering a wide range of
-the exploratory-confirmatory continuum in factor analytic models (Chen, Guo, Zhang, &amp; Pan, 2020).
-The PCFA is only for continuous data, while the generalized PCFA (GPCFA) covers both continuous and categorical data.
- There are two major model variants with different constraints for identification. One assumes local
+    <p><code>pcirm</code> is a partially confirmatory approach to item response models (Chen, 2020),
+which estimates the intercept for continuous and dichotomous data. Similar to PCFA and GPCFA,
+ there are two major model variants with different constraints for identification. One assumes local
  independence (LI) with a more exploratory tendency, which can be also called the E-step.
  The other allows local dependence (LD) with a more confirmatory tendency, which can be also
  called the C-step. Parameters are obtained by sampling from the posterior distributions with
@@ -156,7 +154,7 @@ The PCFA is only for continuous data, while the generalized PCFA (GPCFA) covers 
  and the factorial eigenvalue can be plotted with <code><a href='plot_eigen.html'>plot_eigen</a></code>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>pcfa</span><span class='op'>(</span>
+    <pre class="usage"><span class='fu'>pcirm</span><span class='op'>(</span>
   <span class='va'>dat</span>,
   <span class='va'>Q</span>,
   LD <span class='op'>=</span> <span class='cn'>TRUE</span>,
@@ -194,7 +192,7 @@ without any specified loading (Chen, Guo, Zhang, &amp; Pan, 2020). See <code>Exa
     </tr>
     <tr>
       <th>cati</th>
-      <td><p>The set of categorical (polytomous) items in sequence number (i.e., 1 to \(J\));
+      <td><p>The set of dichotomous items in sequence number (i.e., 1 to \(J\));
 <code>NULL</code> for no and -1 for all items (default is <code>NULL</code>).</p></td>
     </tr>
     <tr>
@@ -231,13 +229,13 @@ without any specified loading (Chen, Guo, Zhang, &amp; Pan, 2020). See <code>Exa
     </tr>
     <tr>
       <th>verbose</th>
-      <td><p>logical; to display the sampling information every <code>update</code> or not.</p><ul>
+      <td><p>logical; to display the sampling information every <code>update</code> or not.</p>
+<ul>
 <li><p><code>Feigen</code>: Eigenvalue for each factor.</p></li>
 <li><p><code>NLA_lg3</code>: Number of Loading estimates &gt; .3 for each factor.</p></li>
 <li><p><code>Shrink</code>: Ave. shrinkage parameter (for adaptive LASSO) for each factor.</p></li>
 <li><p><code>Adj PSR</code>: Adjusted PSR for each factor.</p></li>
-<li><p><code>Ave. Thd</code>: Ave. thresholds.</p></li>
-<li><p><code>Acc Rate</code>: Acceptance rate of threshold (MH algorithm).</p></li>
+<li><p><code>Ave. Int.</code>: Ave. item intercept.</p></li>
 <li><p><code>LD&gt;.2 &gt;.1 LD&gt;.2 &gt;.1</code>: # of LD terms larger than .2 and .1, and LD's shrinkage parameter.</p></li>
 </ul></td>
     </tr>
@@ -245,14 +243,13 @@ without any specified loading (Chen, Guo, Zhang, &amp; Pan, 2020). See <code>Exa
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p><code>pcfa</code> returns an object of class <code>lawbl</code> without item intercepts. It contains a lot of information about
+    <p><code>pcirm</code> returns an object of class <code>lawbl</code> with item intercepts. It contains a lot of information about
 the posteriors that can be summarized using <code><a href='summary.lawbl.html'>summary.lawbl</a></code>. The factorial eigenvalue
  can be plotted with <code><a href='plot_eigen.html'>plot_eigen</a></code>.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
-    <p>Chen, J., Guo, Z., Zhang, L., &amp; Pan, J. (2020). A partially confirmatory approach to scale development
- with the Bayesian Lasso. <em>Psychological Methods</em>.
- Advance online publication. DOI:10.1037/met0000293</p>
+    <p>Chen, J. (2020). A partially confirmatory approach to the multidimensional item response theory with the Bayesian Lasso.
+<em>Psychometrika</em>. 85(3), 738-774. DOI:10.1007/s11336-020-09724-3.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
@@ -284,7 +281,7 @@ the posteriors that can be summarized using <code><a href='summary.lawbl.html'>s
 #&gt; [15,]   -1   -1   -1
 #&gt; [16,]   -1   -1   -1
 #&gt; [17,]   -1   -1   -1
-#&gt; [18,]   -1   -1   -1</div><div class='input'><span class='va'>m0</span> <span class='op'>&lt;-</span> <span class='fu'>pcfa</span><span class='op'>(</span>dat <span class='op'>=</span> <span class='va'>dat</span>, Q <span class='op'>=</span> <span class='va'>Q</span>, LD <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+#&gt; [18,]   -1   -1   -1</div><div class='input'><span class='va'>m0</span> <span class='op'>&lt;-</span> <span class='fu'><a href='pcfa.html'>pcfa</a></span><span class='op'>(</span>dat <span class='op'>=</span> <span class='va'>dat</span>, Q <span class='op'>=</span> <span class='va'>Q</span>, LD <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m0</span><span class='op'>)</span> <span class='co'># summarize basic information</span>
 </div><div class='output co'>#&gt; $N
 #&gt; [1] 1000
@@ -386,7 +383,7 @@ the posteriors that can be summarized using <code><a href='summary.lawbl.html'>s
 #&gt; [15,]   -1   -1    1
 #&gt; [16,]   -1   -1    1
 #&gt; [17,]   -1   -1    1
-#&gt; [18,]   -1   -1    1</div><div class='input'><span class='va'>m1</span> <span class='op'>&lt;-</span> <span class='fu'>pcfa</span><span class='op'>(</span>dat <span class='op'>=</span> <span class='va'>dat</span>, Q <span class='op'>=</span> <span class='va'>Q</span><span class='op'>)</span>
+#&gt; [18,]   -1   -1    1</div><div class='input'><span class='va'>m1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='pcfa.html'>pcfa</a></span><span class='op'>(</span>dat <span class='op'>=</span> <span class='va'>dat</span>, Q <span class='op'>=</span> <span class='va'>Q</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m1</span><span class='op'>)</span> <span class='co'># summarize basic information</span>
 </div><div class='output co'>#&gt; $N
 #&gt; [1] 1000

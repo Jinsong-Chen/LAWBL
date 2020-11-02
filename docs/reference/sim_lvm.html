@@ -40,8 +40,9 @@
 
 
 <meta property="og:title" content="Simulating data with Latent Variable Modeling — sim_lvm" />
-<meta property="og:description" content="sim_lvm can simulate data based on factor analytic models
- with different loading patterns and residual covariance (local dependence) structures." />
+<meta property="og:description" content="sim_lvm can simulate data based on factor analysis or
+item response models with different response formats (continuous or categorical),
+loading patterns and residual covariance (local dependence) structures." />
 
 
 
@@ -73,7 +74,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">LAWBL</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.0</span>
       </span>
     </div>
 
@@ -100,6 +101,9 @@
     </li>
     <li>
       <a href="../articles/gpcfa-examples.html">gpcfa-examples</a>
+    </li>
+    <li>
+      <a href="../articles/pcirm-examples.html">pcirm-examples</a>
     </li>
   </ul>
 </li>
@@ -133,8 +137,9 @@
     </div>
 
     <div class="ref-description">
-    <p><code>sim_lvm</code> can simulate data based on factor analytic models
- with different loading patterns and residual covariance (local dependence) structures.</p>
+    <p><code>sim_lvm</code> can simulate data based on factor analysis or
+item response models with different response formats (continuous or categorical),
+loading patterns and residual covariance (local dependence) structures.</p>
     </div>
 
     <pre class="usage"><span class='fu'>sim_lvm</span><span class='op'>(</span>
@@ -222,7 +227,7 @@
     </tr>
     <tr>
       <th>necw</th>
-      <td><p>Number of withinn-factor local dependence.</p></td>
+      <td><p>Number of within-factor local dependence.</p></td>
     </tr>
     <tr>
       <th>necb</th>
@@ -367,59 +372,59 @@
 #&gt; [18,]   -1   -1   -1</div><div class='input'><span class='va'>m0</span> <span class='op'>&lt;-</span> <span class='fu'><a href='pcfa.html'>pcfa</a></span><span class='op'>(</span>dat <span class='op'>=</span> <span class='va'>dat</span>, cati <span class='op'>=</span> <span class='op'>-</span><span class='fl'>1</span>, Q <span class='op'>=</span> <span class='va'>Q</span>, LD <span class='op'>=</span> <span class='cn'>FALSE</span>,burn <span class='op'>=</span> <span class='fl'>3000</span>, iter <span class='op'>=</span> <span class='fl'>3000</span>,verbose<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; 
 #&gt; Tot. Iter = 1000
-#&gt;          [,1]  [,2]  [,3]
-#&gt; Feigen  3.468 4.136 5.848
-#&gt; NLA_lg3 6.000 8.000 8.000
-#&gt; Shrink  2.595 2.595 2.595
-#&gt; Ave. Thd: -1e+200 -1.859 -0.2993 1.191 1e+200
-#&gt; Acc Rate: 0.3674 0.5848
+#&gt;          [,1]   [,2]  [,3]
+#&gt; Feigen  3.007  4.402 5.418
+#&gt; NLA_lg3 6.000 10.000 8.000
+#&gt; Shrink  2.609  2.609 2.609
+#&gt; Ave. Thd: -1e+200 -1.867 -0.2897 1.214 1e+200
+#&gt; Acc Rate: 0.3601
 #&gt; 
 #&gt; Tot. Iter = 2000
 #&gt;          [,1]  [,2]  [,3]
-#&gt; Feigen  3.387 3.042 3.762
+#&gt; Feigen  3.629 3.216 3.532
 #&gt; NLA_lg3 8.000 8.000 8.000
-#&gt; Shrink  2.396 2.396 2.396
-#&gt; Ave. Thd: -1e+200 -1.773 -0.2133 1.251 1e+200
-#&gt; Acc Rate: 0.3566 0.5972
+#&gt; Shrink  2.518 2.518 2.518
+#&gt; Ave. Thd: -1e+200 -1.809 -0.2319 1.225 1e+200
+#&gt; Acc Rate: 0.3551
 #&gt; 
 #&gt; Tot. Iter = 3000
 #&gt;          [,1]  [,2]  [,3]
-#&gt; Feigen  4.702 3.812 3.029
-#&gt; NLA_lg3 8.000 6.000 6.000
-#&gt; Shrink  2.763 2.763 2.763
-#&gt; Ave. Thd: -1e+200 -1.74 -0.1854 1.304 1e+200
-#&gt; Acc Rate: 0.3516 0.5971
+#&gt; Feigen  3.923 3.162 3.956
+#&gt; NLA_lg3 8.000 6.000 8.000
+#&gt; Shrink  2.889 2.889 2.889
+#&gt; Ave. Thd: -1e+200 -1.748 -0.2131 1.287 1e+200
+#&gt; Acc Rate: 0.3536
 #&gt; 
 #&gt; Tot. Iter = 4000
 #&gt;          [,1]  [,2]  [,3]
-#&gt; Feigen  4.353 3.241 3.495
-#&gt; NLA_lg3 8.000 7.000 8.000
-#&gt; Shrink  3.452 3.452 3.452
-#&gt; Adj PSR 1.15 1.115 2.194
-#&gt; Ave. Thd: -1e+200 -1.697 -0.1431 1.346 1e+200
-#&gt; Acc Rate: 0.3524 0.5973
+#&gt; Feigen  3.828 3.263 3.530
+#&gt; NLA_lg3 8.000 8.000 8.000
+#&gt; Shrink  3.719 3.719 3.719
+#&gt; Adj PSR 1.07 1.01 2.087
+#&gt; Ave. Thd: -1e+200 -1.691 -0.1414 1.325 1e+200
+#&gt; Acc Rate: 0.3523
 #&gt; 
 #&gt; Tot. Iter = 5000
 #&gt;          [,1]  [,2]  [,3]
-#&gt; Feigen  3.993 3.401 3.081
+#&gt; Feigen  3.372 3.501 3.618
 #&gt; NLA_lg3 8.000 8.000 8.000
-#&gt; Shrink  2.875 2.875 2.875
-#&gt; Adj PSR 1.364 2.007 1.028
-#&gt; Ave. Thd: -1e+200 -1.674 -0.1312 1.373 1e+200
-#&gt; Acc Rate: 0.3529 0.5988
+#&gt; Shrink  2.891 2.891 2.891
+#&gt; Adj PSR 1.649 1.075 1.019
+#&gt; Ave. Thd: -1e+200 -1.693 -0.1558 1.344 1e+200
+#&gt; Acc Rate: 0.3531
 #&gt; 
 #&gt; Tot. Iter = 6000
 #&gt;          [,1]  [,2]  [,3]
-#&gt; Feigen  3.221 3.411 3.390
+#&gt; Feigen  3.580 3.049 3.755
 #&gt; NLA_lg3 8.000 8.000 8.000
-#&gt; Shrink  3.393 3.393 3.393
-#&gt; Adj PSR 1.06 1.51 1.079
-#&gt; Ave. Thd: -1e+200 -1.691 -0.1194 1.4 1e+200
-#&gt; Acc Rate: 0.357 0.5998
+#&gt; Shrink  3.445 3.445 3.445
+#&gt; Adj PSR 1.166 1.076 1.013
+#&gt; Ave. Thd: -1e+200 -1.706 -0.1385 1.371 1e+200
+#&gt; Acc Rate: 0.3546
 #&gt; 
 #&gt; #Sign change: 0 0 0 0 0 0
 #&gt;    user  system elapsed 
-#&gt;  103.02    0.04  103.41 </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m0</span><span class='op'>)</span> <span class='co'># summarize basic information</span>
+#&gt;   100.5     0.0   100.5 </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m0</span><span class='op'>)</span> <span class='co'># summarize basic information</span>
 </div><div class='output co'>#&gt; $N
 #&gt; [1] 1000
 #&gt; 
@@ -446,9 +451,9 @@
 #&gt; 
 #&gt; $`Adj. PSR`
 #&gt;    Point est. Upper C.I.
-#&gt; F1   1.059833   1.244354
-#&gt; F2   1.510243   2.613654
-#&gt; F3   1.078946   1.293420
+#&gt; F1   1.166455   1.579199
+#&gt; F2   1.075824   1.158405
+#&gt; F3   1.012916   1.019371
 #&gt; 
 #&gt; $`Cat Items`
 #&gt;  [1]  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18
@@ -457,49 +462,49 @@
 #&gt; [1] 4
 #&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m0</span>, what <span class='op'>=</span> <span class='st'>'lambda'</span><span class='op'>)</span> <span class='co'>#summarize significant loadings</span>
 </div><div class='output co'>#&gt;       Item F       est         sd     lower     upper sig
-#&gt; var1     1 1 0.7982782 0.07215491 0.6607845 0.9413583   1
-#&gt; var2     2 1 0.8068711 0.07266035 0.6618496 0.9349032   1
-#&gt; var3     3 1 0.7392978 0.06488783 0.6174716 0.8666189   1
-#&gt; var4     4 1 0.7509514 0.06225709 0.6388954 0.8777813   1
-#&gt; var5     5 1 0.7311445 0.07026153 0.5964928 0.8645368   1
-#&gt; var6     6 1 0.7595116 0.07142673 0.6253944 0.8914917   1
-#&gt; var17   17 1 0.3960988 0.08388555 0.2289212 0.5541216   1
-#&gt; var18   18 1 0.4258988 0.09004551 0.2261432 0.5697483   1
-#&gt; var23    5 2 0.4012357 0.09462303 0.2166065 0.5650244   1
-#&gt; var24    6 2 0.3668400 0.09501164 0.1844207 0.5303457   1
-#&gt; var25    7 2 0.7181459 0.06814201 0.5844522 0.8597254   1
-#&gt; var26    8 2 0.7235017 0.07300010 0.5894451 0.8784389   1
-#&gt; var27    9 2 0.7354113 0.07259400 0.5909544 0.8804008   1
-#&gt; var28   10 2 0.7488617 0.06758814 0.6159852 0.8827301   1
-#&gt; var29   11 2 0.7376723 0.05511605 0.6405893 0.8496557   1
-#&gt; var30   12 2 0.6789079 0.05366711 0.5747152 0.7840886   1
-#&gt; var47   11 3 0.3756407 0.08056053 0.2147899 0.5366861   1
-#&gt; var48   12 3 0.4183832 0.07776984 0.2651418 0.5691131   1
-#&gt; var49   13 3 0.7691632 0.06841003 0.6447916 0.9132286   1
-#&gt; var50   14 3 0.7394105 0.05726511 0.6303995 0.8479232   1
-#&gt; var51   15 3 0.6973138 0.06318189 0.5845243 0.8268083   1
-#&gt; var52   16 3 0.7218488 0.06353080 0.6092361 0.8569854   1
-#&gt; var53   17 3 0.7004362 0.06527908 0.5801073 0.8243858   1
-#&gt; var54   18 3 0.7095391 0.06567843 0.5892349 0.8421828   1</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m0</span>, what <span class='op'>=</span> <span class='st'>'qlambda'</span><span class='op'>)</span> <span class='co'>#summarize significant loadings in pattern/Q-matrix format</span>
+#&gt; var1     1 1 0.7513928 0.06086839 0.6334580 0.8655604   1
+#&gt; var2     2 1 0.7846111 0.05686583 0.6698745 0.8898211   1
+#&gt; var3     3 1 0.6963859 0.05187712 0.5934600 0.7976899   1
+#&gt; var4     4 1 0.7097179 0.05552289 0.6011540 0.8167845   1
+#&gt; var5     5 1 0.6775012 0.05660098 0.5628928 0.7973446   1
+#&gt; var6     6 1 0.7027709 0.05506972 0.6002609 0.8216999   1
+#&gt; var17   17 1 0.3704505 0.06800001 0.2267468 0.4897480   1
+#&gt; var18   18 1 0.3920823 0.07137759 0.2518373 0.5249785   1
+#&gt; var23    5 2 0.4521916 0.07264070 0.3108411 0.5951826   1
+#&gt; var24    6 2 0.4209032 0.07264477 0.2797739 0.5575893   1
+#&gt; var25    7 2 0.7010917 0.05625919 0.5864559 0.8079367   1
+#&gt; var26    8 2 0.7058866 0.06302445 0.5917430 0.8368060   1
+#&gt; var27    9 2 0.7244635 0.06384414 0.5985317 0.8475623   1
+#&gt; var28   10 2 0.7333519 0.05781271 0.6224628 0.8519866   1
+#&gt; var29   11 2 0.7221971 0.04970786 0.6329132 0.8231842   1
+#&gt; var30   12 2 0.6651844 0.04695533 0.5762356 0.7618485   1
+#&gt; var47   11 3 0.4088030 0.06948185 0.2759376 0.5428537   1
+#&gt; var48   12 3 0.4445436 0.06305243 0.3218806 0.5631624   1
+#&gt; var49   13 3 0.7743668 0.05968387 0.6627701 0.8936835   1
+#&gt; var50   14 3 0.7477978 0.05630337 0.6387987 0.8556948   1
+#&gt; var51   15 3 0.7058896 0.05872753 0.6030618 0.8323233   1
+#&gt; var52   16 3 0.7265640 0.06071449 0.6158904 0.8468757   1
+#&gt; var53   17 3 0.7278373 0.05517413 0.6275085 0.8351958   1
+#&gt; var54   18 3 0.7498162 0.05851032 0.6349423 0.8528206   1</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m0</span>, what <span class='op'>=</span> <span class='st'>'qlambda'</span><span class='op'>)</span> <span class='co'>#summarize significant loadings in pattern/Q-matrix format</span>
 </div><div class='output co'>#&gt;          [,1]      [,2]      [,3]
-#&gt; I1  0.7982782 0.0000000 0.0000000
-#&gt; I2  0.8068711 0.0000000 0.0000000
-#&gt; I3  0.7392978 0.0000000 0.0000000
-#&gt; I4  0.7509514 0.0000000 0.0000000
-#&gt; I5  0.7311445 0.4012357 0.0000000
-#&gt; I6  0.7595116 0.3668400 0.0000000
-#&gt; I7  0.0000000 0.7181459 0.0000000
-#&gt; I8  0.0000000 0.7235017 0.0000000
-#&gt; I9  0.0000000 0.7354113 0.0000000
-#&gt; I10 0.0000000 0.7488617 0.0000000
-#&gt; I11 0.0000000 0.7376723 0.3756407
-#&gt; I12 0.0000000 0.6789079 0.4183832
-#&gt; I13 0.0000000 0.0000000 0.7691632
-#&gt; I14 0.0000000 0.0000000 0.7394105
-#&gt; I15 0.0000000 0.0000000 0.6973138
-#&gt; I16 0.0000000 0.0000000 0.7218488
-#&gt; I17 0.3960988 0.0000000 0.7004362
-#&gt; I18 0.4258988 0.0000000 0.7095391</div><div class='input'><span class='co'># }</span>
+#&gt; I1  0.7513928 0.0000000 0.0000000
+#&gt; I2  0.7846111 0.0000000 0.0000000
+#&gt; I3  0.6963859 0.0000000 0.0000000
+#&gt; I4  0.7097179 0.0000000 0.0000000
+#&gt; I5  0.6775012 0.4521916 0.0000000
+#&gt; I6  0.7027709 0.4209032 0.0000000
+#&gt; I7  0.0000000 0.7010917 0.0000000
+#&gt; I8  0.0000000 0.7058866 0.0000000
+#&gt; I9  0.0000000 0.7244635 0.0000000
+#&gt; I10 0.0000000 0.7333519 0.0000000
+#&gt; I11 0.0000000 0.7221971 0.4088030
+#&gt; I12 0.0000000 0.6651844 0.4445436
+#&gt; I13 0.0000000 0.0000000 0.7743668
+#&gt; I14 0.0000000 0.0000000 0.7477978
+#&gt; I15 0.0000000 0.0000000 0.7058896
+#&gt; I16 0.0000000 0.0000000 0.7265640
+#&gt; I17 0.3704505 0.0000000 0.7278373
+#&gt; I18 0.3920823 0.0000000 0.7498162</div><div class='input'><span class='co'># }</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

@@ -4,5 +4,6 @@ pkgdown_sha: ~
 articles:
   pcfa-examples: pcfa-examples.html
   gpcfa-examples: gpcfa-examples.html
-last_built: 2020-10-30T05:28Z
+  pcirm-examples: pcirm-examples.html
+last_built: 2020-11-02T09:55Z
 

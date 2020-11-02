@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Simulated CCFA data with LI — sim18ccfa40 • LAWBL</title>
+<title>Simulated CCFA data with LI and missingness — sim18ccfa40 • LAWBL</title>
 
 
 <!-- jquery -->
@@ -39,9 +39,9 @@
 
 
 
-<meta property="og:title" content="Simulated CCFA data with LI — sim18ccfa40" />
-<meta property="og:description" content="Categorical CFA data simulated based on 18 items, 3 factors, 4 categories and local independence;
- factorial correlation \(\Phi=.3\)." />
+<meta property="og:title" content="Simulated CCFA data with LI and missingness — sim18ccfa40" />
+<meta property="og:description" content="Categorical CFA data simulated based on 18 items, 3 factors, and 4 categories
+with local independence and  10" />
 
 
 
@@ -73,7 +73,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">LAWBL</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.0</span>
       </span>
     </div>
 
@@ -101,6 +101,9 @@
     <li>
       <a href="../articles/gpcfa-examples.html">gpcfa-examples</a>
     </li>
+    <li>
+      <a href="../articles/pcirm-examples.html">pcirm-examples</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -127,14 +130,14 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Simulated CCFA data with LI</h1>
+    <h1>Simulated CCFA data with LI and missingness</h1>
     <small class="dont-index">Source: <a href='https://github.com/Jinsong-Chen/LAWBL/blob/master/R/datasets.R'><code>R/datasets.R</code></a></small>
     <div class="hidden name"><code>sim18ccfa40.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Categorical CFA data simulated based on 18 items, 3 factors, 4 categories and local independence;
- factorial correlation \(\Phi=.3\).</p>
+    <p>Categorical CFA data simulated based on 18 items, 3 factors, and 4 categories
+with local independence and  10<!-- % missingness at random; factorial correlation \eqn{\Phi=.3}. --></p>
     </div>
 
     <pre class="usage"><span class='va'>sim18ccfa40</span></pre>
@@ -143,7 +146,7 @@
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
     <p>A list with components:</p><dl>
-<dt><code>dat</code></dt><dd><p>A dataset with simulated responses of 500 individuals to 18 items</p></dd>
+<dt><code>dat</code></dt><dd><p>A dataset with simulated responses of 1000 individuals to 18 items</p></dd>
 <dt><code>qlam</code></dt><dd><p>Loading pattern and values used to simulated the data</p></dd>
 
 </dl>

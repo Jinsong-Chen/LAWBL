@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">LAWBL</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.0</span>
       </span>
     </div>
 
@@ -58,6 +58,9 @@
     </li>
     <li>
       <a href="../articles/gpcfa-examples.html">gpcfa-examples</a>
+    </li>
+    <li>
+      <a href="../articles/pcirm-examples.html">pcirm-examples</a>
     </li>
   </ul>
 </li>
@@ -103,155 +106,153 @@
 <ol style="list-style-type: decimal">
 <li>Load the package, obtain the data, loading pattern (<em>qlam</em>), and setup the design matrix Q.</li>
 </ol>
-<div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/Jinsong-Chen/LAWBL">LAWBL</a></span><span class="op">)</span>
-<span class="va">dat</span> <span class="op">&lt;-</span> <span class="va">sim18cfa0</span><span class="op">$</span><span class="va">dat</span>
-<span class="va">J</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span> <span class="co"># no. of items</span>
-<span class="va">K</span> <span class="op">&lt;-</span> <span class="fl">3</span> <span class="co"># no. of factors</span>
-<span class="va">qlam</span> <span class="op">&lt;-</span> <span class="va">sim18cfa0</span><span class="op">$</span><span class="va">qlam</span>
-<span class="va">qlam</span>
-<span class="co">#&gt;       [,1] [,2] [,3]</span>
-<span class="co">#&gt;  [1,]  0.7  0.0  0.0</span>
-<span class="co">#&gt;  [2,]  0.7  0.0  0.0</span>
-<span class="co">#&gt;  [3,]  0.7  0.0  0.0</span>
-<span class="co">#&gt;  [4,]  0.7  0.0  0.0</span>
-<span class="co">#&gt;  [5,]  0.7  0.4  0.0</span>
-<span class="co">#&gt;  [6,]  0.7  0.4  0.0</span>
-<span class="co">#&gt;  [7,]  0.0  0.7  0.0</span>
-<span class="co">#&gt;  [8,]  0.0  0.7  0.0</span>
-<span class="co">#&gt;  [9,]  0.0  0.7  0.0</span>
-<span class="co">#&gt; [10,]  0.0  0.7  0.0</span>
-<span class="co">#&gt; [11,]  0.0  0.7  0.4</span>
-<span class="co">#&gt; [12,]  0.0  0.7  0.4</span>
-<span class="co">#&gt; [13,]  0.0  0.0  0.7</span>
-<span class="co">#&gt; [14,]  0.0  0.0  0.7</span>
-<span class="co">#&gt; [15,]  0.0  0.0  0.7</span>
-<span class="co">#&gt; [16,]  0.0  0.0  0.7</span>
-<span class="co">#&gt; [17,]  0.4  0.0  0.7</span>
-<span class="co">#&gt; [18,]  0.4  0.0  0.7</span>
-
-<span class="va">Q</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>,<span class="va">J</span>,<span class="va">K</span><span class="op">)</span>; <span class="co"># -1 for unspecified items</span>
-<span class="va">Q</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>,<span class="fl">1</span><span class="op">]</span><span class="op">&lt;-</span><span class="va">Q</span><span class="op">[</span><span class="fl">7</span><span class="op">:</span><span class="fl">8</span>,<span class="fl">2</span><span class="op">]</span><span class="op">&lt;-</span><span class="va">Q</span><span class="op">[</span><span class="fl">13</span><span class="op">:</span><span class="fl">14</span>,<span class="fl">3</span><span class="op">]</span><span class="op">&lt;-</span><span class="fl">1</span> <span class="co"># 1 for specified items</span>
-<span class="va">Q</span>
-<span class="co">#&gt;       [,1] [,2] [,3]</span>
-<span class="co">#&gt;  [1,]    1   -1   -1</span>
-<span class="co">#&gt;  [2,]    1   -1   -1</span>
-<span class="co">#&gt;  [3,]   -1   -1   -1</span>
-<span class="co">#&gt;  [4,]   -1   -1   -1</span>
-<span class="co">#&gt;  [5,]   -1   -1   -1</span>
-<span class="co">#&gt;  [6,]   -1   -1   -1</span>
-<span class="co">#&gt;  [7,]   -1    1   -1</span>
-<span class="co">#&gt;  [8,]   -1    1   -1</span>
-<span class="co">#&gt;  [9,]   -1   -1   -1</span>
-<span class="co">#&gt; [10,]   -1   -1   -1</span>
-<span class="co">#&gt; [11,]   -1   -1   -1</span>
-<span class="co">#&gt; [12,]   -1   -1   -1</span>
-<span class="co">#&gt; [13,]   -1   -1    1</span>
-<span class="co">#&gt; [14,]   -1   -1    1</span>
-<span class="co">#&gt; [15,]   -1   -1   -1</span>
-<span class="co">#&gt; [16,]   -1   -1   -1</span>
-<span class="co">#&gt; [17,]   -1   -1   -1</span>
-<span class="co">#&gt; [18,]   -1   -1   -1</span></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">library</span>(LAWBL)</span>
+<span id="cb1-2"><a href="#cb1-2"></a>dat &lt;-<span class="st"> </span>sim18cfa0<span class="op">$</span>dat</span>
+<span id="cb1-3"><a href="#cb1-3"></a>J &lt;-<span class="st"> </span><span class="kw">ncol</span>(dat) <span class="co"># no. of items</span></span>
+<span id="cb1-4"><a href="#cb1-4"></a>K &lt;-<span class="st"> </span><span class="dv">3</span> <span class="co"># no. of factors</span></span>
+<span id="cb1-5"><a href="#cb1-5"></a>qlam &lt;-<span class="st"> </span>sim18cfa0<span class="op">$</span>qlam</span>
+<span id="cb1-6"><a href="#cb1-6"></a>qlam</span>
+<span id="cb1-7"><a href="#cb1-7"></a>R<span class="op">&gt;</span><span class="st">       </span>[,<span class="dv">1</span>] [,<span class="dv">2</span>] [,<span class="dv">3</span>]</span>
+<span id="cb1-8"><a href="#cb1-8"></a>R<span class="op">&gt;</span><span class="st">  </span>[<span class="dv">1</span>,]  <span class="fl">0.7</span>  <span class="fl">0.0</span>  <span class="fl">0.0</span></span>
+<span id="cb1-9"><a href="#cb1-9"></a>R<span class="op">&gt;</span><span class="st">  </span>[<span class="dv">2</span>,]  <span class="fl">0.7</span>  <span class="fl">0.0</span>  <span class="fl">0.0</span></span>
+<span id="cb1-10"><a href="#cb1-10"></a>R<span class="op">&gt;</span><span class="st">  </span>[<span class="dv">3</span>,]  <span class="fl">0.7</span>  <span class="fl">0.0</span>  <span class="fl">0.0</span></span>
+<span id="cb1-11"><a href="#cb1-11"></a>R<span class="op">&gt;</span><span class="st">  </span>[<span class="dv">4</span>,]  <span class="fl">0.7</span>  <span class="fl">0.0</span>  <span class="fl">0.0</span></span>
+<span id="cb1-12"><a href="#cb1-12"></a>R<span class="op">&gt;</span><span class="st">  </span>[<span class="dv">5</span>,]  <span class="fl">0.7</span>  <span class="fl">0.3</span>  <span class="fl">0.0</span></span>
+<span id="cb1-13"><a href="#cb1-13"></a>R<span class="op">&gt;</span><span class="st">  </span>[<span class="dv">6</span>,]  <span class="fl">0.7</span>  <span class="fl">0.3</span>  <span class="fl">0.0</span></span>
+<span id="cb1-14"><a href="#cb1-14"></a>R<span class="op">&gt;</span><span class="st">  </span>[<span class="dv">7</span>,]  <span class="fl">0.0</span>  <span class="fl">0.7</span>  <span class="fl">0.0</span></span>
+<span id="cb1-15"><a href="#cb1-15"></a>R<span class="op">&gt;</span><span class="st">  </span>[<span class="dv">8</span>,]  <span class="fl">0.0</span>  <span class="fl">0.7</span>  <span class="fl">0.0</span></span>
+<span id="cb1-16"><a href="#cb1-16"></a>R<span class="op">&gt;</span><span class="st">  </span>[<span class="dv">9</span>,]  <span class="fl">0.0</span>  <span class="fl">0.7</span>  <span class="fl">0.0</span></span>
+<span id="cb1-17"><a href="#cb1-17"></a>R<span class="op">&gt;</span><span class="st"> </span>[<span class="dv">10</span>,]  <span class="fl">0.0</span>  <span class="fl">0.7</span>  <span class="fl">0.0</span></span>
+<span id="cb1-18"><a href="#cb1-18"></a>R<span class="op">&gt;</span><span class="st"> </span>[<span class="dv">11</span>,]  <span class="fl">0.0</span>  <span class="fl">0.7</span>  <span class="fl">0.3</span></span>
+<span id="cb1-19"><a href="#cb1-19"></a>R<span class="op">&gt;</span><span class="st"> </span>[<span class="dv">12</span>,]  <span class="fl">0.0</span>  <span class="fl">0.7</span>  <span class="fl">0.3</span></span>
+<span id="cb1-20"><a href="#cb1-20"></a>R<span class="op">&gt;</span><span class="st"> </span>[<span class="dv">13</span>,]  <span class="fl">0.0</span>  <span class="fl">0.0</span>  <span class="fl">0.7</span></span>
+<span id="cb1-21"><a href="#cb1-21"></a>R<span class="op">&gt;</span><span class="st"> </span>[<span class="dv">14</span>,]  <span class="fl">0.0</span>  <span class="fl">0.0</span>  <span class="fl">0.7</span></span>
+<span id="cb1-22"><a href="#cb1-22"></a>R<span class="op">&gt;</span><span class="st"> </span>[<span class="dv">15</span>,]  <span class="fl">0.0</span>  <span class="fl">0.0</span>  <span class="fl">0.7</span></span>
+<span id="cb1-23"><a href="#cb1-23"></a>R<span class="op">&gt;</span><span class="st"> </span>[<span class="dv">16</span>,]  <span class="fl">0.0</span>  <span class="fl">0.0</span>  <span class="fl">0.7</span></span>
+<span id="cb1-24"><a href="#cb1-24"></a>R<span class="op">&gt;</span><span class="st"> </span>[<span class="dv">17</span>,]  <span class="fl">0.3</span>  <span class="fl">0.0</span>  <span class="fl">0.7</span></span>
+<span id="cb1-25"><a href="#cb1-25"></a>R<span class="op">&gt;</span><span class="st"> </span>[<span class="dv">18</span>,]  <span class="fl">0.3</span>  <span class="fl">0.0</span>  <span class="fl">0.7</span></span>
+<span id="cb1-26"><a href="#cb1-26"></a></span>
+<span id="cb1-27"><a href="#cb1-27"></a>Q&lt;-<span class="kw">matrix</span>(<span class="op">-</span><span class="dv">1</span>,J,K); <span class="co"># -1 for unspecified items</span></span>
+<span id="cb1-28"><a href="#cb1-28"></a>Q[<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>,<span class="dv">1</span>]&lt;-Q[<span class="dv">7</span><span class="op">:</span><span class="dv">8</span>,<span class="dv">2</span>]&lt;-Q[<span class="dv">13</span><span class="op">:</span><span class="dv">14</span>,<span class="dv">3</span>]&lt;-<span class="dv">1</span> <span class="co"># 1 for specified items</span></span>
+<span id="cb1-29"><a href="#cb1-29"></a>Q</span>
+<span id="cb1-30"><a href="#cb1-30"></a>R<span class="op">&gt;</span><span class="st">       </span>[,<span class="dv">1</span>] [,<span class="dv">2</span>] [,<span class="dv">3</span>]</span>
+<span id="cb1-31"><a href="#cb1-31"></a>R<span class="op">&gt;</span><span class="st">  </span>[<span class="dv">1</span>,]    <span class="dv">1</span>   <span class="dv">-1</span>   <span class="dv">-1</span></span>
+<span id="cb1-32"><a href="#cb1-32"></a>R<span class="op">&gt;</span><span class="st">  </span>[<span class="dv">2</span>,]    <span class="dv">1</span>   <span class="dv">-1</span>   <span class="dv">-1</span></span>
+<span id="cb1-33"><a href="#cb1-33"></a>R<span class="op">&gt;</span><span class="st">  </span>[<span class="dv">3</span>,]   <span class="dv">-1</span>   <span class="dv">-1</span>   <span class="dv">-1</span></span>
+<span id="cb1-34"><a href="#cb1-34"></a>R<span class="op">&gt;</span><span class="st">  </span>[<span class="dv">4</span>,]   <span class="dv">-1</span>   <span class="dv">-1</span>   <span class="dv">-1</span></span>
+<span id="cb1-35"><a href="#cb1-35"></a>R<span class="op">&gt;</span><span class="st">  </span>[<span class="dv">5</span>,]   <span class="dv">-1</span>   <span class="dv">-1</span>   <span class="dv">-1</span></span>
+<span id="cb1-36"><a href="#cb1-36"></a>R<span class="op">&gt;</span><span class="st">  </span>[<span class="dv">6</span>,]   <span class="dv">-1</span>   <span class="dv">-1</span>   <span class="dv">-1</span></span>
+<span id="cb1-37"><a href="#cb1-37"></a>R<span class="op">&gt;</span><span class="st">  </span>[<span class="dv">7</span>,]   <span class="dv">-1</span>    <span class="dv">1</span>   <span class="dv">-1</span></span>
+<span id="cb1-38"><a href="#cb1-38"></a>R<span class="op">&gt;</span><span class="st">  </span>[<span class="dv">8</span>,]   <span class="dv">-1</span>    <span class="dv">1</span>   <span class="dv">-1</span></span>
+<span id="cb1-39"><a href="#cb1-39"></a>R<span class="op">&gt;</span><span class="st">  </span>[<span class="dv">9</span>,]   <span class="dv">-1</span>   <span class="dv">-1</span>   <span class="dv">-1</span></span>
+<span id="cb1-40"><a href="#cb1-40"></a>R<span class="op">&gt;</span><span class="st"> </span>[<span class="dv">10</span>,]   <span class="dv">-1</span>   <span class="dv">-1</span>   <span class="dv">-1</span></span>
+<span id="cb1-41"><a href="#cb1-41"></a>R<span class="op">&gt;</span><span class="st"> </span>[<span class="dv">11</span>,]   <span class="dv">-1</span>   <span class="dv">-1</span>   <span class="dv">-1</span></span>
+<span id="cb1-42"><a href="#cb1-42"></a>R<span class="op">&gt;</span><span class="st"> </span>[<span class="dv">12</span>,]   <span class="dv">-1</span>   <span class="dv">-1</span>   <span class="dv">-1</span></span>
+<span id="cb1-43"><a href="#cb1-43"></a>R<span class="op">&gt;</span><span class="st"> </span>[<span class="dv">13</span>,]   <span class="dv">-1</span>   <span class="dv">-1</span>    <span class="dv">1</span></span>
+<span id="cb1-44"><a href="#cb1-44"></a>R<span class="op">&gt;</span><span class="st"> </span>[<span class="dv">14</span>,]   <span class="dv">-1</span>   <span class="dv">-1</span>    <span class="dv">1</span></span>
+<span id="cb1-45"><a href="#cb1-45"></a>R<span class="op">&gt;</span><span class="st"> </span>[<span class="dv">15</span>,]   <span class="dv">-1</span>   <span class="dv">-1</span>   <span class="dv">-1</span></span>
+<span id="cb1-46"><a href="#cb1-46"></a>R<span class="op">&gt;</span><span class="st"> </span>[<span class="dv">16</span>,]   <span class="dv">-1</span>   <span class="dv">-1</span>   <span class="dv">-1</span></span>
+<span id="cb1-47"><a href="#cb1-47"></a>R<span class="op">&gt;</span><span class="st"> </span>[<span class="dv">17</span>,]   <span class="dv">-1</span>   <span class="dv">-1</span>   <span class="dv">-1</span></span>
+<span id="cb1-48"><a href="#cb1-48"></a>R<span class="op">&gt;</span><span class="st"> </span>[<span class="dv">18</span>,]   <span class="dv">-1</span>   <span class="dv">-1</span>   <span class="dv">-1</span></span></code></pre></div>
 <ol start="2" style="list-style-type: decimal">
 <li>
 <strong>E-step:</strong> Estimate with the PCFA-LI model (E-step) by setting <em>LD=F</em>. Only a few loadings need to be specified in Q (e.g., 2 per factor). Longer chain is suggested for stabler performance (<em>burn=iter=5,000</em> by default).</li>
 </ol>
-<div class="sourceCode" id="cb2"><pre class="downlit">
-<span class="va">m0</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pcfa.html">pcfa</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">dat</span>, Q <span class="op">=</span> <span class="va">Q</span>,LD <span class="op">=</span> <span class="cn">FALSE</span>, burn <span class="op">=</span> <span class="fl">2000</span>, iter <span class="op">=</span> <span class="fl">2000</span>,verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Tot. Iter = 1000</span>
-<span class="co">#&gt;          [,1]  [,2]  [,3]</span>
-<span class="co">#&gt; Feigen  3.323 2.577 3.291</span>
-<span class="co">#&gt; NLA_lg3 8.000 8.000 8.000</span>
-<span class="co">#&gt; Shrink  3.851 3.851 3.851</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Tot. Iter = 2000</span>
-<span class="co">#&gt;          [,1]  [,2]  [,3]</span>
-<span class="co">#&gt; Feigen  2.903 3.304 4.193</span>
-<span class="co">#&gt; NLA_lg3 8.000 8.000 8.000</span>
-<span class="co">#&gt; Shrink  2.636 2.636 2.636</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Tot. Iter = 3000</span>
-<span class="co">#&gt;          [,1]  [,2]  [,3]</span>
-<span class="co">#&gt; Feigen  2.772 3.243 3.514</span>
-<span class="co">#&gt; NLA_lg3 8.000 8.000 8.000</span>
-<span class="co">#&gt; Shrink  3.445 3.445 3.445</span>
-<span class="co">#&gt; Adj PSR 1.4 1.134 1.038</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Tot. Iter = 4000</span>
-<span class="co">#&gt;          [,1]  [,2]   [,3]</span>
-<span class="co">#&gt; Feigen  3.991 4.713  4.308</span>
-<span class="co">#&gt; NLA_lg3 8.000 8.000 10.000</span>
-<span class="co">#&gt; Shrink  3.201 3.201  3.201</span>
-<span class="co">#&gt; Adj PSR 1.159 1.378 1.07</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; #Sign change: 0 0 0 0 0 0</span>
-<span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   14.64    0.00   14.67</span>
-
-<span class="co"># summarize basic information</span>
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">m0</span><span class="op">)</span>
-<span class="co">#&gt; $N</span>
-<span class="co">#&gt; [1] 500</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $J</span>
-<span class="co">#&gt; [1] 18</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $K</span>
-<span class="co">#&gt; [1] 3</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $`Miss%`</span>
-<span class="co">#&gt; [1] 0</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $`LD enabled`</span>
-<span class="co">#&gt; [1] FALSE</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $`Burn in`</span>
-<span class="co">#&gt; [1] 2000</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $Iteration</span>
-<span class="co">#&gt; [1] 2000</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $`No. of sig lambda`</span>
-<span class="co">#&gt; [1] 24</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $`Adj. PSR`</span>
-<span class="co">#&gt;    Point est. Upper C.I.</span>
-<span class="co">#&gt; F1   1.159097   1.437669</span>
-<span class="co">#&gt; F2   1.377527   2.323779</span>
-<span class="co">#&gt; F3   1.069836   1.274876</span>
-
-<span class="co">#summarize significant loadings in pattern/Q-matrix format</span>
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">m0</span>, what <span class="op">=</span> <span class="st">'qlambda'</span><span class="op">)</span> 
-<span class="co">#&gt;          [,1]      [,2]      [,3]</span>
-<span class="co">#&gt; I1  0.7006520 0.0000000 0.0000000</span>
-<span class="co">#&gt; I2  0.7129764 0.0000000 0.0000000</span>
-<span class="co">#&gt; I3  0.7201485 0.0000000 0.0000000</span>
-<span class="co">#&gt; I4  0.6764871 0.0000000 0.0000000</span>
-<span class="co">#&gt; I5  0.7018335 0.3981160 0.0000000</span>
-<span class="co">#&gt; I6  0.6705350 0.4148202 0.0000000</span>
-<span class="co">#&gt; I7  0.0000000 0.7219834 0.0000000</span>
-<span class="co">#&gt; I8  0.0000000 0.7758877 0.0000000</span>
-<span class="co">#&gt; I9  0.0000000 0.7342936 0.0000000</span>
-<span class="co">#&gt; I10 0.0000000 0.6643274 0.0000000</span>
-<span class="co">#&gt; I11 0.0000000 0.6936387 0.3736486</span>
-<span class="co">#&gt; I12 0.0000000 0.6626755 0.4260824</span>
-<span class="co">#&gt; I13 0.0000000 0.0000000 0.6365149</span>
-<span class="co">#&gt; I14 0.0000000 0.0000000 0.6849702</span>
-<span class="co">#&gt; I15 0.0000000 0.0000000 0.7129319</span>
-<span class="co">#&gt; I16 0.0000000 0.0000000 0.7902067</span>
-<span class="co">#&gt; I17 0.3956917 0.0000000 0.7233275</span>
-<span class="co">#&gt; I18 0.3888041 0.0000000 0.7186225</span>
-
-<span class="co">#factorial eigenvalue</span>
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">m0</span>,what<span class="op">=</span><span class="st">'eigen'</span><span class="op">)</span> 
-<span class="co">#&gt;         est        sd    lower    upper sig</span>
-<span class="co">#&gt; F1 3.332857 0.4751161 2.472778 4.148886   1</span>
-<span class="co">#&gt; F2 3.485774 0.5385707 2.567001 4.614304   1</span>
-<span class="co">#&gt; F3 3.492405 0.4823052 2.616686 4.444067   1</span>
-
-<span class="co">#plotting factorial eigenvalue</span>
-<span class="fu"><a href="../reference/plot_eigen.html">plot_eigen</a></span><span class="op">(</span><span class="va">m0</span><span class="op">)</span> <span class="co"># trace</span></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>m0 &lt;-<span class="st"> </span><span class="kw">pcfa</span>(<span class="dt">dat =</span> dat, <span class="dt">Q =</span> Q,<span class="dt">LD =</span> <span class="ot">FALSE</span>, <span class="dt">burn =</span> <span class="dv">2000</span>, <span class="dt">iter =</span> <span class="dv">2000</span>,<span class="dt">verbose =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb2-2"><a href="#cb2-2"></a>R<span class="op">&gt;</span><span class="st"> </span></span>
+<span id="cb2-3"><a href="#cb2-3"></a>R<span class="op">&gt;</span><span class="st"> </span>Tot. Iter =<span class="st"> </span><span class="dv">1000</span></span>
+<span id="cb2-4"><a href="#cb2-4"></a>R<span class="op">&gt;</span><span class="st">          </span>[,<span class="dv">1</span>]  [,<span class="dv">2</span>]  [,<span class="dv">3</span>]</span>
+<span id="cb2-5"><a href="#cb2-5"></a>R<span class="op">&gt;</span><span class="st"> </span>Feigen  <span class="fl">4.027</span> <span class="fl">3.873</span> <span class="fl">2.503</span></span>
+<span id="cb2-6"><a href="#cb2-6"></a>R<span class="op">&gt;</span><span class="st"> </span>NLA_lg3 <span class="fl">8.000</span> <span class="fl">6.000</span> <span class="fl">6.000</span></span>
+<span id="cb2-7"><a href="#cb2-7"></a>R<span class="op">&gt;</span><span class="st"> </span>Shrink  <span class="fl">3.219</span> <span class="fl">3.219</span> <span class="fl">3.219</span></span>
+<span id="cb2-8"><a href="#cb2-8"></a>R<span class="op">&gt;</span><span class="st"> </span></span>
+<span id="cb2-9"><a href="#cb2-9"></a>R<span class="op">&gt;</span><span class="st"> </span>Tot. Iter =<span class="st"> </span><span class="dv">2000</span></span>
+<span id="cb2-10"><a href="#cb2-10"></a>R<span class="op">&gt;</span><span class="st">          </span>[,<span class="dv">1</span>]  [,<span class="dv">2</span>]  [,<span class="dv">3</span>]</span>
+<span id="cb2-11"><a href="#cb2-11"></a>R<span class="op">&gt;</span><span class="st"> </span>Feigen  <span class="fl">3.626</span> <span class="fl">3.688</span> <span class="fl">4.227</span></span>
+<span id="cb2-12"><a href="#cb2-12"></a>R<span class="op">&gt;</span><span class="st"> </span>NLA_lg3 <span class="fl">6.000</span> <span class="fl">6.000</span> <span class="fl">6.000</span></span>
+<span id="cb2-13"><a href="#cb2-13"></a>R<span class="op">&gt;</span><span class="st"> </span>Shrink  <span class="fl">2.705</span> <span class="fl">2.705</span> <span class="fl">2.705</span></span>
+<span id="cb2-14"><a href="#cb2-14"></a>R<span class="op">&gt;</span><span class="st"> </span></span>
+<span id="cb2-15"><a href="#cb2-15"></a>R<span class="op">&gt;</span><span class="st"> </span>Tot. Iter =<span class="st"> </span><span class="dv">3000</span></span>
+<span id="cb2-16"><a href="#cb2-16"></a>R<span class="op">&gt;</span><span class="st">          </span>[,<span class="dv">1</span>]  [,<span class="dv">2</span>]  [,<span class="dv">3</span>]</span>
+<span id="cb2-17"><a href="#cb2-17"></a>R<span class="op">&gt;</span><span class="st"> </span>Feigen  <span class="fl">3.757</span> <span class="fl">3.545</span> <span class="fl">4.346</span></span>
+<span id="cb2-18"><a href="#cb2-18"></a>R<span class="op">&gt;</span><span class="st"> </span>NLA_lg3 <span class="fl">6.000</span> <span class="fl">6.000</span> <span class="fl">7.000</span></span>
+<span id="cb2-19"><a href="#cb2-19"></a>R<span class="op">&gt;</span><span class="st"> </span>Shrink  <span class="fl">3.614</span> <span class="fl">3.614</span> <span class="fl">3.614</span></span>
+<span id="cb2-20"><a href="#cb2-20"></a>R<span class="op">&gt;</span><span class="st"> </span>Adj PSR <span class="fl">1.092</span> <span class="fl">1.809</span> <span class="fl">1.729</span></span>
+<span id="cb2-21"><a href="#cb2-21"></a>R<span class="op">&gt;</span><span class="st"> </span></span>
+<span id="cb2-22"><a href="#cb2-22"></a>R<span class="op">&gt;</span><span class="st"> </span>Tot. Iter =<span class="st"> </span><span class="dv">4000</span></span>
+<span id="cb2-23"><a href="#cb2-23"></a>R<span class="op">&gt;</span><span class="st">          </span>[,<span class="dv">1</span>]  [,<span class="dv">2</span>]  [,<span class="dv">3</span>]</span>
+<span id="cb2-24"><a href="#cb2-24"></a>R<span class="op">&gt;</span><span class="st"> </span>Feigen  <span class="fl">2.677</span> <span class="fl">3.699</span> <span class="fl">3.423</span></span>
+<span id="cb2-25"><a href="#cb2-25"></a>R<span class="op">&gt;</span><span class="st"> </span>NLA_lg3 <span class="fl">6.000</span> <span class="fl">6.000</span> <span class="fl">7.000</span></span>
+<span id="cb2-26"><a href="#cb2-26"></a>R<span class="op">&gt;</span><span class="st"> </span>Shrink  <span class="fl">3.153</span> <span class="fl">3.153</span> <span class="fl">3.153</span></span>
+<span id="cb2-27"><a href="#cb2-27"></a>R<span class="op">&gt;</span><span class="st"> </span>Adj PSR <span class="fl">1.001</span> <span class="fl">1.006</span> <span class="fl">1.021</span></span>
+<span id="cb2-28"><a href="#cb2-28"></a>R<span class="op">&gt;</span><span class="st"> </span></span>
+<span id="cb2-29"><a href="#cb2-29"></a>R<span class="op">&gt;</span><span class="st"> </span><span class="co">#Sign change: 0 0 0 0 0 0</span></span>
+<span id="cb2-30"><a href="#cb2-30"></a>R<span class="op">&gt;</span><span class="st">    </span>user  system elapsed </span>
+<span id="cb2-31"><a href="#cb2-31"></a>R<span class="op">&gt;</span><span class="st">   </span><span class="fl">16.44</span>    <span class="fl">0.03</span>   <span class="fl">16.49</span></span>
+<span id="cb2-32"><a href="#cb2-32"></a></span>
+<span id="cb2-33"><a href="#cb2-33"></a><span class="co"># summarize basic information</span></span>
+<span id="cb2-34"><a href="#cb2-34"></a><span class="kw">summary</span>(m0)</span>
+<span id="cb2-35"><a href="#cb2-35"></a>R<span class="op">&gt;</span><span class="st"> </span><span class="er">$</span>N</span>
+<span id="cb2-36"><a href="#cb2-36"></a>R<span class="op">&gt;</span><span class="st"> </span>[<span class="dv">1</span>] <span class="dv">1000</span></span>
+<span id="cb2-37"><a href="#cb2-37"></a>R<span class="op">&gt;</span><span class="st"> </span></span>
+<span id="cb2-38"><a href="#cb2-38"></a>R<span class="op">&gt;</span><span class="st"> </span><span class="er">$</span>J</span>
+<span id="cb2-39"><a href="#cb2-39"></a>R<span class="op">&gt;</span><span class="st"> </span>[<span class="dv">1</span>] <span class="dv">18</span></span>
+<span id="cb2-40"><a href="#cb2-40"></a>R<span class="op">&gt;</span><span class="st"> </span></span>
+<span id="cb2-41"><a href="#cb2-41"></a>R<span class="op">&gt;</span><span class="st"> </span><span class="er">$</span>K</span>
+<span id="cb2-42"><a href="#cb2-42"></a>R<span class="op">&gt;</span><span class="st"> </span>[<span class="dv">1</span>] <span class="dv">3</span></span>
+<span id="cb2-43"><a href="#cb2-43"></a>R<span class="op">&gt;</span><span class="st"> </span></span>
+<span id="cb2-44"><a href="#cb2-44"></a>R<span class="op">&gt;</span><span class="st"> </span><span class="er">$</span><span class="st">`</span><span class="dt">Miss%</span><span class="st">`</span></span>
+<span id="cb2-45"><a href="#cb2-45"></a>R<span class="op">&gt;</span><span class="st"> </span>[<span class="dv">1</span>] <span class="dv">0</span></span>
+<span id="cb2-46"><a href="#cb2-46"></a>R<span class="op">&gt;</span><span class="st"> </span></span>
+<span id="cb2-47"><a href="#cb2-47"></a>R<span class="op">&gt;</span><span class="st"> </span><span class="er">$</span><span class="st">`</span><span class="dt">LD enabled</span><span class="st">`</span></span>
+<span id="cb2-48"><a href="#cb2-48"></a>R<span class="op">&gt;</span><span class="st"> </span>[<span class="dv">1</span>] <span class="ot">FALSE</span></span>
+<span id="cb2-49"><a href="#cb2-49"></a>R<span class="op">&gt;</span><span class="st"> </span></span>
+<span id="cb2-50"><a href="#cb2-50"></a>R<span class="op">&gt;</span><span class="st"> </span><span class="er">$</span><span class="st">`</span><span class="dt">Burn in</span><span class="st">`</span></span>
+<span id="cb2-51"><a href="#cb2-51"></a>R<span class="op">&gt;</span><span class="st"> </span>[<span class="dv">1</span>] <span class="dv">2000</span></span>
+<span id="cb2-52"><a href="#cb2-52"></a>R<span class="op">&gt;</span><span class="st"> </span></span>
+<span id="cb2-53"><a href="#cb2-53"></a>R<span class="op">&gt;</span><span class="st"> </span><span class="er">$</span>Iteration</span>
+<span id="cb2-54"><a href="#cb2-54"></a>R<span class="op">&gt;</span><span class="st"> </span>[<span class="dv">1</span>] <span class="dv">2000</span></span>
+<span id="cb2-55"><a href="#cb2-55"></a>R<span class="op">&gt;</span><span class="st"> </span></span>
+<span id="cb2-56"><a href="#cb2-56"></a>R<span class="op">&gt;</span><span class="st"> </span><span class="er">$</span><span class="st">`</span><span class="dt">No. of sig lambda</span><span class="st">`</span></span>
+<span id="cb2-57"><a href="#cb2-57"></a>R<span class="op">&gt;</span><span class="st"> </span>[<span class="dv">1</span>] <span class="dv">24</span></span>
+<span id="cb2-58"><a href="#cb2-58"></a>R<span class="op">&gt;</span><span class="st"> </span></span>
+<span id="cb2-59"><a href="#cb2-59"></a>R<span class="op">&gt;</span><span class="st"> </span><span class="er">$</span><span class="st">`</span><span class="dt">Adj. PSR</span><span class="st">`</span></span>
+<span id="cb2-60"><a href="#cb2-60"></a>R<span class="op">&gt;</span><span class="st">    </span>Point est. Upper C.I.</span>
+<span id="cb2-61"><a href="#cb2-61"></a>R<span class="op">&gt;</span><span class="st"> </span>F1   <span class="fl">1.000692</span>   <span class="fl">1.000992</span></span>
+<span id="cb2-62"><a href="#cb2-62"></a>R<span class="op">&gt;</span><span class="st"> </span>F2   <span class="fl">1.006334</span>   <span class="fl">1.030777</span></span>
+<span id="cb2-63"><a href="#cb2-63"></a>R<span class="op">&gt;</span><span class="st"> </span>F3   <span class="fl">1.020804</span>   <span class="fl">1.022674</span></span>
+<span id="cb2-64"><a href="#cb2-64"></a></span>
+<span id="cb2-65"><a href="#cb2-65"></a><span class="co">#summarize significant loadings in pattern/Q-matrix format</span></span>
+<span id="cb2-66"><a href="#cb2-66"></a><span class="kw">summary</span>(m0, <span class="dt">what =</span> <span class="st">'qlambda'</span>) </span>
+<span id="cb2-67"><a href="#cb2-67"></a>R<span class="op">&gt;</span><span class="st">          </span>[,<span class="dv">1</span>]      [,<span class="dv">2</span>]      [,<span class="dv">3</span>]</span>
+<span id="cb2-68"><a href="#cb2-68"></a>R<span class="op">&gt;</span><span class="st"> </span>I1  <span class="fl">0.6881938</span> <span class="fl">0.0000000</span> <span class="fl">0.0000000</span></span>
+<span id="cb2-69"><a href="#cb2-69"></a>R<span class="op">&gt;</span><span class="st"> </span>I2  <span class="fl">0.7276617</span> <span class="fl">0.0000000</span> <span class="fl">0.0000000</span></span>
+<span id="cb2-70"><a href="#cb2-70"></a>R<span class="op">&gt;</span><span class="st"> </span>I3  <span class="fl">0.7053776</span> <span class="fl">0.0000000</span> <span class="fl">0.0000000</span></span>
+<span id="cb2-71"><a href="#cb2-71"></a>R<span class="op">&gt;</span><span class="st"> </span>I4  <span class="fl">0.6525335</span> <span class="fl">0.0000000</span> <span class="fl">0.0000000</span></span>
+<span id="cb2-72"><a href="#cb2-72"></a>R<span class="op">&gt;</span><span class="st"> </span>I5  <span class="fl">0.7120300</span> <span class="fl">0.2865062</span> <span class="fl">0.0000000</span></span>
+<span id="cb2-73"><a href="#cb2-73"></a>R<span class="op">&gt;</span><span class="st"> </span>I6  <span class="fl">0.7095454</span> <span class="fl">0.2982842</span> <span class="fl">0.0000000</span></span>
+<span id="cb2-74"><a href="#cb2-74"></a>R<span class="op">&gt;</span><span class="st"> </span>I7  <span class="fl">0.0000000</span> <span class="fl">0.7413281</span> <span class="fl">0.0000000</span></span>
+<span id="cb2-75"><a href="#cb2-75"></a>R<span class="op">&gt;</span><span class="st"> </span>I8  <span class="fl">0.0000000</span> <span class="fl">0.7388007</span> <span class="fl">0.0000000</span></span>
+<span id="cb2-76"><a href="#cb2-76"></a>R<span class="op">&gt;</span><span class="st"> </span>I9  <span class="fl">0.0000000</span> <span class="fl">0.7328911</span> <span class="fl">0.0000000</span></span>
+<span id="cb2-77"><a href="#cb2-77"></a>R<span class="op">&gt;</span><span class="st"> </span>I10 <span class="fl">0.0000000</span> <span class="fl">0.6653911</span> <span class="fl">0.0000000</span></span>
+<span id="cb2-78"><a href="#cb2-78"></a>R<span class="op">&gt;</span><span class="st"> </span>I11 <span class="fl">0.0000000</span> <span class="fl">0.7037540</span> <span class="fl">0.2547656</span></span>
+<span id="cb2-79"><a href="#cb2-79"></a>R<span class="op">&gt;</span><span class="st"> </span>I12 <span class="fl">0.0000000</span> <span class="fl">0.7147327</span> <span class="fl">0.2628362</span></span>
+<span id="cb2-80"><a href="#cb2-80"></a>R<span class="op">&gt;</span><span class="st"> </span>I13 <span class="fl">0.0000000</span> <span class="fl">0.0000000</span> <span class="fl">0.7521188</span></span>
+<span id="cb2-81"><a href="#cb2-81"></a>R<span class="op">&gt;</span><span class="st"> </span>I14 <span class="fl">0.0000000</span> <span class="fl">0.0000000</span> <span class="fl">0.7831557</span></span>
+<span id="cb2-82"><a href="#cb2-82"></a>R<span class="op">&gt;</span><span class="st"> </span>I15 <span class="fl">0.0000000</span> <span class="fl">0.0000000</span> <span class="fl">0.7695287</span></span>
+<span id="cb2-83"><a href="#cb2-83"></a>R<span class="op">&gt;</span><span class="st"> </span>I16 <span class="fl">0.0000000</span> <span class="fl">0.0000000</span> <span class="fl">0.7263737</span></span>
+<span id="cb2-84"><a href="#cb2-84"></a>R<span class="op">&gt;</span><span class="st"> </span>I17 <span class="fl">0.2407217</span> <span class="fl">0.0000000</span> <span class="fl">0.7269717</span></span>
+<span id="cb2-85"><a href="#cb2-85"></a>R<span class="op">&gt;</span><span class="st"> </span>I18 <span class="fl">0.2450948</span> <span class="fl">0.0000000</span> <span class="fl">0.7290218</span></span>
+<span id="cb2-86"><a href="#cb2-86"></a></span>
+<span id="cb2-87"><a href="#cb2-87"></a><span class="co">#factorial eigenvalue</span></span>
+<span id="cb2-88"><a href="#cb2-88"></a><span class="kw">summary</span>(m0,<span class="dt">what=</span><span class="st">'eigen'</span>) </span>
+<span id="cb2-89"><a href="#cb2-89"></a>R<span class="op">&gt;</span><span class="st">         </span>est        sd    lower    upper sig</span>
+<span id="cb2-90"><a href="#cb2-90"></a>R<span class="op">&gt;</span><span class="st"> </span>F1 <span class="fl">3.157885</span> <span class="fl">0.5277766</span> <span class="fl">2.128743</span> <span class="fl">4.166953</span>   <span class="dv">1</span></span>
+<span id="cb2-91"><a href="#cb2-91"></a>R<span class="op">&gt;</span><span class="st"> </span>F2 <span class="fl">3.387151</span> <span class="fl">0.4077793</span> <span class="fl">2.640005</span> <span class="fl">4.243836</span>   <span class="dv">1</span></span>
+<span id="cb2-92"><a href="#cb2-92"></a>R<span class="op">&gt;</span><span class="st"> </span>F3 <span class="fl">3.600655</span> <span class="fl">0.4920634</span> <span class="fl">2.666980</span> <span class="fl">4.561343</span>   <span class="dv">1</span></span>
+<span id="cb2-93"><a href="#cb2-93"></a></span>
+<span id="cb2-94"><a href="#cb2-94"></a><span class="co">#plotting factorial eigenvalue</span></span>
+<span id="cb2-95"><a href="#cb2-95"></a><span class="kw">plot_eigen</span>(m0) <span class="co"># trace</span></span></code></pre></div>
 <p><img src="pcfa-examples_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
 <div class="sourceCode" id="cb3"><pre class="downlit">
 <span class="fu"><a href="../reference/plot_eigen.html">plot_eigen</a></span><span class="op">(</span><span class="va">m0</span>, what<span class="op">=</span><span class="st">'density'</span><span class="op">)</span> <span class="co">#density</span></pre></div>
