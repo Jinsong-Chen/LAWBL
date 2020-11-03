@@ -41,7 +41,7 @@ Q
 2) **E-step:** Estimate with the GPCFA-LI model (E-step) by setting *LD=F*. Only a few loadings need to be specified in Q (e.g., 2 per factor). Longer chain is suggested for more accurate and stable estimation.
 
 
-```{r}
+```{r eval=FALSE}
 m0 <- pcfa(dat = dat, Q = Q,LD = FALSE, cati = -1,burn = 4000, iter = 4000,verbose = TRUE)
 
 # summarize basic information

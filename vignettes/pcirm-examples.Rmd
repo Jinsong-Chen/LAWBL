@@ -36,7 +36,7 @@ K <- ncol(qlam) # no. of factors
 
 2) PCIRM with primary loadings and three traits specified. Longer chain is suggested for stabler performance (*burn=iter=5,000* by default).
 
-```{r}
+```{r eval=FALSE}
 ipf <- 8
 Q<-matrix(-1,J,K-1); # -1 for unspecified items
 Q[1:8,1]<-Q[9:16,2]<-Q[17:24,3]<-1
