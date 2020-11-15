@@ -103,7 +103,7 @@ init <- function(y, const) {
         const$mnoc <- mnoc
         const$zind <- zind
         ycs <- y[-pind, ]
-        y[-pind, ] <- t(scale(t(ycs), center = T))  #J * N
+        y[-pind, ] <- t(scale(t(ycs), center = !int))  #J * N
     } else {
         y <- t(scale(t(y), center = !int))
         THD <- NULL
