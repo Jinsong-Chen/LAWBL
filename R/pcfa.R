@@ -124,6 +124,7 @@ pcfa <- function(dat, Q, LD = TRUE,cati = NULL, PPMC = FALSE, burn = 5000, iter 
     Y[which(Y == missing)] <- NA
     N <- ncol(Y)
     J <- nrow(Y)
+    int<-F #intercept retained or not
     Q <- as.matrix(Q)
     K <- ncol(Q)
     Jp <- length(cati)
@@ -135,7 +136,7 @@ pcfa <- function(dat, Q, LD = TRUE,cati = NULL, PPMC = FALSE, burn = 5000, iter 
     Nmis <- sum(is.na(Y))
     mind <- which(is.na(Y), arr.ind = TRUE)
 
-    const <- list(N = N, J = J, K = K, Q = Q, cati = cati, Jp = Jp, Nmis = Nmis, cand_thd = cand_thd)
+    const <- list(N = N, J = J, K = K, Q = Q, cati = cati, Jp = Jp, Nmis = Nmis, cand_thd = cand_thd, int = int)
 
     ######## Init ########################################################
     miter <- iter + burn

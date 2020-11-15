@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# LAWBL: Latent (variable) Analysis with Bayesian Learning
+# LAWBL: Latent (Variable) Analysis With Bayesian Learning
 
 [![Project Status: Active ? The project has reached a stable, usable
 state and is being actively

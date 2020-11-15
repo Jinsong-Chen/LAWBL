@@ -3,6 +3,7 @@ init <- function(y, const) {
 
     N <- const$N
     J <- const$J
+    int <- const$int
     K <- const$K
     Q <- const$Q
     pind <- const$cati
@@ -104,7 +105,7 @@ init <- function(y, const) {
         ycs <- y[-pind, ]
         y[-pind, ] <- t(scale(t(ycs), center = T))  #J * N
     } else {
-        y <- t(scale(t(y), center = T))
+        y <- t(scale(t(y), center = !int))
         THD <- NULL
     }  #end Jp
 
