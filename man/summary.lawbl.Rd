@@ -2,7 +2,7 @@
 % Please edit documentation in R/summary.lawbl.R
 \name{summary.lawbl}
 \alias{summary.lawbl}
-\title{Summary method for \code{pcfa} objectects}
+\title{Summary method for \code{lawbl} objects}
 \usage{
 \method{summary}{lawbl}(
   object,
@@ -30,6 +30,7 @@
     \item \code{thd}: Threshold estimates.
     \item \code{int}: Intercept estimates (for  \code{\link{pcirm}} only).
     \item \code{shrink}: (Ave) shrinkage for each factor's loadings and LD (if \code{LD} in \code{pcfa} = T).
+    \item \code{factor}: Are the factors true of not (for EFA).
     \item \code{all}: All above information.
  }}
 
@@ -47,7 +48,7 @@
 A list or matrix containing the summarized information based on the option \code{what}.
 }
 \description{
-Provide basic information for an \code{PCFA} object, and summarize various posteriors.
+Provide summaries of posterior information for a \code{lawbl} object, .
 }
 \examples{
 \donttest{

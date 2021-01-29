@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_eigen.R
 \name{plot_eigen}
 \alias{plot_eigen}
-\title{Factorial eigenvalue plot}
+\title{Factorial eigenvalue plot (degenerate)}
 \usage{
 plot_eigen(obj, what = "trace")
 }

@@ -9,6 +9,7 @@ pcfa(
   Q,
   LD = TRUE,
   cati = NULL,
+  cand_thd = 0.2,
   PPMC = FALSE,
   burn = 5000,
   iter = 5000,
@@ -34,6 +35,8 @@ without any specified loading. See \code{Examples}.}
 
 \item{cati}{The set of categorical (polytomous) items in sequence number (i.e., 1 to \eqn{J});
 \code{NULL} for no and -1 for all items (default is \code{NULL}).}
+
+\item{cand_thd}{Candidate parameter for sampling the thresholds with the MH algorithm.}
 
 \item{PPMC}{logical; \code{TRUE} for conducting posterior predictive model checking.}
 
@@ -97,7 +100,7 @@ summary(m0, what = 'qlambda') #summarize significant loadings in pattern/Q-matri
 summary(m0, what = 'offpsx') #summarize significant LD terms
 
 ######################################################
-#  Example 1: Estimation with categorical data & LI  #
+#  Example 2: Estimation with categorical data & LI  #
 ######################################################
 dat <- sim18ccfa40$dat
 J <- ncol(dat)

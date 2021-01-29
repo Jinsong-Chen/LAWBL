@@ -27,6 +27,8 @@
 #' @param cati The set of categorical (polytomous) items in sequence number (i.e., 1 to \eqn{J});
 #' \code{NULL} for no and -1 for all items (default is \code{NULL}).
 #'
+#' @param cand_thd Candidate parameter for sampling the thresholds with the MH algorithm.
+#'
 #' @param PPMC logical; \code{TRUE} for conducting posterior predictive model checking.
 #'
 #' @param burn Number of burn-in iterations before posterior sampling.
@@ -85,7 +87,7 @@
 #' summary(m0, what = 'offpsx') #summarize significant LD terms
 #'
 #'######################################################
-#'#  Example 1: Estimation with categorical data & LI  #
+#'#  Example 2: Estimation with categorical data & LI  #
 #'######################################################
 #' dat <- sim18ccfa40$dat
 #' J <- ncol(dat)
@@ -99,10 +101,10 @@
 #' summary(m1, what = 'offpsx') #summarize significant LD terms
 #' summary(m1,what='thd') #thresholds for categorical items
 #' }
-pcfa <- function(dat, Q, LD = TRUE,cati = NULL, PPMC = FALSE, burn = 5000, iter = 5000, update = 1000, missing = NA, rseed = 12345,
-    digits = 4, alas = FALSE, verbose = FALSE) {
+pcfa <- function(dat, Q, LD = TRUE,cati = NULL,cand_thd = 0.2, PPMC = FALSE, burn = 5000, iter = 5000,
+                 update = 1000, missing = NA, rseed = 12345, digits = 4, alas = FALSE, verbose = FALSE) {
 
-    cand_thd = 0.2
+
     conv = 0
 
     if (nrow(Q) != ncol(dat))

@@ -1,18 +1,18 @@
-#' @title Factorial eigenvalue plot (degenerate)
+#' @title Posterior plots for \code{lawbl} object
 #'
-#' @description Provide plots based on the factorial eigenvalues of a \code{pcfa} objects.
+#' @description Provide posterior plots based on the factorial eigenvalues of a \code{lawbl} object.
+#' For \code{PEFA} or \code{FEFA}, only true factors will be plotted.
 #'
+#' @name plot.lawbl
 #'
-#' @name plot_eigen
-#'
-#' @param obj A \code{lawbl} object
+#' @param object A \code{lawbl} object
 #'
 #' @param what A list of options for what to plot.
 #'
 #' \itemize{
 #'      \item \code{trace}: The trace of each factor's eigenvalue.
 #'     \item \code{density}: The trace of each factor's eigenvalue.
-#'     \item \code{APSR}: The pseudo Gelman-Rubin diagnostics of each factor's eigenvalue.
+#'     \item \code{APSR}: The adjusted (single-chain) Gelman-Rubin diagnostics of each factor's eigenvalue.
 #'  }
 #'
 #'
@@ -33,28 +33,37 @@
 #'
 #'
 #' m0 <- pcfa(dat = dat, Q = Q, LD = FALSE,burn = 1000, iter = 1000)
-#' plot_eigen(m0) # trace
-#' plot_eigen(m0, what='density')
-#' plot_eigen(m0, what='APSR')
+#' plot(m0) # trace
+#' plot(m0, what='density')
+#' plot(m0, what='APSR')
 #' }
-plot_eigen <- function(obj, what = "trace") {
-    if (class(obj) != "lawbl")
-        stop("It must be a lawbl object.", call. = F)
+plot.lawbl <- function(object, what = "trace") {
+    # if (class(obj) != "lawbl")
+    #     stop("It must be a lawbl object.", call. = F)
 
     oldmar <- par("mar")
     par(mar = rep(2, 4))
 
-    Q <- obj$Q
-    poq <- which(Q != 0, arr.ind = T)
-    iter <- obj$iter
+    Q <- object$Q
+    iter <- object$iter
     K <- ncol(Q)
-    eig_arr <- array(0, dim = c(iter, K))
-    for (k in 1:K) {
-        ind1 <- (poq[, 2] == k)
-        eig_arr[, k] <- rowSums(obj$LA[, ind1]^2)
-    }
-    colnames(eig_arr) <- paste0("F", c(1:K))
+
+    # poq <- which(Q != 0, arr.ind = T)
+    # eig_arr <- array(0, dim = c(iter, K))
+    # for (k in 1:K) {
+    #     ind1 <- (poq[, 2] == k)
+    #     eig_arr[, k] <- rowSums(obj$LA[, ind1]^2)
+    # }
+    # colnames(eig_arr) <- paste0("F", c(1:K))
+    # mobj <- mcmc(eig_arr)
+
+    eigen <-object$Eigen
+    colnames(eigen) <- paste0("F", c(1:K))
+    TF_ind = object$TF_ind
+    if(is.null(TF_ind)) TF_ind <- rep(TRUE, K)
+    eig_arr<- eigen[,TF_ind]
     mobj <- mcmc(eig_arr)
+
     x1 <- mcmc(mobj[1:(iter/2), ])
     x2 <- mcmc(mobj[(iter/2 + 1):iter, ])
     # x1<-mcmc(mobj[1:(iter/2)]);x2<-mcmc(mobj[(iter/2+1):iter])

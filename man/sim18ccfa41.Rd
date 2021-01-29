@@ -17,6 +17,6 @@ sim18ccfa41
 }
 \description{
 Categorical CFA data simulated based on 18 items, 3 factors, and 4 categories
-with local dependence and  10% missingness at random; factorial correlation \eqn{\Phi=.3}.
+with local dependence and  10 percent missingness at random; factorial correlation \eqn{\Phi=.3}.
 }
 \keyword{datasets}

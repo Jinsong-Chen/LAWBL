@@ -17,7 +17,7 @@ sim18mcfa41
 }
 \description{
 CFA data mixed with continuous and categorical responses simulated based on 3 factors,
-12 4-category items, 6 continuous items, local dependence, and 10% missigness at random;
+12 4-category items, 6 continuous items, local dependence, and 10 percent missigness at random;
 factorial correlation \eqn{\Phi=.3}.
 }
 \keyword{datasets}

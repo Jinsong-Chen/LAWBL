@@ -29,7 +29,7 @@
 #' Simulated CCFA data with LI and missingness
 #'
 #' Categorical CFA data simulated based on 18 items, 3 factors, and 4 categories
-#' with local independence and  10% missingness at random; factorial correlation \eqn{\Phi=.3}.
+#' with local independence and  10 percent missingness at random; factorial correlation \eqn{\Phi=.3}.
 #'
 #' @format A list with components:
 #' \describe{
@@ -42,7 +42,7 @@
 #' Simulated CCFA data with LD and missingness
 #'
 #' Categorical CFA data simulated based on 18 items, 3 factors, and 4 categories
-#' with local dependence and  10% missingness at random; factorial correlation \eqn{\Phi=.3}.
+#' with local dependence and  10 percent missingness at random; factorial correlation \eqn{\Phi=.3}.
 #'
 #'
 #' @format A list with components:
@@ -57,7 +57,7 @@
 #' Simulated MCFA data with LD and Missingness
 #'
 #' CFA data mixed with continuous and categorical responses simulated based on 3 factors,
-#' 12 4-category items, 6 continuous items, local dependence, and 10% missigness at random;
+#' 12 4-category items, 6 continuous items, local dependence, and 10 percent missigness at random;
 #' factorial correlation \eqn{\Phi=.3}.
 #'
 #'

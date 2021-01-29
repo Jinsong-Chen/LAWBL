@@ -1,6 +1,6 @@
-#' @title Summary method for \code{pcfa} objectects
+#' @title Summary method for \code{lawbl} objects
 #'
-#' @description Provide basic information for an \code{PCFA} object, and summarize various posteriors.
+#' @description Provide summaries of posterior information for a \code{lawbl} object, .
 #'
 #' @name summary.lawbl
 #'
@@ -19,6 +19,7 @@
 #'     \item \code{thd}: Threshold estimates.
 #'     \item \code{int}: Intercept estimates (for  \code{\link{pcirm}} only).
 #'     \item \code{shrink}: (Ave) shrinkage for each factor's loadings and LD (if \code{LD} in \code{pcfa} = T).
+#'     \item \code{factor}: Are the factors true of not (for EFA).
 #'     \item \code{all}: All above information.
 #'  }
 #'
@@ -92,7 +93,6 @@ summary.lawbl <- function(object, what = "basic", med = FALSE, SL = 0.05, detail
     row.names(MLA) <- paste0("I", 1:J)
 
     # eigenvalue
-
     # poq = which(Q != 0, arr.ind = TRUE)
     # eig_arr <- array(0, dim = c(iter, K))
     # for (k in 1:K) {
@@ -126,27 +126,40 @@ summary.lawbl <- function(object, what = "basic", med = FALSE, SL = 0.05, detail
     }
     row.names(dpsx) <- paste0("I", 1:J)
 
-    tmp <- result(object$PHI, med, SL)
-    pos <- lower.tri(matrix(0, K, K))
-    ind <- which(pos, arr.ind = TRUE)
-    phi <- cbind(ind, tmp)
-
-
-    tlam <- cbind(object$gammal, object$gammas)
-    allgam <- result(tlam, med, SL)
-    row.names(allgam) <- c(paste0("F", 1:K), "PSX")
-    # # GRD <- schain.grd(ELA) GRD_max<-object$GRD_max names(GRD_max) <- names(object$GRD_mean)
-
-    APSR = object$APSR
-    row.names(APSR) <- paste0("F", c(1:K))
 
     out0 <- list(N = N, J = J, K = K, `Miss%` = object$Nmis/J/N * 100, `LD enabled` = LD, `Burn in` = object$burn,
-        Iteration = object$iter, `No. of sig lambda` = NSLA, 'Adj. PSR' = APSR)
-    # 'Auto Conv' = object$conv, 'mean GRD' = object$GRD_mean, 'max GRD' = GRD_max,
+                 Iteration = object$iter, `No. of sig lambda` = NSLA)
 
-    if (LD) {
+    TF_ind = object$TF_ind
+    if(is.null(TF_ind)) TF_ind <- rep(TRUE, K)
+    KE <- sum(TF_ind)
+    out0$'True Factor' = TF_ind
+
+    APSR = object$APSR
+    row.names(APSR) <- paste0("F", c(1:KE))
+    out0$'Adj. PSR' = APSR
+
+    tmp <- result(object$PHI, med, SL)
+    pos <- lower.tri(matrix(0, K, K))
+    ind0 <- which(pos, arr.ind = TRUE)
+    tmp0 <- cbind(ind0, tmp)
+
+    ind <- which(TF_ind)
+    sind <- NULL
+    for (i in 1:dim(tmp0)[1]){
+        if(all(ind0[i,] %in% ind)) sind <- c(sind, i)
+    }
+    phi <- tmp0[sind,]
+
+    if (LD){
         out0$"No. of sig LD terms" = no_ofd
-        # out$ofd_PSX = offpsx
+        tgam <- cbind(object$gammal, object$gammas)
+        allgam <- result(tgam, med, SL)
+        row.names(allgam) <- c(paste0("F", 1:K), "PSX")
+    }else{
+        tgam <- (object$gammal)
+        allgam <- result(tgam, med, SL)
+        row.names(allgam) <- paste0("F", 1:K)
     }
 
     Jp <- length(object$cati)
@@ -190,9 +203,8 @@ summary.lawbl <- function(object, what = "basic", med = FALSE, SL = 0.05, detail
         MU <- NULL
     }
 
-
     out <- switch(what, basic = out0, lambda = LAM, qlambda = MLA, eigen = eigen, dpsx = dpsx, offpsx = offpsx,
-        phi = phi, shrink = allgam, thd = Mthd, int = MU, all = {
+        phi = phi, shrink = allgam, thd = Mthd, int = MU, factor = TF_ind, all = {
             out1 <- out0
             out1$lambda <- LAM
             out1$qlambda <- MLA
@@ -203,12 +215,12 @@ summary.lawbl <- function(object, what = "basic", med = FALSE, SL = 0.05, detail
             out1$shrink <- allgam
             out1$thd <- Mthd
             out1$int <- MU
+            out1$factor <- TF_ind
             out1
         }, stop(sprintf("Can not show element '%s'", what), call. = FALSE))
 
     # options(digits = old_digits)
     return(out)
 }
-
 
 ######## end of Summary #################################################
