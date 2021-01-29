@@ -3,7 +3,7 @@
 #' @description Provide posterior plots based on the factorial eigenvalues of a \code{lawbl} object.
 #' For \code{PEFA} or \code{FEFA}, only true factors will be plotted.
 #'
-#' @name plot.lawbl
+#' @name plot_lawbl
 #'
 #' @param object A \code{lawbl} object
 #'
@@ -37,7 +37,7 @@
 #' plot(m0, what='density')
 #' plot(m0, what='APSR')
 #' }
-plot.lawbl <- function(object, what = "trace") {
+plot_lawbl <- function(object, what = "trace") {
     # if (class(obj) != "lawbl")
     #     stop("It must be a lawbl object.", call. = F)
 
