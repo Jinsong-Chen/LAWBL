@@ -49,9 +49,9 @@ summary(m0,what='int')
 summary(m0,what='eigen')
 
 #plotting factorial eigenvalue
-plot_eigen(m0) # trace
-plot_eigen(m0, what='density') #density
-plot_eigen(m0, what='APSR') #adj, PSRF
+plot_lawbl(m0) # trace
+plot_lawbl(m0, what='density') #density
+plot_lawbl(m0, what='APSR') #adj, PSRF
 ```
 
 3) PCIRM-LI with four traits and two cross-loadings specified based on results from previous step. Longer chain is suggested for stabler performance.
@@ -81,8 +81,8 @@ summary(m2,what='int')
 summary(m2,what='eigen')
 
 #plotting factorial eigenvalue
-plot_eigen(m2) # trace
-plot_eigen(m2, what='density') #density
-plot_eigen(m2, what='APSR') #adj, PSRF
+plot_lawbl(m2) # trace
+plot_lawbl(m2, what='density') #density
+plot_lawbl(m2, what='APSR') #adj, PSRF
 ```
 

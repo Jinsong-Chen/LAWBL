@@ -7,7 +7,7 @@
 #' The loading vector is reparameterized to tackle model sparsity at the factor and loading levels
 #' with the multivariate spike and slab priors. Parameters are obtained by sampling from the posterior
 #' distributions with the Markov chain Monte Carlo (MCMC) techniques. The estimation results can be summarized
-#' with \code{\link{summary.lawbl}} and the trace or density of the posterior can be plotted with \code{\link{plot.lawbl}}.
+#' with \code{\link{summary.lawbl}} and the trace or density of the posterior can be plotted with \code{\link{plot_lawbl}}.
 #'
 #' @name pefa
 #'
@@ -48,7 +48,7 @@
 #'
 #' @references
 #'
-#' Chen, J. (2021). A Bayesian regularized approach to exploratory factor analysis in one step
+#' Chen, J. (2021). A Bayesian regularized approach to exploratory factor analysis in one step.
 #'  \emph{Structural Equation Modeling: A Multidisciplinary Journal}. DOI: 10.1080/10705511.2020.1854763.
 #'
 #' @importFrom MASS mvrnorm
@@ -308,7 +308,7 @@ pefa <- function(dat, Q=NULL, K=5, mjf=3, PPMC = FALSE, burn = 5000, iter = 5000
     }  #end of g MCMAX
 
     if(verbose){
-        cat(chg0_count,chg_count, fill = TRUE, labels = "\n#Sign change:")
+        # cat(chg0_count,chg_count, fill = TRUE, labels = "\n#Sign change:")
         print(proc.time()-ptm)
     }
 
@@ -327,12 +327,10 @@ pefa <- function(dat, Q=NULL, K=5, mjf=3, PPMC = FALSE, burn = 5000, iter = 5000
         iter <- burn <- g/2
     }
 
-    # out <- list(Q = Q, LD = LD, LA = ELA, Omega = mOmega/iter, PSX = EPSX, iter = iter, burn = burn,
-    #     PHI = EPHI, gammal = Egammal, gammas = Egammas, Nmis = Nmis, PPP = Eppmc, conv = conv, GRD_mean = GRD_mean,
-    #     GRD_max = GRD_max)
+    chg1_count<-rbind(chg0_count,chg_count)
     out <- list(Q = Q, LD = FALSE, LA = ELA,PSX = EPSX, Omega = mOmega/iter, iter = iter, burn = burn,
                 PHI = EPHI, gammal = Egammal,  Nmis = Nmis, PPP = Eppmc, conv = conv,
-                Eigen = Eigen, APSR = APSR,TF_ind=TF_ind)
+                Eigen = Eigen, APSR = APSR,TF_ind=TF_ind,chg_count=chg1_count)
 
     class(out) <- c("lawbl")
 

@@ -78,9 +78,9 @@ For examples of how to use the package, see vignettes or
     *summary(m,what=‘qlambda’)*
   - To summarize factorial eigenvalues, use *summary(m,what=‘eigen’)*
   - To summarize significant LD terms, use *summary(m,what=‘offpsx’)*
-  - To plot eigenvalues’ trace, use *plot\_eigen(m)*
-  - To plot eigenvalues’ density, use *plot\_eigen(m, what=‘density’)*
-  - To plot eigenvalues’ adjusted PSRF, use *plot\_eigen(m,
+  - To plot eigenvalues’ trace, use *plot\_lawbl(m)*
+  - To plot eigenvalues’ density, use *plot\_lawbl(m, what=‘density’)*
+  - To plot eigenvalues’ adjusted PSRF, use *plot\_lawbl(m,
     what=‘APSR’)*
 
 ## Reference
@@ -93,3 +93,7 @@ Methods*. Advance online publication.
 Chen, J. (2020). A partially confirmatory approach to the
 multidimensional item response theory with the Bayesian Lasso.
 *Psychometrika*. 85(3), 738-774. DOI: 10.1007/s11336-020-09724-3.
+
+Chen, J. (2021). A Bayesian regularized approach to exploratory factor
+analysis in one step. *Structural Equation Modeling: A Multidisciplinary
+Journal*. DOI: 10.1080/10705511.2020.1854763.

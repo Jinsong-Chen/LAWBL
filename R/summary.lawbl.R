@@ -126,9 +126,10 @@ summary.lawbl <- function(object, what = "basic", med = FALSE, SL = 0.05, detail
     }
     row.names(dpsx) <- paste0("I", 1:J)
 
-
+    sign_chg<-object$chg_count
+    row.names(sign_chg) <- c("Burn-in", "Iteration")
     out0 <- list(N = N, J = J, K = K, `Miss%` = object$Nmis/J/N * 100, `LD enabled` = LD, `Burn in` = object$burn,
-                 Iteration = object$iter, `No. of sig lambda` = NSLA)
+                 Iteration = object$iter, 'Sign Change'= sign_chg, `No. of sig lambda` = NSLA)
 
     TF_ind = object$TF_ind
     if(is.null(TF_ind)) TF_ind <- rep(TRUE, K)

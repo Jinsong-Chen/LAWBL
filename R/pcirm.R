@@ -8,7 +8,7 @@
 #'  called the C-step. Parameters are obtained by sampling from the posterior distributions with
 #'  the Markov chain Monte Carlo (MCMC) techniques. Different Bayesian Lasso methods are used to
 #'  regularize the loading pattern and LD. The estimation results can be summarized with \code{\link{summary.lawbl}}
-#'  and the factorial eigenvalue can be plotted with \code{\link{plot_eigen}}.
+#'  and the factorial eigenvalue can be plotted with \code{\link{plot_lawbl}}.
 #'
 #' @name pcirm
 #'
@@ -54,8 +54,7 @@
 #' }
 #'
 #' @return \code{pcirm} returns an object of class \code{lawbl} with item intercepts. It contains a lot of information about
-#' the posteriors that can be summarized using \code{\link{summary.lawbl}}. The factorial eigenvalue
-#'  can be plotted with \code{\link{plot_eigen}}.
+#' the posteriors that can be summarized using \code{\link{summary.lawbl}}.
 #'
 #' @references
 #'
@@ -347,7 +346,7 @@ pcirm <- function(dat, Q, LD = TRUE,cati = NULL, PPMC = FALSE, burn = 5000, iter
     }  #end of g MCMAX
 
     if(verbose){
-        cat(chg0_count,chg_count, fill = TRUE, labels = "\n#Sign change:")
+        # cat(chg0_count,chg_count, fill = TRUE, labels = "\n#Sign change:")
         print(proc.time()-ptm)
     }
 
@@ -368,12 +367,10 @@ pcirm <- function(dat, Q, LD = TRUE,cati = NULL, PPMC = FALSE, burn = 5000, iter
         iter <- burn <- g/2
     }
 
-    # out <- list(Q = Q, LD = LD, LA = ELA, Omega = mOmega/iter, PSX = EPSX, iter = iter, burn = burn,
-    #     PHI = EPHI, gammal = Egammal, gammas = Egammas, Nmis = Nmis, PPP = Eppmc, conv = conv, GRD_mean = GRD_mean,
-    #     GRD_max = GRD_max)
+    chg1_count<-rbind(chg0_count,chg_count)
     out <- list(Q = Q, LD = LD, LA = ELA, Omega = mOmega/iter, PSX = EPSX, iter = iter, burn = burn,
                 PHI = EPHI, gammal = Egammal, gammas = Egammas, Nmis = Nmis, PPP = Eppmc, conv = conv,
-                Eigen = Eigen, APSR = APSR, MU = EMU)
+                Eigen = Eigen, APSR = APSR, MU = EMU,chg_count=chg1_count)
 
     if (Jp > 0) {
         out$cati = cati

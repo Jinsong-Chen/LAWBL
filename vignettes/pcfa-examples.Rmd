@@ -52,9 +52,9 @@ summary(m0, what = 'qlambda')
 summary(m0,what='eigen') 
 
 #plotting factorial eigenvalue
-plot_eigen(m0) # trace
-plot_eigen(m0, what='density') #density
-plot_eigen(m0, what='APSR') #adj, PSRF
+plot_lawbl(m0) # trace
+plot_lawbl(m0, what='density') #density
+plot_lawbl(m0, what='APSR') #adj, PSRF
 ```
 
 3) **C-step:** Reconfigure the Q matrix for the C-step with one specified loading per item based on results from the E-step. Estimate with the PCFA model by setting *LD=TRUE* (by default). Longer chain is suggested for stabler performance. Results are very close to the E-step, since there's no LD in the data.
@@ -75,9 +75,9 @@ summary(m1,what='eigen')
 
 #plotting factorial eigenvalue
 # par(mar = rep(2, 4))
-plot_eigen(m1) # trace
-plot_eigen(m1, what='density') #density
-plot_eigen(m1, what='APSR') #adj, PSRF
+plot_lawbl(m1) # trace
+plot_lawbl(m1, what='density') #density
+plot_lawbl(m1, what='APSR') #adj, PSRF
 ```
 
 4) **CFA-LD:** One can also configure the Q matrix for a CFA model with local dependence (i.e. without any unspecified loading) based on results from the C-step. Results are also very close.
@@ -93,7 +93,7 @@ summary(m2, what = 'qlambda')
 summary(m2, what = 'offpsx')
 summary(m2,what='eigen')
 
-plot_eigen(m2) # Eigens' traces are excellent without regularization of the loadings
+plot_lawbl(m2) # Eigens' traces are excellent without regularization of the loadings
 ```
 
 ## Continuous Data with Local Dependence:
@@ -121,8 +121,8 @@ summary(m0)
 summary(m0, what = 'qlambda')
 summary(m0,what='eigen')
 
-plot_eigen(m0) # trace
-plot_eigen(m0, what='APSR')
+plot_lawbl(m0) # trace
+plot_lawbl(m0, what='APSR')
 ```
 
 3) **C-step:** Reconfigure the Q matrix for the C-step with one specified loading per item based on results from the E-step. Estimate with the PCFA model by setting *LD=TRUE* (by default). The estimates are more accurate, and the LD terms can be largely recovered.

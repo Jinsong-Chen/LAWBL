@@ -64,7 +64,7 @@ A large number of factors can be imposed for selection where true factors will b
 The loading vector is reparameterized to tackle model sparsity at the factor and loading levels
 with the multivariate spike and slab priors. Parameters are obtained by sampling from the posterior
 distributions with the Markov chain Monte Carlo (MCMC) techniques. The estimation results can be summarized
-with \code{\link{summary.lawbl}} and the trace or density of the posterior can be plotted with \code{\link{plot.lawbl}}.
+with \code{\link{summary.lawbl}} and the trace or density of the posterior can be plotted with \code{\link{plot_lawbl}}.
 }
 \examples{
 \donttest{
@@ -98,6 +98,6 @@ summary(m1,what='eigen')
 }
 }
 \references{
-Chen, J. (2021). A Bayesian regularized approach to exploratory factor analysis in one step
+Chen, J. (2021). A Bayesian regularized approach to exploratory factor analysis in one step.
  \emph{Structural Equation Modeling: A Multidisciplinary Journal}. DOI: 10.1080/10705511.2020.1854763.
 }

@@ -67,8 +67,7 @@ without any specified loading. See \code{Examples}.}
 }
 \value{
 \code{pcfa} returns an object of class \code{lawbl} without item intercepts. It contains a lot of information about
-the posteriors that can be summarized using \code{\link{summary.lawbl}}. The factorial eigenvalue
- can be plotted with \code{\link{plot_eigen}}.
+the posteriors that can be summarized using \code{\link{summary.lawbl}}.
 }
 \description{
 \code{PCFA} is a partially confirmatory approach covering a wide range of
@@ -80,7 +79,7 @@ The PCFA is only for continuous data, while the generalized PCFA (GPCFA) covers 
  called the C-step. Parameters are obtained by sampling from the posterior distributions with
  the Markov chain Monte Carlo (MCMC) techniques. Different Bayesian Lasso methods are used to
  regularize the loading pattern and LD. The estimation results can be summarized with \code{\link{summary.lawbl}}
- and the factorial eigenvalue can be plotted with \code{\link{plot_eigen}}.
+ and the factorial eigenvalue can be plotted with \code{\link{plot_lawbl}}.
 }
 \examples{
 \donttest{
