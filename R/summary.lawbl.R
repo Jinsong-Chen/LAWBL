@@ -132,11 +132,12 @@ summary.lawbl <- function(object, what = "basic", med = FALSE, SL = 0.05, detail
 
     TF_ind = object$TF_ind
     if(is.null(TF_ind)) TF_ind <- rep(TRUE, K)
+    eigen <- eigen[TF_ind,]
     KE <- sum(TF_ind)
     out0$'True Factor' = TF_ind
-
+    ind <- which(TF_ind)
     APSR = object$APSR
-    row.names(APSR) <- paste0("F", c(1:KE))
+    row.names(APSR) <- paste0("F", c(ind))
     out0$'Adj. PSR' = APSR
 
     tmp <- result(object$PHI, med, SL)
@@ -144,7 +145,6 @@ summary.lawbl <- function(object, what = "basic", med = FALSE, SL = 0.05, detail
     ind0 <- which(pos, arr.ind = TRUE)
     tmp0 <- cbind(ind0, tmp)
 
-    ind <- which(TF_ind)
     sind <- NULL
     for (i in 1:dim(tmp0)[1]){
         if(all(ind0[i,] %in% ind)) sind <- c(sind, i)
