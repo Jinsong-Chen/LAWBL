@@ -55,15 +55,15 @@ init <- function(y, const) {
     # initial values
     LA <- matrix(0, J, K)
     LA[Q == 1] <- .7
+    # LA[Q == -1] <- .1+(runif(sum(Q==-1))-.5)/100
     LA[Q == -1] <- .1
-    # LA <- matrix(runif(J * K), J, K)
     # LA[Q == 0] <- 0
 
     PHI <- matrix(0.1, K, K)
     diag(PHI[, ]) <- 1
 
     PSX <- matrix(0, J, J)
-    diag(PSX) <- 0.3
+    diag(PSX) <- .3
     # inv.PSX <-chol2inv(chol(PSX))
 
     # shrinkage for PSX

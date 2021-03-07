@@ -48,7 +48,7 @@
 #' @param verbose logical; to display the sampling information every \code{update} or not.
 #' \itemize{
 #'     \item \code{Feigen}: Eigenvalue for each factor.
-#'     \item \code{NLA_lg3}: Number of Loading estimates > .3 for each factor.
+#'     \item \code{NLA_le3}: Number of Loading estimates >= .3 for each factor.
 #'     \item \code{Shrink}: Ave. shrinkage parameter (for adaptive LASSO) for each factor.
 #'     \item \code{Adj PSR}: Adjusted PSR for each factor.
 #'     \item \code{Ave. Thd}: Ave. thresholds.
@@ -183,11 +183,10 @@ pcfa <- function(dat, Q, LD = TRUE,cati = NULL,cand_thd = 0.2, PPMC = FALSE, bur
         Y[mind] <- rnorm(Nmis)
 
     # OME <- t(mvrnorm(N,mu=rep(0,K),Sigma=diag(1,K))) # J*N
-    chg_count <- rep(0, K)
-    chg0_count <- rep(0, K)
-    # chg1_count <- rep(0, K)
-    # Jest <- colSums(Q != 0)
-    LA_eps <- -1
+    sign_sw <- rep(0, K)
+
+    # LA_eps <- -1
+    sign_eps <- -1
 
     Eigen <- array(0, dim = c(iter, K))  #Store retained trace of Eigen
     tmp <- which(Q!=0,arr.ind=TRUE)
@@ -235,11 +234,12 @@ pcfa <- function(dat, Q, LD = TRUE,cati = NULL,cand_thd = 0.2, PPMC = FALSE, bur
         # }
         # LA <- LA1
 
-
-        chg <- (colSums(LA)<= LA_eps)
+        chg <- (colSums(LA)<= sign_eps)
+        # chg <- (colSums(LA)<= LA_eps)
         if (any(chg)) {
             sign <- diag(1 - 2 * chg)
-            if(g<0){chg0_count <- chg0_count + chg}else{chg_count <- chg_count + chg}
+            sign_sw <- sign_sw + chg
+            # if(g<0){chg0_count <- chg0_count + chg}else{chg_count <- chg_count + chg}
             LA <- LA %*% sign
             OME <- t(t(OME) %*% sign)
 
@@ -315,12 +315,12 @@ pcfa <- function(dat, Q, LD = TRUE,cati = NULL,cand_thd = 0.2, PPMC = FALSE, bur
                 # print(proc.time() - ptm)
                 Shrink <- colMeans(sqrt(gammal_sq))
                 Feigen <- diag(crossprod(LA))
-                NLA_lg3 <- colSums(abs(LA) > 0.3)
+                NLA_le3 <- colSums(abs(LA) >= 0.3)
                 # Meigen <- colMeans(Eigen)
                 # Mlambda<-colMeans(LA)
 
                 cat(ii, fill = TRUE, labels = "\nTot. Iter =")
-                print(rbind(Feigen, NLA_lg3, Shrink))
+                print(rbind(Feigen, NLA_le3, Shrink,sign_sw))
                 # cat(chg_count, fill = TRUE, labels = '#Sign change:')
                 if (g > 0) cat(t(APSR[,1]), fill = TRUE, labels = "Adj PSR")
 
@@ -337,7 +337,8 @@ pcfa <- function(dat, Q, LD = TRUE,cati = NULL,cand_thd = 0.2, PPMC = FALSE, bur
                     print(tmp)
                 }
 
-                # print(chg_count) cat(chg_count, fill = TRUE, labels = '#Sign change:')
+                # print(chg_count)
+                # cat(chg_count, fill = TRUE, labels = '#sign sw:')
 
             }#end verbose
 
@@ -346,7 +347,7 @@ pcfa <- function(dat, Q, LD = TRUE,cati = NULL,cand_thd = 0.2, PPMC = FALSE, bur
     }  #end of g MCMAX
 
     if(verbose){
-        cat(chg0_count,chg_count, fill = TRUE, labels = "\n#Sign change:")
+        # cat(chg0_count,chg_count, fill = TRUE, labels = "\n#Sign change:")
         print(proc.time()-ptm)
     }
 
@@ -365,10 +366,10 @@ pcfa <- function(dat, Q, LD = TRUE,cati = NULL,cand_thd = 0.2, PPMC = FALSE, bur
         iter <- burn <- g/2
     }
 
-    chg1_count<-rbind(chg0_count,chg_count)
+    # chg1_count<-rbind(chg0_count,chg_count)
     out <- list(Q = Q, LD = LD, LA = ELA, Omega = mOmega/iter, PSX = EPSX, iter = iter, burn = burn,
                 PHI = EPHI, gammal = Egammal, gammas = Egammas, Nmis = Nmis, PPP = Eppmc, conv = conv,
-                Eigen = Eigen, APSR = APSR,chg_count=chg1_count)
+                Eigen = Eigen, APSR = APSR)
 
     if (Jp > 0) {
         out$cati = cati

@@ -61,7 +61,7 @@ plot_lawbl <- function(object, what = "trace") {
     colnames(eigen) <- paste0("F", c(1:K))
     TF_ind = object$TF_ind
     if(is.null(TF_ind)) TF_ind <- rep(TRUE, K)
-    eig_arr<- eigen[,TF_ind]
+    eig_arr<- as.matrix(eigen[,TF_ind])
     mobj <- mcmc(eig_arr)
 
     x1 <- mcmc(mobj[1:(iter/2), ])

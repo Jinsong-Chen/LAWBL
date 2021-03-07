@@ -126,15 +126,15 @@ summary.lawbl <- function(object, what = "basic", med = FALSE, SL = 0.05, detail
     }
     row.names(dpsx) <- paste0("I", 1:J)
 
-    sign_chg<-object$chg_count
-    row.names(sign_chg) <- c("Burn-in", "Iteration")
+    # sign_chg<-object$chg_count
+    # row.names(sign_chg) <- c("Burn-in", "Iteration")
     out0 <- list(N = N, J = J, K = K, `Miss%` = object$Nmis/J/N * 100, `LD enabled` = LD, `Burn in` = object$burn,
-                 Iteration = object$iter, 'Sign Change'= sign_chg, `No. of sig lambda` = NSLA)
+                 Iteration = object$iter, `No. of sig lambda` = NSLA)
 
     TF_ind = object$TF_ind
     if(is.null(TF_ind)) TF_ind <- rep(TRUE, K)
-    eigen <- eigen[TF_ind,]
-    KE <- sum(TF_ind)
+    if (!detail) eigen <- eigen[TF_ind,]
+    # KE <- sum(TF_ind)
     out0$'True Factor' = TF_ind
     ind <- which(TF_ind)
     APSR = object$APSR
@@ -146,11 +146,16 @@ summary.lawbl <- function(object, what = "basic", med = FALSE, SL = 0.05, detail
     ind0 <- which(pos, arr.ind = TRUE)
     tmp0 <- cbind(ind0, tmp)
 
+    if (detail){
+      phi<-tmp0
+
+    }else{
     sind <- NULL
     for (i in 1:dim(tmp0)[1]){
         if(all(ind0[i,] %in% ind)) sind <- c(sind, i)
     }
     phi <- tmp0[sind,]
+    }
 
     if (LD){
         out0$"No. of sig LD terms" = no_ofd

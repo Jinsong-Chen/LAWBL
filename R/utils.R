@@ -1,5 +1,6 @@
 # x: iter * nvar
-schain.grd <- function(x, auto = F) {
+schain.grd <- function(x0, auto = F) {
+    x <- as.matrix(x0)
     len <- dim(x)[1]
     if (auto) {
         len <- len/2
@@ -18,7 +19,7 @@ result <- function(dat, med = F, SL = 0.05) {
     } else {
         est = apply(dat, 2, median)
     }
-    
+
     sd = apply(dat, 2, sd)
     hpd = HPDinterval(mcmc(dat), prob = 1 - SL)
     # hpd.90=HPDinterval(mcmc(dat),prob=.90)
@@ -26,7 +27,7 @@ result <- function(dat, med = F, SL = 0.05) {
     sig <- array(F, dim = c(len))
     k <- 1
     for (i in 1:len) {
-        if (!(hpd[i, 1] <= 0 && hpd[i, 2] >= 0)) 
+        if (!(hpd[i, 1] <= 0 && hpd[i, 2] >= 0))
             sig[k] <- T
         # if(!(hpd.95[i,1]<=0 && hpd.95[i,2]>=0)) sig[k]<-2;
         k <- k + 1
@@ -51,11 +52,11 @@ rwish1 <- function(v, S) {
 
 # slightly adjusted rinvgauss function
 rinvgauss1 <- function(n, mean = 1, dispersion = 1) {
-    
+
     mu <- rep_len(mean, n)
     phi <- rep_len(dispersion, n)
     r <- rep_len(0, n)
-    
+
     Y <- rnorm(n)^2
     # Yphi <- Y * phi[i] * mu[i]
     Yphi <- Y * phi * mu
@@ -68,7 +69,7 @@ rinvgauss1 <- function(n, mean = 1, dispersion = 1) {
         X1 <- 1 + Yphi/2 * (1 - sqrt(1 + 4/Yphi))
     }
     firstroot <- (runif(n) < 1/(1 + X1))
-    
+
     r[][firstroot] <- X1[firstroot]
     r[][!firstroot] <- 1/X1[!firstroot]
     r <- mu * r
@@ -76,21 +77,21 @@ rinvgauss1 <- function(n, mean = 1, dispersion = 1) {
 }
 
 post_pp <- function(y, mu = 0, ome, la, psx, inv.psx, N, J) {
-    
+
     Ycen <- y - mu - la %*% ome  # NY*N
     tmp1 <- diag(t(Ycen) %*% inv.psx %*% Ycen)
     # O.tmp<-t(mvrnorm(N,mu=rep(0,K),Sigma=PHI))
-    
+
     # Ym<-MU+LD%*%Omega # NY*N Y.tmp<-t(mvrnorm(N,mu=rep(0,J),Sigma=PSX)) Y.cen<-Y.tmp+Ym-MU-LD%*%Omega
-    
+
     # Ycen<-t(mvrnorm(N,mu=rep(0,J),Sigma=psx))
-    
+
     cpsx <- chol(psx)
     Ycen <- matrix(rnorm(N * J), J, N)
     Ycen <- t(t(Ycen) %*% cpsx)
-    
+
     tmp2 <- diag(t(Ycen) %*% inv.psx %*% Ycen)
-    
+
     return(sum(tmp2 - tmp1) > 0)
-    
+
 }

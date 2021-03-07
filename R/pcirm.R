@@ -46,7 +46,7 @@
 #'
 #' \itemize{
 #'     \item \code{Feigen}: Eigenvalue for each factor.
-#'     \item \code{NLA_lg3}: Number of Loading estimates > .3 for each factor.
+#'     \item \code{NLA_le3}: Number of Loading estimates >= .3 for each factor.
 #'     \item \code{Shrink}: Ave. shrinkage parameter (for adaptive LASSO) for each factor.
 #'     \item \code{Adj PSR}: Adjusted PSR for each factor.
 #'     \item \code{Ave. Int.}: Ave. item intercept.
@@ -314,12 +314,12 @@ pcirm <- function(dat, Q, LD = TRUE,cati = NULL, PPMC = FALSE, burn = 5000, iter
                 # print(proc.time() - ptm)
                 Shrink <- colMeans(sqrt(gammal_sq))
                 Feigen <- diag(crossprod(LA))
-                NLA_lg3 <- colSums(abs(LA) > 0.3)
+                NLA_le3 <- colSums(abs(LA) >= 0.3)
                 # Meigen <- colMeans(Eigen)
                 # Mlambda<-colMeans(LA)
 
                 cat(ii, fill = TRUE, labels = "\nTot. Iter =")
-                print(rbind(Feigen, NLA_lg3, Shrink))
+                print(rbind(Feigen, NLA_le3, Shrink))
                 # cat(chg_count, fill = TRUE, labels = '#Sign change:')
                 if (g > 0) cat(t(APSR[,1]), fill = TRUE, labels = "Adj PSR")
 

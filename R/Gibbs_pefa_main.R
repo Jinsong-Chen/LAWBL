@@ -1,16 +1,17 @@
 ##################  update bsfa main##############################################################
-Gibbs_pefa_main<-function(y,mu=0,ome,ly,psx, tausq,pig,prior,ilamsq,ilamsq_t,const){
+Gibbs_pefa_main<-function(y,mu=0,ome,ly,psx, tausq,pig,prior,ilamsq,ilamsq_t,const,count){
   Q <- const$Q
   J <- const$J
   N <- const$N
   K <- const$K
+  indg<-const$indg
   t_num <- const$t_num
-  mjf <- const$mjf
+  # mjf <- const$mjf
 
   Ycen<-y-mu
-  indg<-(pig!=-1)
+  # indg<-(pig!=-1)
   lyb<-tausq
-  lyb[tausq!=0]<-ly[tausq!=0]/sqrt(tausq[tausq!=0])
+  # lyb[tausq!=0]<-ly[tausq!=0]/sqrt(tausq[tausq!=0])
   a_gamma <- prior$a_gaml_sq
   b_gamma <- prior$b_gaml_sq
 
@@ -21,15 +22,15 @@ Gibbs_pefa_main<-function(y,mu=0,ome,ly,psx, tausq,pig,prior,ilamsq,ilamsq_t,con
   # sub_ul <- const$sub_ul
   # len_ul <- const$len_ul
 
-  temp <- y - mu - ly %*% ome  # J*N
-  S <- temp %*% t(temp)  # J*J
+  temp <- Ycen - ly %*% ome  # J*N
+  Stmp <- temp %*% t(temp)  # J*J
 
   for(j in 1:J){
 
     # tmp<-Ycen[j,]-ly[j,]%*%ome
-    # S<-tmp%*%t(tmp)
+    # Stmp<-tmp%*%t(tmp)
 
-    psx[j,j]<-1/rgamma(1, shape=a_gamma+(N-1)/2, rate=b_gamma+(S[j,j])/2)
+    psx[j,j]<-1/rgamma(1, shape=a_gamma+(N-1)/2, rate=b_gamma+(Stmp[j,j])/2)
 
     # ind1<-(Q[j,]==1)
     # len<-sum(ind1)
@@ -80,8 +81,8 @@ Gibbs_pefa_main<-function(y,mu=0,ome,ly,psx, tausq,pig,prior,ilamsq,ilamsq_t,con
         # } #end if eigen
         lyb[,k]<- pig[k]*lyb[,k]
 
-        vg2<-pmin(1/(1/ilamsq[k]+sum(ome[k,]^2)*lyb[,k]^2/diag(psx)),10^12)
-        # vg2<-1/(1/ilamsq[,k]+sum(ome[k,]^2)*lyb[,k]^2/diag(psx))
+        vg2<-pmin(1/(1/ilamsq[k]+sum(ome[k,]^2)*lyb[,k]^2/diag(psx)),const$max_var)
+        # vg2<-pmin(1/(1/ilamsq[k]+sum(ome[k,]^2)*lyb[,k]^2/diag(psx)),1e26)
         ug<-(Ycen-ly[,-k]%*%ome[-k,])%*%ome[k,]*vg2*lyb[,k]/diag(psx)
         # ug<-(Ycen)%*%ome[k,]*vg2*lyb[,k]/diag(psx)
 
@@ -97,15 +98,33 @@ Gibbs_pefa_main<-function(y,mu=0,ome,ly,psx, tausq,pig,prior,ilamsq,ilamsq_t,con
         qg<-pi1/(pi1+2*(1-pi1)*tmp)
         pij<-1-(qg>runif(J))
 
-        # if (!pig[k] || sum(pij) <= 3){
-        if (sum(pij) < mjf){
-          tausq[,k] <- 0
-        }else{
-          # tausq[,k]<-(rnorm(J,ug,vg2))^2*pij #truncated normal
-          tausq[,k]<-(rtnorm(J,ug,vg2,lower=0))^2*pij #truncated normal
-          # tausq[,k]<-(rtnorm(J,ug,diag(psx)*vg2,lower=0))^2*pij #truncated normal
-        }
+        # tausq[,k]<-(rtnorm(J,ug,vg2,lower=0)*pij)^2 #truncated normal
+        tausq[,k]<-(rnorm(J,ug,(vg2))*pij)^2 #truncated normal
 
+        s_pij<-sum(pij)
+        if (s_pij < const$mjf && s_pij>0){
+          count[k,3:4]<-count[k,3:4]+1
+          # if (count_mjf[k,2]>count_mjf[k,3]){
+          #
+          # }
+          if (count[k,4] >const$no_mjf) {
+            tausq[,k] <- 0
+            count[k,5] =count[k,5] + 1
+            count[k,4] = 0
+          }
+        }else{
+            count[k,4] = 0
+          }
+
+        # # if (sum(pij) < mjf){
+        # if (s_pij == 0){
+        #   tausq[,k] <- 0
+        # }else{
+        #   # tausq[,k]<-(rnorm(J,ug,vg2))^2*pij #truncated normal
+        #   # tausq[,k]<-(rtnorm(J,ug,vg2,lower=0))^2*pij #truncated normal
+        #   tausq[,k]<-(rtnorm(J,ug,vg2,lower=0)*pij)^2 #truncated normal
+        #   # tausq[,k]<-(rtnorm(J,ug,diag(psx)*vg2,lower=0))^2*pij #truncated normal
+        # }
 
         ly[,k]<-lyb[,k]*sqrt(tausq[,k])
         # lamsq[,k]<-rgamma(1, shape=a_lamsq+sum(tausq[,k]!=0), rate=b_lamsq+sum(tausq[,k])/2)
@@ -113,12 +132,12 @@ Gibbs_pefa_main<-function(y,mu=0,ome,ly,psx, tausq,pig,prior,ilamsq,ilamsq_t,con
         lam.tmp<- rgamma(t_num, shape=1+sum(tausq[,k]!=0)/2, rate=ilamsq_t[k]+sum(tausq[,k])/2)
         ilamsq_t[k]<-1/mean(lam.tmp)
         ilamsq[k]<-1/rgamma(1, shape=1+sum(tausq[,k]!=0)/2, rate=ilamsq_t[k]+sum(tausq[,k])/2)
-
+        # ilamsq[k]<-1/rgamma(1, shape=1+sum(tausq[,k]!=0)/2, rate=.1+sum(tausq[,k])/2)
 
       }else{
 
-          vg2<-pmin(1/(1/ilamsq[k]+sum(ome[k,]^2)*lyb[,k]^2/diag(psx)),10^12)
-          # vg2<-1/(1/ilamsq[,k]+sum(ome[k,]^2)*lyb[,k]^2/diag(psx))
+          vg2<-pmin(1/(1/ilamsq[k]+sum(ome[k,]^2)*lyb[,k]^2/diag(psx)),const$max_var)
+          # vg2<-1/(1/ilamsq[k]+sum(ome[k,]^2)*lyb[,k]^2/diag(psx))
           ug<-(Ycen-ly[,-k]%*%ome[-k,])%*%ome[k,]*vg2*lyb[,k]/diag(psx)
 
         tmp<-(log(vg2)-log(ilamsq[k])+ug^2/vg2+2*pnorm(ug/sqrt(vg2)))/2
@@ -132,32 +151,38 @@ Gibbs_pefa_main<-function(y,mu=0,ome,ly,psx, tausq,pig,prior,ilamsq,ilamsq_t,con
 
         qg<-pi1/(pi1+2*(1-pi1)*tmp)
         pij<-1-(qg>runif(J))
-        tmp2<-(rtnorm(J,ug,vg2,lower=0))^2*pij #truncated normal
-        # tmp2<-(rtnorm(J,ug,diag(psx)*vg2,lower=0))^2*pij #truncated normal
+        # tmp2<-(rtnorm(J,ug,vg2,lower=0))^2*pij #truncated normal
+        # tmp2<-(rtnorm(J,ug,vg2,lower=0)*pij)^2 #truncated normal
+        tmp2<-(rnorm(J,ug,(vg2))*pij)^2 #truncated normal
 
         ind<-(Q[,k]==-1)
-        len<-sum(ind)
+        # len<-sum(ind)
         tausq[ind,k]<-tmp2[ind]
         ly[ind,k]<-lyb[ind,k]*sqrt(tausq[ind,k])
         # ly[,k]<-lyb[,k]*sqrt(tausq[,k])
 
       } #end if indg
 
+        # lam.tmp<- rgamma(t_num, shape=1+sum(tausq[,k]!=0)/2, rate=ilamsq_t[k]+sum(tausq[,k])/2)
+        # ilamsq_t[k]<-1/mean(lam.tmp)
+        # ilamsq[k]<-1/rgamma(1, shape=1+sum(tausq[,k]!=0)/2, rate=ilamsq_t[k]+sum(tausq[,k])/2)
+
   } # end of k
 
-ly[ly>.999]<-.999
-ly[ly< -.999]<--.999
-# ly[abs(ly)< 10^(-12)]<-0
+# ly[ly>.999]<-.999
+# ly[ly< -.999]<--.999
+# # ly[abs(ly)< 10^(-12)]<-0
 
 
-if(sum(!indg)>0){
+# if(sum(!indg)>0){
+if(any(!indg)){
   lam.tmp<- rgamma(t_num, shape=1+sum(tausq[,!indg]!=0)/2, rate=mean(ilamsq_t[!indg])+sum(tausq[,!indg])/2)
   ilamsq_t[!indg] <- tmp_t <- 1/mean(lam.tmp)
   ilamsq[!indg]<-1/rgamma(1, shape=1+sum(tausq[,!indg]!=0)/2, rate=tmp_t+sum(tausq[,!indg])/2)
 }
 
 # return(list(ly=ly,lamsq=lamsq,ome=ome,pig=pig,psx=psx,tausq=tausq,lamsq_add=lamsq_add,lamsq_t=lamsq_t))
-return(list(ly=ly,ilamsq=ilamsq,pig=pig,psx=psx,tausq=tausq,ilamsq_t=ilamsq_t))
+return(list(ly=ly,ilamsq=ilamsq,pig=pig,psx=psx,tausq=tausq,ilamsq_t=ilamsq_t,count=count))
 }
 
 ##################  end of update bsfa main ########################################################
