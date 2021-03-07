@@ -17,7 +17,7 @@
 #'
 #'
 #' @name LAWBL-package
-#' @aliases LAWBL
+#' @aliases LAWBL-package
 #' @docType package
 #'
 #' @author {Jinsong Chen, \email{jinsong.chen@live.com}}

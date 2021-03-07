@@ -3,7 +3,6 @@
 \docType{package}
 \name{LAWBL-package}
 \alias{LAWBL-package}
-\alias{LAWBL}
 \title{LAWBL: Latent (Variable) Analysis with Bayesian Learning}
 \description{
 The long-term goal of this package is to provide an analytical framework for

@@ -52,7 +52,6 @@
 #'  \emph{Structural Equation Modeling: A Multidisciplinary Journal}. DOI: 10.1080/10705511.2020.1854763.
 #'
 #' @importFrom MASS mvrnorm
-#' @importFrom msm rtnorm
 #'
 #' @export
 #'

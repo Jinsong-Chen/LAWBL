@@ -57,7 +57,7 @@ without any specified loading. See \code{Examples}.}
 \item{verbose}{logical; to display the sampling information every \code{update} or not.
 \itemize{
     \item \code{Feigen}: Eigenvalue for each factor.
-    \item \code{NLA_lg3}: Number of Loading estimates > .3 for each factor.
+    \item \code{NLA_le3}: Number of Loading estimates >= .3 for each factor.
     \item \code{Shrink}: Ave. shrinkage parameter (for adaptive LASSO) for each factor.
     \item \code{Adj PSR}: Adjusted PSR for each factor.
     \item \code{Ave. Thd}: Ave. thresholds.

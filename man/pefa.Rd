@@ -7,7 +7,7 @@
 pefa(
   dat,
   Q = NULL,
-  K = 5,
+  K = 8,
   mjf = 3,
   PPMC = FALSE,
   burn = 5000,
@@ -46,7 +46,7 @@ for \code{FEFA}, which is the default. See \code{Examples}.}
 \item{verbose}{logical; to display the sampling information every \code{update} or not.
 \itemize{
     \item \code{Feigen}: Eigenvalue for each factor.
-    \item \code{NLA}: Number of Loading for each factor.
+    \item \code{NLA_le3}: Number of Loading estimates >= .3 for each factor.
     \item \code{Shrink}: Shrinkage parameter for each factor.
     \item \code{True Fa}: Is the factor identified as true or not.
     \item \code{Adj PSR}: Adjusted PSR for each factor.

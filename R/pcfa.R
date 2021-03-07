@@ -186,7 +186,7 @@ pcfa <- function(dat, Q, LD = TRUE,cati = NULL,cand_thd = 0.2, PPMC = FALSE, bur
     sign_sw <- rep(0, K)
 
     # LA_eps <- -1
-    sign_eps <- -1
+    sign_eps <- -.5
 
     Eigen <- array(0, dim = c(iter, K))  #Store retained trace of Eigen
     tmp <- which(Q!=0,arr.ind=TRUE)
