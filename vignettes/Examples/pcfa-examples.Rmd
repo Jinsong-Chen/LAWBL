@@ -1,20 +1,14 @@
 ---
 title: "pcfa-examples"
-output: rmarkdown::html_vignette
-vignette: >
-  %\VignetteIndexEntry{pcfa-examples}
-  %\VignetteEncoding{UTF-8}
-  <!-- \usepackage[utf8]{inputenc} -->
-  %\VignetteEngine{knitr::rmarkdown}
-editor_options: 
-  chunk_output_type: console
+author: "Jinsong Chen"
+date: "`r Sys.Date()`"
+output:
+  html_document: default
+  pdf_document: default
 ---
 
-```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "R>"
-)
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
 ```
 
 **Note: the estimation process can be time consuming depending on the computing power. You can same some time by reducing the length of the chains.**
@@ -32,15 +26,15 @@ qlam <- sim18cfa0$qlam
 qlam
 
 Q<-matrix(-1,J,K); # -1 for unspecified items
-Q[1:2,1]<-Q[7:8,2]<-Q[13:14,3]<-1 # 1 for specified items
+Q[1:3,1]<-Q[7:9,2]<-Q[13:15,3]<-1 # 1 for specified items
 Q
 ```
 
-2) **E-step:** Estimate with the PCFA-LI model (E-step) by setting *LD=F*. Only a few loadings need to be specified in Q (e.g., 2 per factor). Longer chain is suggested for stabler performance (*burn=iter=5,000* by default).
+2) **E-step:** Estimate with the PCFA-LI model (E-step) by setting *LD=F*. Only a few loadings need to be specified in Q (e.g., 3 per factor). Longer chain is suggested for stabler performance (*burn=iter=5,000* by default).
 
 
 ```{r}
-m0 <- pcfa(dat = dat, Q = Q,LD = FALSE, burn = 2000, iter = 2000,verbose = TRUE)
+m0 <- pcfa(dat = dat, Q = Q,LD = FALSE)
 
 # summarize basic information
 summary(m0)
@@ -59,7 +53,7 @@ plot_lawbl(m0, what='APSR') #adj, PSRF
 
 3) **C-step:** Reconfigure the Q matrix for the C-step with one specified loading per item based on results from the E-step. Estimate with the PCFA model by setting *LD=TRUE* (by default). Longer chain is suggested for stabler performance. Results are very close to the E-step, since there's no LD in the data.
 
-```{r eval=FALSE}
+```{r}
 Q<-matrix(-1,J,K);
 tmp<-summary(m0, what="qlambda")
 cind<-apply(tmp,1,which.max)
@@ -67,7 +61,7 @@ Q[cbind(c(1:J),cind)]<-1
 #alternatively
 #Q[1:6,1]<-Q[7:12,2]<-Q[13:18,3]<-1 # 1 for specified items
 
-m1 <- pcfa(dat = dat, Q = Q, burn = 2000, iter = 2000,verbose = TRUE)
+m1 <- pcfa(dat = dat, Q = Q)
 summary(m1)
 summary(m1, what = 'qlambda')
 summary(m1, what = 'offpsx') #summarize significant LD terms
@@ -82,12 +76,12 @@ plot_lawbl(m1, what='APSR') #adj, PSRF
 
 4) **CFA-LD:** One can also configure the Q matrix for a CFA model with local dependence (i.e. without any unspecified loading) based on results from the C-step. Results are also very close.
 
-```{r eval=FALSE}
+```{r}
 Q<-summary(m1, what="qlambda")
 Q[Q!=0]<-1
 Q
 
-m2 <- pcfa(dat = dat, Q = Q, burn = 2000, iter = 2000,verbose = TRUE)
+m2 <- pcfa(dat = dat, Q = Q)
 summary(m2)
 summary(m2, what = 'qlambda') 
 summary(m2, what = 'offpsx')
@@ -100,7 +94,7 @@ plot_lawbl(m2) # Eigens' traces are excellent without regularization of the load
 
 1) Load the the data, loading pattern (*qlam*), and LD terms, and setup the design matrix Q.
 
-```{r, eval=FALSE}
+```{r}
 dat <- sim18cfa1$dat
 J <- ncol(dat) # no. of items
 K <- 3 # no. of factors
@@ -108,15 +102,15 @@ sim18cfa1$qlam
 sim18cfa1$LD # effect size = .3
 
 Q<-matrix(-1,J,K); # -1 for unspecified items
-Q[1:2,1]<-Q[7:8,2]<-Q[13:14,3]<-1 # 1 for specified items
+Q[1:3,1]<-Q[7:9,2]<-Q[13:15,3]<-1 # 1 for specified items
 Q
 
 ```
 
-2) **E-step:** Estimate with the PCFA-LI model (E-step) by setting *LD=FALSE*. Only a few loadings need to be specified in Q (e.g., 2 per factor). Some loading estimates are biased due to ignoring the LD. So do the eigenvalues.
+2) **E-step:** Estimate with the PCFA-LI model (E-step) by setting *LD=FALSE*. Only a few loadings need to be specified in Q (e.g., 3 per factor). Some loading estimates are biased due to ignoring the LD. So do the eigenvalues.
 
-```{r eval=FALSE}
-m0 <- pcfa(dat = dat, Q = Q,LD = FALSE, burn = 4000, iter = 4000,verbose = TRUE)
+```{r}
+m0 <- pcfa(dat = dat, Q = Q,LD = FALSE)
 summary(m0)
 summary(m0, what = 'qlambda')
 summary(m0,what='eigen')
@@ -127,14 +121,14 @@ plot_lawbl(m0, what='APSR')
 
 3) **C-step:** Reconfigure the Q matrix for the C-step with one specified loading per item based on results from the E-step. Estimate with the PCFA model by setting *LD=TRUE* (by default). The estimates are more accurate, and the LD terms can be largely recovered.
 
-```{r eval=FALSE}
+```{r}
 Q<-matrix(-1,J,K);
 tmp<-summary(m0, what="qlambda")
 cind<-apply(tmp,1,which.max)
 Q[cbind(c(1:J),cind)]<-1
 Q
 
-m1 <- pcfa(dat = dat, Q = Q,burn = 4000, iter = 4000,verbose = TRUE)
+m1 <- pcfa(dat = dat, Q = Q)
 summary(m1)
 summary(m1, what = 'qlambda')
 summary(m1,what='eigen')
@@ -144,12 +138,12 @@ summary(m1, what = 'offpsx')
 
 4) **CFA-LD:** Configure the Q matrix for a CFA model with local dependence (i.e. without any unspecified loading) based on results from the C-step. Results are better than, but similar to the C-step.
 
-```{r eval=FALSE}
+```{r}
 Q<-summary(m1, what="qlambda")
 Q[Q!=0]<-1
 Q
 
-m2 <- pcfa(dat = dat, Q = Q,burn = 4000, iter = 4000,verbose = TRUE)
+m2 <- pcfa(dat = dat, Q = Q)
 summary(m2)
 summary(m2, what = 'qlambda') 
 summary(m2,what='eigen')

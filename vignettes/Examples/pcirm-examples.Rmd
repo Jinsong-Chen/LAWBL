@@ -1,20 +1,14 @@
 ---
 title: "pcirm-examples"
-output: rmarkdown::html_vignette
-vignette: >
-  %\VignetteIndexEntry{pcirm-examples}
-  %\VignetteEncoding{UTF-8}
-  <!-- \usepackage[utf8]{inputenc} -->
-  %\VignetteEngine{knitr::rmarkdown}
-editor_options: 
-  chunk_output_type: console
+author: "Jinsong Chen"
+date: "`r Sys.Date()`"
+output:
+  html_document: default
+  pdf_document: default
 ---
 
-```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "R>"
-)
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
 ```
 
 **Note: the estimation process can be time consuming depending on the computing power. You can same some time by reducing the length of the chains.**
@@ -36,12 +30,12 @@ K <- ncol(qlam) # no. of factors
 
 2) PCIRM with primary loadings and three traits specified. Longer chain is suggested for stabler performance (*burn=iter=5,000* by default).
 
-```{r eval=FALSE}
+```{r}
 ipf <- 8
 Q<-matrix(-1,J,K-1); # -1 for unspecified items
 Q[1:8,1]<-Q[9:16,2]<-Q[17:24,3]<-1
 Q
-m0<-pcirm(dat = dat,Q=  Q,LD = TRUE,cati = -1,burn = 2000,iter = 2000,verbose = TRUE)
+m0<-pcirm(dat = dat,Q=  Q,LD = TRUE,cati = -1,burn = 5000,iter = 5000)
 summary(m0)
 summary(m0, what = 'qlambda')
 summary(m0, what = 'offpsx') #summarize significant LD terms
@@ -56,24 +50,24 @@ plot_lawbl(m0, what='APSR') #adj, PSRF
 
 3) PCIRM-LI with four traits and two cross-loadings specified based on results from previous step. Longer chain is suggested for stabler performance.
 
-```{r eval=FALSE}
+```{r}
 Q<-cbind(Q,-1);
 Q[c(15:16),K] <- 1
 
-m1<-pcirm(dat = dat,Q=  Q,LD = FALSE, cati = -1,burn = 4000,iter = 4000,verbose = TRUE)
+m1<-pcirm(dat = dat,Q=  Q,LD = FALSE, cati = -1,burn = 5000,iter = 5000)
 summary(m1)
 summary(m1, what = 'qlambda') #close to qlam
 ```
 
 4) PCIRM with four traits and four cross-loadings specified based on results from previous step. Longer chain is suggested for stabler performance.
 
-```{r eval=FALSE}
+```{r}
 tmp<-summary(m1, what="qlambda")
 Q<-matrix(-1,J,K)
 Q[tmp!=0]<-1
 Q
 
-m2<-pcirm(dat = dat,Q=  Q,LD = TRUE,cati = -1,burn = 4000,iter = 4000,verbose = TRUE)
+m2<-pcirm(dat = dat,Q=  Q,LD = TRUE,cati = -1,burn = 5000,iter = 5000)
 summary(m2)
 summary(m2, what = 'qlambda')
 summary(m2, what = 'offpsx') #summarize significant LD terms
@@ -85,4 +79,3 @@ plot_lawbl(m2) # trace
 plot_lawbl(m2, what='density') #density
 plot_lawbl(m2, what='APSR') #adj, PSRF
 ```
-

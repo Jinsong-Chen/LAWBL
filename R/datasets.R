@@ -87,3 +87,17 @@
 #'
 "sim24ccfa21"
 
+#' National Longitudinal Survey of Youth 1997
+#'
+#' A data set consisted of 3,458 individual responses to 27 mixed-type items, with a 1.12% rate of missing data
+#'
+#'
+#' @format A list with components:
+#' \describe{
+#' \item{\code{dat}}{The response data}
+#' \item{\code{Q}}{Intial design matrix with three factors and two to three specified loadings per factor}
+#' \item{\code{cati}}{Indices of categorical (polytomous) items}
+#' }
+#'
+"nlsy27"
+

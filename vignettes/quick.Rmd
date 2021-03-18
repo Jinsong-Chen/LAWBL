@@ -1,0 +1,38 @@
+---
+title: "Quick Start"
+author: "Jinsong Chen"
+data: "'r Sys.Date()'"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Quick Start}
+  %\VignetteEncoding{UTF-8}{inputenc}
+  <!-- \usepackage[utf8]{inputenc} -->
+  %\VignetteEngine{knitr::rmarkdown}
+---
+
+**LAWBL** is to provide a variety of models to analyze latent variables based on Bayesian learning. For more information about the package, one can see [here](https://jinsong-chen.github.io/LAWBL/index.html) or [here](https://jinsong-chen.github.io/LAWBL/reference/LAWBL-package.html).
+
+## How to use this package in brief
+
+* A design matrix Q is needed for PCFA, GPCFA, or PCIRM, but not necessary for PEFA
+* Default setting can be used to minimize input (e.g., burn-in, formal iteration, maximum number of factors)
+* To estimate PCFA-LI (when only a few loadings can be specified, e.g., 2 per factor), use *m <- pcfa(dat=dat,Q=Q,LD=F)*
+* To estimate PCFA (with one specified loading per item), use *m <- pcfa(dat=dat,Q=Q,LD=T)*
+* To estimate BREFA or FEFA (i.e., PFEA without partial information), use *m <- pefa(dat=dat)*
+* To summarize basic information after estimation, use *summary(m)*
+* To summarize significant loadings in pattern/Q-matrix format, use *summary(m,what='qlambda')*
+* To summarize factorial eigenvalues, use *summary(m,what='eigen')*
+* To summarize significant LD terms, use *summary(m,what='offpsx')*
+* To plot eigenvalues' trace, use *plot_lawbl(m)*
+* To plot eigenvalues' density, use *plot_lawbl(m, what='density')*
+* To plot eigenvalues' adjusted PSRF, use *plot_lawbl(m, what='APSR')*
+
+You are also encouraged to visit [here](https://jinsong-chen.github.io/LAWBL/reference/index.html) for an online reference of all functions.
+
+
+For examples of how to use the package, see
+
+* For PCFA with continuous data: [here](https://jinsong-chen.github.io/LAWBL/articles/Examples/pcfa-examples.html) 
+* For GPCFA with categorical and mixed-type data: [here](https://jinsong-chen.github.io/LAWBL/articles/Examples/gpcfa-examples.html) 
+* For PCIRM with dichotomous data and intercept terms: [here](https://jinsong-chen.github.io/LAWBL/articles/Examples/pcirm-examples.html) 
+

@@ -7,12 +7,49 @@
 state and is being actively
 developed.](http://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/)
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/LAWBL)](https://cran.r-project.org/package=LAWBL)
+[![](https://cranlogs.r-pkg.org/badges/LAWBL?color=brightgreen)](https://cran.r-project.org/package=LAWBL)
+[![](http://cranlogs.r-pkg.org/badges/grand-total/LAWBL?color=green)](https://cran.r-project.org/package=LAWBL)
 
 ## How to cite the package
 
-Chen, J. (2020). LAWBL: Latent (variable) analysis with Bayesian
-learning (R package version 1.3.0). Retrieved from
+Chen, J. (2021). LAWBL: Latent (variable) analysis with Bayesian
+learning (R package version 1.4.0). Retrieved from
 <https://CRAN.R-project.org/package=LAWBL>
+
+## Description
+
+**LAWBL** represents a partially confirmatory / exploratory approach to
+model latent variables based on Bayesian learning. Built on the power of
+statistical learning, it can address psychometric challenges such as
+parameter specification, local dependence, and factor extraction. Built
+on the scalability and flexibility of Bayesian inference and resampling
+techniques, it can accommodate modeling frameworks such as factor
+analysis, item response theory, cognitive diagnosis modeling and causal
+or explanatory modeling. The package can also handle different response
+formats or a mix of them, with or without missingness.
+
+## Features
+
+  - Partially CFA (PCFA) for continuous data: regularization of loading
+    specification and local dependence; PCFA with local independence
+    (PCFA-LI); CFA with local dependence (CFA-LD)
+  - Generalized PCFA (GPCFA) for continuous, categorical, or mixed-type
+    data, with or without missingness; GPCFA with local independence
+    (GPCFA-LI); Generalized CFA with local dependence (GCFA-LD)
+  - Partially confirmatory item response model (PCIRM) for continuous
+    and dichotomous data with intercept terms; PCIRM-LI; CIRM-LD
+  - Bayesian regularized EFA (BREFA): factor extraction and parameter
+    estimation in one step; Fully and partially EFA: unknown number of
+    factors without or with partial knowledge
+  - Estimation using different Bayesian learning methods and MCMC
+    algorithms
+  - Simulating data based on all aforementioned models
+  - Plotting trace, density or Gelman-Rubin diagnostics based on
+    eigenvalue
+  - Summary of all parameters with both point and interval estimates
+
+Please refer to the [online
+tutorials](https://jinsong-chen.github.io/LAWBL/) for more details.
 
 ## Installation
 
@@ -34,66 +71,3 @@ install.packages("LAWBL")
 # install.packages("devtools")
 devtools::install_github("Jinsong-Chen/LAWBL")
 ```
-
-## What can this package do
-
-The long-term goal of **LAWBL** is to provide an analytical framework
-for modeling latent variables with different Bayesian learning methods.
-
-Currently, this package includes the Partially Confirmatory Factor
-Analysis (PCFA) model for continuous data (Chen, Guo, Zhang, & Pan,
-2020), the generalized PCFA (GPCFA) model covering continuous,
-categorical, and mixed-type data, and the partially confirmatory item
-response model (PCIRM) for continuous and dichotomous data with
-intercept terms (Chen, 2020). The three models represent a partially
-confirmatory approach covering a wide range of the
-exploratory-confirmatory continuum under the context of factor analysis
-and item response theory. For PCFA, GPCFA, and PCIRM, there are two
-major model variants with different constraints for identification. One
-assumes local independence (LI) with a more exploratory tendency, which
-can be also called the E-step. The other allows local dependence (LD)
-with a more confirmatory tendency, which can be also called the C-step.
-Parameters are obtained by sampling from the posterior distributions
-with the Markov chain Monte Carlo (MCMC) techniques. Different Bayesian
-Lasso methods are used to regularize the loading pattern and local
-dependence.
-
-For examples of how to use the package, see vignettes or
-
-  - For PCFA with continuous data:
-    [here](https://jinsong-chen.github.io/LAWBL/articles/pcfa-examples.html)
-  - For GPCFA with categorical and mixed-type data:
-    [here](https://jinsong-chen.github.io/LAWBL/articles/gpcfa-examples.html)
-  - For PCIRM with dichotomous data and intercept terms:
-    [here](https://jinsong-chen.github.io/LAWBL/articles/pcirm-examples.html)
-
-## How to use this package in brief
-
-  - To estimate the E-step (when only a few loadings can be specified,
-    e.g., 2 per factor), use *m \<- pcfa(dat=dat,Q=Q,LD=F)*
-  - To estimate the C-step (with one specified loading per item), use *m
-    \<- pcfa(dat=dat,Q=Q,LD=T)*
-  - To summarize basic information after estimation, use *summary(m)*
-  - To summarize significant loadings in pattern/Q-matrix format, use
-    *summary(m,what=‘qlambda’)*
-  - To summarize factorial eigenvalues, use *summary(m,what=‘eigen’)*
-  - To summarize significant LD terms, use *summary(m,what=‘offpsx’)*
-  - To plot eigenvalues’ trace, use *plot\_lawbl(m)*
-  - To plot eigenvalues’ density, use *plot\_lawbl(m, what=‘density’)*
-  - To plot eigenvalues’ adjusted PSRF, use *plot\_lawbl(m,
-    what=‘APSR’)*
-
-## Reference
-
-Chen, J., Guo, Z., Zhang, L., & Pan, J. (2020). A partially confirmatory
-approach to scale development with the Bayesian Lasso. *Psychological
-Methods*. Advance online publication.
-<http://dx.doi.org/10.1037/met0000293>.
-
-Chen, J. (2020). A partially confirmatory approach to the
-multidimensional item response theory with the Bayesian Lasso.
-*Psychometrika*. 85(3), 738-774. DOI: 10.1007/s11336-020-09724-3.
-
-Chen, J. (2021). A Bayesian regularized approach to exploratory factor
-analysis in one step. *Structural Equation Modeling: A Multidisciplinary
-Journal*. DOI: 10.1080/10705511.2020.1854763.
