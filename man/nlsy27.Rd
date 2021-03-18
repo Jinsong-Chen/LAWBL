@@ -16,6 +16,6 @@ A list with components:
 nlsy27
 }
 \description{
-A data set consisted of 3,458 individual responses to 27 mixed-type items, with a 1.12% rate of missing data
+A data set consisted of 3,458 individual responses to 27 mixed-type items, with a 1.12 percentage of missing data
 }
 \keyword{datasets}

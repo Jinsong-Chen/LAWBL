@@ -177,10 +177,10 @@ Q
 
 ```
 
-2) **E-step:** Estimate with the GPCFA-LI model (E-step) by setting *LD=FALSE*. Only a few loadings need to be specified in Q (e.g., 3 per factor). The first 12 items are categorical and need to be specified with *cati*.
+2) **E-step:** Estimate with the GPCFA-LI model (E-step) by setting *LD=FALSE*. Only a few loadings need to be specified in Q (e.g., 3 per factor). The first 6 items are categorical and need to be specified with *cati*.
 
 ```{r}
-m0 <- pcfa(dat = dat, Q = Q,LD = FALSE, cati = c(1:12),burn = 5000, iter = 5000)
+m0 <- pcfa(dat = dat, Q = Q,LD = FALSE, cati = c(1:6),burn = 5000, iter = 5000)
 summary(m0)
 summary(m0, what = 'qlambda')
 summary(m0,what='eigen')
@@ -200,7 +200,7 @@ cind<-apply(tmp,1,which.max)
 Q[cbind(c(1:J),cind)]<-1
 Q
 
-m1 <- pcfa(dat = dat, Q = Q, cati = c(1:12),burn = 5000, iter = 5000)
+m1 <- pcfa(dat = dat, Q = Q, cati = c(1:6),burn = 5000, iter = 5000)
 summary(m1)
 summary(m1, what = 'qlambda')
 summary(m1,what='eigen')
@@ -215,7 +215,7 @@ Q<-summary(m1, what="qlambda")
 Q[Q!=0]<-1
 Q
 
-m2 <- pcfa(dat = dat, Q = Q, cati = c(1:12),burn = 5000, iter = 5000)
+m2 <- pcfa(dat = dat, Q = Q, cati = c(1:6),burn = 5000, iter = 5000)
 summary(m2)
 summary(m2, what = 'qlambda') 
 summary(m2,what='eigen')
