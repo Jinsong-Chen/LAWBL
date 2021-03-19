@@ -5,7 +5,7 @@
 #'
 #' @details
 #'
-#' **LAWBL** represents a partially confirmatory / exploratory approach to model latent variables based on Bayesian learning.
+#' \emph{LAWBL} represents a partially confirmatory / exploratory approach to model latent variables based on Bayesian learning.
 #' Built on the power of statistical learning, it can address psychometric challenges such as parameter specification, local dependence,
 #' and factor extraction. Built on the scalability and flexibility of Bayesian inference and resampling techniques, it can accommodate
 #' modeling frameworks such as factor analysis, item response theory, cognitive diagnosis modeling and causal or explanatory modeling.
@@ -25,7 +25,6 @@
 #' Parameters are obtained by sampling from the posterior distributions with the Markov chain Monte Carlo (MCMC) techniques. Different
 #' Bayesian learning methods are used to regularize the loading pattern, local dependence, and/or factor identification.
 #'
-#' Please refer to the [online tutorials](https://jinsong-chen.github.io/LAWBL/) for more details.
 #'
 #' @name LAWBL-package
 #' @aliases LAWBL-package
