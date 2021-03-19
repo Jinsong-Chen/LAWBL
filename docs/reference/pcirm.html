@@ -48,7 +48,7 @@ which estimates the intercept for continuous and dichotomous data. Similar to PC
  called the C-step. Parameters are obtained by sampling from the posterior distributions with
  the Markov chain Monte Carlo (MCMC) techniques. Different Bayesian Lasso methods are used to
  regularize the loading pattern and LD. The estimation results can be summarized with summary.lawbl
- and the factorial eigenvalue can be plotted with plot_eigen." />
+ and the factorial eigenvalue can be plotted with plot_lawbl." />
 
 
 
@@ -80,7 +80,7 @@ which estimates the intercept for continuous and dichotomous data. Similar to PC
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">LAWBL</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.0</span>
       </span>
     </div>
 
@@ -103,13 +103,16 @@ which estimates the intercept for continuous and dichotomous data. Similar to PC
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/pcfa-examples.html">pcfa-examples</a>
+      <a href="../articles/Examples/pcfa-examples.html">pcfa-examples</a>
     </li>
     <li>
-      <a href="../articles/gpcfa-examples.html">gpcfa-examples</a>
+      <a href="../articles/Examples/pcirm-examples.html">pcirm-examples</a>
     </li>
     <li>
-      <a href="../articles/pcirm-examples.html">pcirm-examples</a>
+      <a href="../articles/Examples/gpcfa-examples.html">gpcfa-examples</a>
+    </li>
+    <li>
+      <a href="../articles/quick.html">Quick Start</a>
     </li>
   </ul>
 </li>
@@ -151,7 +154,7 @@ which estimates the intercept for continuous and dichotomous data. Similar to PC
  called the C-step. Parameters are obtained by sampling from the posterior distributions with
  the Markov chain Monte Carlo (MCMC) techniques. Different Bayesian Lasso methods are used to
  regularize the loading pattern and LD. The estimation results can be summarized with <code><a href='summary.lawbl.html'>summary.lawbl</a></code>
- and the factorial eigenvalue can be plotted with <code><a href='plot_eigen.html'>plot_eigen</a></code>.</p>
+ and the factorial eigenvalue can be plotted with <code><a href='plot_lawbl.html'>plot_lawbl</a></code>.</p>
     </div>
 
     <pre class="usage"><span class='fu'>pcirm</span><span class='op'>(</span>
@@ -232,7 +235,7 @@ without any specified loading. See <code>Examples</code>.</p></td>
       <td><p>logical; to display the sampling information every <code>update</code> or not.</p>
 <ul>
 <li><p><code>Feigen</code>: Eigenvalue for each factor.</p></li>
-<li><p><code>NLA_lg3</code>: Number of Loading estimates &gt; .3 for each factor.</p></li>
+<li><p><code>NLA_le3</code>: Number of Loading estimates &gt;= .3 for each factor.</p></li>
 <li><p><code>Shrink</code>: Ave. shrinkage parameter (for adaptive LASSO) for each factor.</p></li>
 <li><p><code>Adj PSR</code>: Adjusted PSR for each factor.</p></li>
 <li><p><code>Ave. Int.</code>: Ave. item intercept.</p></li>
@@ -244,8 +247,7 @@ without any specified loading. See <code>Examples</code>.</p></td>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p><code>pcirm</code> returns an object of class <code>lawbl</code> with item intercepts. It contains a lot of information about
-the posteriors that can be summarized using <code><a href='summary.lawbl.html'>summary.lawbl</a></code>. The factorial eigenvalue
- can be plotted with <code><a href='plot_eigen.html'>plot_eigen</a></code>.</p>
+the posteriors that can be summarized using <code><a href='summary.lawbl.html'>summary.lawbl</a></code>.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     <p>Chen, J. (2020). A partially confirmatory approach to the multidimensional item response theory with the Bayesian Lasso.
@@ -289,11 +291,14 @@ the posteriors that can be summarized using <code><a href='summary.lawbl.html'>s
 #&gt; $`No. of sig lambda`
 #&gt; [1] 24
 #&gt; 
+#&gt; $`True Factor`
+#&gt; [1] TRUE TRUE TRUE
+#&gt; 
 #&gt; $`Adj. PSR`
 #&gt;    Point est. Upper C.I.
-#&gt; F1   1.007454   1.037260
-#&gt; F2   1.018612   1.041351
-#&gt; F3   1.048443   1.183139
+#&gt; F1   1.010731   1.015462
+#&gt; F2   1.074905   1.296835
+#&gt; F3   1.035563   1.154765
 #&gt; 
 #&gt; $`No. of sig LD terms`
 #&gt; [1] 7
@@ -305,38 +310,38 @@ the posteriors that can be summarized using <code><a href='summary.lawbl.html'>s
 #&gt; [1] 2
 #&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m0</span>, what <span class='op'>=</span> <span class='st'>'qlambda'</span><span class='op'>)</span> <span class='co'>#summarize significant loadings in pattern/Q-matrix format</span>
 </div><div class='output co'>#&gt;          [,1]      [,2]      [,3]
-#&gt; I1  0.6445135 0.0000000 0.0000000
-#&gt; I2  0.6441112 0.0000000 0.0000000
-#&gt; I3  0.6295697 0.0000000 0.0000000
-#&gt; I4  0.6781843 0.0000000 0.0000000
-#&gt; I5  0.6486247 0.0000000 0.0000000
-#&gt; I6  0.6570034 0.0000000 0.0000000
-#&gt; I7  0.7456747 0.0000000 0.0000000
-#&gt; I8  0.7766815 0.0000000 0.0000000
-#&gt; I9  0.0000000 0.7257810 0.0000000
-#&gt; I10 0.0000000 0.6927725 0.0000000
-#&gt; I11 0.0000000 0.7565709 0.0000000
-#&gt; I12 0.0000000 0.6967574 0.0000000
-#&gt; I13 0.0000000 0.7290665 0.0000000
-#&gt; I14 0.0000000 0.6948335 0.0000000
-#&gt; I15 0.0000000 0.6341475 0.0000000
-#&gt; I16 0.0000000 0.6751562 0.0000000
-#&gt; I17 0.0000000 0.0000000 0.6924022
-#&gt; I18 0.0000000 0.0000000 0.6824835
-#&gt; I19 0.0000000 0.0000000 0.7199200
-#&gt; I20 0.0000000 0.0000000 0.6880398
-#&gt; I21 0.0000000 0.0000000 0.7582321
-#&gt; I22 0.0000000 0.0000000 0.6672866
-#&gt; I23 0.0000000 0.0000000 0.6868795
-#&gt; I24 0.0000000 0.0000000 0.6839064</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m0</span>, what <span class='op'>=</span> <span class='st'>'offpsx'</span><span class='op'>)</span> <span class='co'>#summarize significant LD terms</span>
+#&gt; I1  0.6947036 0.0000000 0.0000000
+#&gt; I2  0.7162738 0.0000000 0.0000000
+#&gt; I3  0.6958346 0.0000000 0.0000000
+#&gt; I4  0.6682772 0.0000000 0.0000000
+#&gt; I5  0.7389516 0.0000000 0.0000000
+#&gt; I6  0.6556719 0.0000000 0.0000000
+#&gt; I7  0.7070854 0.0000000 0.0000000
+#&gt; I8  0.7488545 0.0000000 0.0000000
+#&gt; I9  0.0000000 0.6178049 0.0000000
+#&gt; I10 0.0000000 0.6922454 0.0000000
+#&gt; I11 0.0000000 0.6935517 0.0000000
+#&gt; I12 0.0000000 0.7111081 0.0000000
+#&gt; I13 0.0000000 0.6719902 0.0000000
+#&gt; I14 0.0000000 0.6915675 0.0000000
+#&gt; I15 0.0000000 0.7261747 0.0000000
+#&gt; I16 0.0000000 0.7163563 0.0000000
+#&gt; I17 0.0000000 0.0000000 0.6428073
+#&gt; I18 0.0000000 0.0000000 0.7509362
+#&gt; I19 0.0000000 0.0000000 0.7415185
+#&gt; I20 0.0000000 0.0000000 0.7477322
+#&gt; I21 0.0000000 0.0000000 0.7190005
+#&gt; I22 0.0000000 0.0000000 0.6921753
+#&gt; I23 0.0000000 0.0000000 0.6656029
+#&gt; I24 0.0000000 0.0000000 0.6712520</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m0</span>, what <span class='op'>=</span> <span class='st'>'offpsx'</span><span class='op'>)</span> <span class='co'>#summarize significant LD terms</span>
 </div><div class='output co'>#&gt;        row col       est         sd      lower     upper sig
-#&gt; var131   8   7 0.1225632 0.05107477 0.02149781 0.2150973   1
-#&gt; var247  16  15 0.1619993 0.04495219 0.07745951 0.2520529   1
-#&gt; var254  23  15 0.1508254 0.03976499 0.07417408 0.2296566   1
-#&gt; var255  24  15 0.1402446 0.04257192 0.06312714 0.2318276   1
-#&gt; var263  23  16 0.1524144 0.04024589 0.06990800 0.2307790   1
-#&gt; var264  24  16 0.1448762 0.04121645 0.06604447 0.2266492   1
-#&gt; var299  24  23 0.1634590 0.04990897 0.08109708 0.2666170   1</div><div class='input'>
+#&gt; var131   8   7 0.1186012 0.03726994 0.04898080 0.1921659   1
+#&gt; var247  16  15 0.1483176 0.06831740 0.01721922 0.2654639   1
+#&gt; var254  23  15 0.1212795 0.05811737 0.00879513 0.2246159   1
+#&gt; var255  24  15 0.1113943 0.05468392 0.01393304 0.2188108   1
+#&gt; var263  23  16 0.1301630 0.05536578 0.02809735 0.2334815   1
+#&gt; var264  24  16 0.1236004 0.05584343 0.01736265 0.2221513   1
+#&gt; var299  24  23 0.1527303 0.04945385 0.06239748 0.2535534   1</div><div class='input'>
 <span class='co'>####################################</span>
 <span class='co'>#  Example 2: Estimation with LD   #</span>
 <span class='co'>####################################</span>
@@ -370,12 +375,15 @@ the posteriors that can be summarized using <code><a href='summary.lawbl.html'>s
 #&gt; $`No. of sig lambda`
 #&gt; [1] 28
 #&gt; 
+#&gt; $`True Factor`
+#&gt; [1] TRUE TRUE TRUE TRUE
+#&gt; 
 #&gt; $`Adj. PSR`
 #&gt;    Point est. Upper C.I.
-#&gt; F1   1.045718   1.064053
-#&gt; F2   1.193415   1.657691
-#&gt; F3   1.065911   1.174982
-#&gt; F4   1.123002   1.423497
+#&gt; F1   1.358024   2.097796
+#&gt; F2   1.499822   2.506300
+#&gt; F3   1.168076   1.586202
+#&gt; F4   1.226010   1.745145
 #&gt; 
 #&gt; $`Cat Items`
 #&gt;  [1]  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24
@@ -384,30 +392,30 @@ the posteriors that can be summarized using <code><a href='summary.lawbl.html'>s
 #&gt; [1] 2
 #&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m1</span>, what <span class='op'>=</span> <span class='st'>'qlambda'</span><span class='op'>)</span> <span class='co'>#summarize significant loadings in pattern/Q-matrix format</span>
 </div><div class='output co'>#&gt;          [,1]      [,2]      [,3]      [,4]
-#&gt; I1  0.5962339 0.0000000 0.0000000 0.0000000
-#&gt; I2  0.6105347 0.0000000 0.0000000 0.0000000
-#&gt; I3  0.6271678 0.0000000 0.0000000 0.0000000
-#&gt; I4  0.6958273 0.0000000 0.0000000 0.0000000
-#&gt; I5  0.6114661 0.0000000 0.0000000 0.0000000
-#&gt; I6  0.6154533 0.0000000 0.0000000 0.0000000
-#&gt; I7  0.8689566 0.0000000 0.0000000 0.0000000
-#&gt; I8  0.8939026 0.0000000 0.0000000 0.0000000
-#&gt; I9  0.0000000 0.7577736 0.0000000 0.0000000
-#&gt; I10 0.0000000 0.6824360 0.0000000 0.0000000
-#&gt; I11 0.0000000 0.7546485 0.0000000 0.0000000
-#&gt; I12 0.0000000 0.6966081 0.0000000 0.0000000
-#&gt; I13 0.0000000 0.7472792 0.0000000 0.0000000
-#&gt; I14 0.0000000 0.7009093 0.0000000 0.0000000
-#&gt; I15 0.0000000 0.5692394 0.0000000 0.5656617
-#&gt; I16 0.0000000 0.6135148 0.0000000 0.5681055
-#&gt; I17 0.0000000 0.0000000 0.7140304 0.0000000
-#&gt; I18 0.0000000 0.0000000 0.6982343 0.0000000
-#&gt; I19 0.0000000 0.0000000 0.7111138 0.0000000
-#&gt; I20 0.0000000 0.0000000 0.7153510 0.0000000
-#&gt; I21 0.0000000 0.0000000 0.7582782 0.0000000
-#&gt; I22 0.0000000 0.0000000 0.6833458 0.0000000
-#&gt; I23 0.0000000 0.0000000 0.6288027 0.4751283
-#&gt; I24 0.0000000 0.0000000 0.6422785 0.4371894</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m1</span>, what <span class='op'>=</span> <span class='st'>'offpsx'</span><span class='op'>)</span> <span class='co'>#summarize significant LD terms</span>
+#&gt; I1  0.6959879 0.0000000 0.0000000 0.0000000
+#&gt; I2  0.6984824 0.0000000 0.0000000 0.0000000
+#&gt; I3  0.6840245 0.0000000 0.0000000 0.0000000
+#&gt; I4  0.6645955 0.0000000 0.0000000 0.0000000
+#&gt; I5  0.7297234 0.0000000 0.0000000 0.0000000
+#&gt; I6  0.6590991 0.0000000 0.0000000 0.0000000
+#&gt; I7  0.8280333 0.0000000 0.0000000 0.0000000
+#&gt; I8  0.8566440 0.0000000 0.0000000 0.0000000
+#&gt; I9  0.0000000 0.6285241 0.0000000 0.0000000
+#&gt; I10 0.0000000 0.7205500 0.0000000 0.0000000
+#&gt; I11 0.0000000 0.7191267 0.0000000 0.0000000
+#&gt; I12 0.0000000 0.7269889 0.0000000 0.0000000
+#&gt; I13 0.0000000 0.6844756 0.0000000 0.0000000
+#&gt; I14 0.0000000 0.6933323 0.0000000 0.0000000
+#&gt; I15 0.0000000 0.7303261 0.0000000 0.5380451
+#&gt; I16 0.0000000 0.7172284 0.0000000 0.5691310
+#&gt; I17 0.0000000 0.0000000 0.6279061 0.0000000
+#&gt; I18 0.0000000 0.0000000 0.7566642 0.0000000
+#&gt; I19 0.0000000 0.0000000 0.7449067 0.0000000
+#&gt; I20 0.0000000 0.0000000 0.7871367 0.0000000
+#&gt; I21 0.0000000 0.0000000 0.7159667 0.0000000
+#&gt; I22 0.0000000 0.0000000 0.7217011 0.0000000
+#&gt; I23 0.0000000 0.0000000 0.6125203 0.5018210
+#&gt; I24 0.0000000 0.0000000 0.6280054 0.4749597</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m1</span>, what <span class='op'>=</span> <span class='st'>'offpsx'</span><span class='op'>)</span> <span class='co'>#summarize significant LD terms</span>
 </div><div class='output co'>#&gt; NULL</div><div class='input'><span class='co'># }</span>
 </div></pre>
   </div>
