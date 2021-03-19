@@ -24,3 +24,12 @@
 * Fixed - bugs
 * Updated - vignettes for PCFA, GPCFA, and PCIRM
 * Updated - Documents & references
+
+
+# LAWBL 1.4.0
+
+* Added - Fully and partially EFA
+* Added - datasets
+* Fixed - bugs
+* Updated - vignettes & online tutorials
+* Updated - Documents & references

@@ -47,7 +47,7 @@
 #' Chen, J., Guo, Z., Zhang, L., & Pan, J. (2020). A partially confirmatory approach to scale development
 #'  with the Bayesian Lasso. \emph{Psychological Methods}. Advance online publication. DOI:10.1037/met0000293
 #'
-#' Chen, J. (2020). A partially confirmatory approach to the multidimensional item response theory with the Bayesian Lasso. \
+#' Chen, J. (2020). A partially confirmatory approach to the multidimensional item response theory with the Bayesian Lasso.
 #' \emph{Psychometrika}. 85(3), 738-774. DOI:10.1007/s11336-020-09724-3.
 #'
 #' Chen, J. (2021). A Bayesian regularized approach to exploratory factor analysis in one step.

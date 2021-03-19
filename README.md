@@ -16,7 +16,7 @@ Chen, J. (2021). LAWBL: Latent (variable) analysis with Bayesian
 learning (R package version 1.4.0). Retrieved from
 <https://CRAN.R-project.org/package=LAWBL>
 
-## Description
+## Introduction
 
 **LAWBL** represents a partially confirmatory / exploratory approach to
 model latent variables based on Bayesian learning. Built on the power of

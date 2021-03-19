@@ -1,6 +1,5 @@
 ---
 title: "Quick Start"
-author: "Jinsong Chen"
 data: "'r Sys.Date()'"
 output: rmarkdown::html_vignette
 vignette: >
@@ -36,3 +35,4 @@ For examples of how to use the package, see
 * For GPCFA with categorical and mixed-type data: [here](https://jinsong-chen.github.io/LAWBL/articles/Examples/gpcfa-examples.html) 
 * For PCIRM with dichotomous data and intercept terms: [here](https://jinsong-chen.github.io/LAWBL/articles/Examples/pcirm-examples.html) 
 
+If you would like to contribute an example to this website, please send your .Rmd file to me at jinsong.chen@live.com.
