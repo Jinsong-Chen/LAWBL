@@ -58,9 +58,10 @@ without any specified loading. See \code{Examples}.}
 \itemize{
     \item \code{Feigen}: Eigenvalue for each factor.
     \item \code{NLA_le3}: Number of Loading estimates >= .3 for each factor.
-    \item \code{Shrink}: Ave. shrinkage parameter (for adaptive LASSO) for each factor.
+    \item \code{Shrink}: Shrinkage (or ave. shrinkage for each factor for adaptive Lasso).
+    \item \code{sign_sw}: Number of sign switch.
     \item \code{Adj PSR}: Adjusted PSR for each factor.
-    \item \code{Ave. Thd}: Ave. thresholds.
+    \item \code{Ave. Thd}: Ave. thresholds for polytomous items.
     \item \code{Acc Rate}: Acceptance rate of threshold (MH algorithm).
     \item \code{LD>.2 >.1 LD>.2 >.1}: # of LD terms larger than .2 and .1, and LD's shrinkage parameter.
 }}

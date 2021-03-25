@@ -49,9 +49,10 @@
 #' \itemize{
 #'     \item \code{Feigen}: Eigenvalue for each factor.
 #'     \item \code{NLA_le3}: Number of Loading estimates >= .3 for each factor.
-#'     \item \code{Shrink}: Ave. shrinkage parameter (for adaptive LASSO) for each factor.
+#'     \item \code{Shrink}: Shrinkage (or ave. shrinkage for each factor for adaptive Lasso).
+#'     \item \code{sign_sw}: Number of sign switch.
 #'     \item \code{Adj PSR}: Adjusted PSR for each factor.
-#'     \item \code{Ave. Thd}: Ave. thresholds.
+#'     \item \code{Ave. Thd}: Ave. thresholds for polytomous items.
 #'     \item \code{Acc Rate}: Acceptance rate of threshold (MH algorithm).
 #'     \item \code{LD>.2 >.1 LD>.2 >.1}: # of LD terms larger than .2 and .1, and LD's shrinkage parameter.
 #' }
@@ -184,8 +185,6 @@ pcfa <- function(dat, Q, LD = TRUE,cati = NULL,cand_thd = 0.2, PPMC = FALSE, bur
 
     # OME <- t(mvrnorm(N,mu=rep(0,K),Sigma=diag(1,K))) # J*N
     sign_sw <- rep(0, K)
-
-    # LA_eps <- -1
     sign_eps <- -.5
 
     Eigen <- array(0, dim = c(iter, K))  #Store retained trace of Eigen
@@ -242,7 +241,6 @@ pcfa <- function(dat, Q, LD = TRUE,cati = NULL,cand_thd = 0.2, PPMC = FALSE, bur
             # if(g<0){chg0_count <- chg0_count + chg}else{chg_count <- chg_count + chg}
             LA <- LA %*% sign
             OME <- t(t(OME) %*% sign)
-
         }
 
         gammal_sq <- LAY$gammal_sq

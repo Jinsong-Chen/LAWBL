@@ -47,7 +47,8 @@
 #' \itemize{
 #'     \item \code{Feigen}: Eigenvalue for each factor.
 #'     \item \code{NLA_le3}: Number of Loading estimates >= .3 for each factor.
-#'     \item \code{Shrink}: Ave. shrinkage parameter (for adaptive LASSO) for each factor.
+#'     \item \code{Shrink}: Shrinkage (or ave. shrinkage for each factor for adaptive Lasso).
+#'     \item \code{sign_sw}: Number of sign switch.
 #'     \item \code{Adj PSR}: Adjusted PSR for each factor.
 #'     \item \code{Ave. Int.}: Ave. item intercept.
 #'     \item \code{LD>.2 >.1 LD>.2 >.1}: # of LD terms larger than .2 and .1, and LD's shrinkage parameter.
@@ -181,11 +182,8 @@ pcirm <- function(dat, Q, LD = TRUE,cati = NULL, PPMC = FALSE, burn = 5000, iter
         Y[mind] <- rnorm(Nmis)
 
     # OME <- t(mvrnorm(N,mu=rep(0,K),Sigma=diag(1,K))) # J*N
-    chg_count <- rep(0, K)
-    chg0_count <- rep(0, K)
-    # chg1_count <- rep(0, K)
-    # Jest <- colSums(Q != 0)
-    LA_eps <- -1
+    sign_sw <- rep(0, K)
+    sign_eps <- -.5
 
     Eigen <- array(0, dim = c(iter, K))  #Store retained trace of Eigen
     tmp <- which(Q!=0,arr.ind=TRUE)
@@ -234,14 +232,14 @@ pcirm <- function(dat, Q, LD = TRUE,cati = NULL, PPMC = FALSE, burn = 5000, iter
         # }
         # LA <- LA1
 
-
-        chg <- (colSums(LA)<= LA_eps)
+        chg <- (colSums(LA)<= sign_eps)
+        # chg <- (colSums(LA)<= LA_eps)
         if (any(chg)) {
             sign <- diag(1 - 2 * chg)
-            if(g<0){chg0_count <- chg0_count + chg}else{chg_count <- chg_count + chg}
+            sign_sw <- sign_sw + chg
+            # if(g<0){chg0_count <- chg0_count + chg}else{chg_count <- chg_count + chg}
             LA <- LA %*% sign
             OME <- t(t(OME) %*% sign)
-
         }
 
         gammal_sq <- LAY$gammal_sq
@@ -319,7 +317,7 @@ pcirm <- function(dat, Q, LD = TRUE,cati = NULL, PPMC = FALSE, burn = 5000, iter
                 # Mlambda<-colMeans(LA)
 
                 cat(ii, fill = TRUE, labels = "\nTot. Iter =")
-                print(rbind(Feigen, NLA_le3, Shrink))
+                print(rbind(Feigen, NLA_le3, Shrink,sign_sw))
                 # cat(chg_count, fill = TRUE, labels = '#Sign change:')
                 if (g > 0) cat(t(APSR[,1]), fill = TRUE, labels = "Adj PSR")
 
@@ -367,10 +365,10 @@ pcirm <- function(dat, Q, LD = TRUE,cati = NULL, PPMC = FALSE, burn = 5000, iter
         iter <- burn <- g/2
     }
 
-    chg1_count<-rbind(chg0_count,chg_count)
+    # chg1_count<-rbind(chg0_count,chg_count)
     out <- list(Q = Q, LD = LD, LA = ELA, Omega = mOmega/iter, PSX = EPSX, iter = iter, burn = burn,
                 PHI = EPHI, gammal = Egammal, gammas = Egammas, Nmis = Nmis, PPP = Eppmc, conv = conv,
-                Eigen = Eigen, APSR = APSR, MU = EMU,chg_count=chg1_count)
+                Eigen = Eigen, APSR = APSR, MU = EMU)
 
     if (Jp > 0) {
         out$cati = cati
