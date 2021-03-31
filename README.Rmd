@@ -13,6 +13,7 @@ knitr::opts_chunk$set(
 )
 ```
 
+
 # LAWBL: Latent (Variable) Analysis With Bayesian Learning
 
 [![Project Status: Active ? The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/)
@@ -28,7 +29,7 @@ Chen, J. (2021). LAWBL: Latent (variable) analysis with Bayesian learning (R pac
 
 ## Introduction
 
-**LAWBL** represents a partially confirmatory / exploratory approach to model latent variables based on Bayesian learning. Built on the power of statistical learning, it can address psychometric challenges such as parameter specification, local dependence, and factor extraction. Built on the scalability and flexibility of Bayesian inference and resampling techniques, it can accommodate modeling frameworks such as factor analysis, item response theory, cognitive diagnosis modeling and causal or explanatory modeling. The package can also handle different response formats or a mix of them, with or without missingness.
+**LAWBL** represents a partially exploratory-confirmatory approach to model latent variables based on Bayesian learning. Built on the power of statistical learning, it can address psychometric challenges such as parameter specification, local dependence, and factor extraction. Built on the scalability and flexibility of Bayesian inference and resampling techniques, it can accommodate modeling frameworks such as factor analysis, item response theory, cognitive diagnosis modeling and causal or explanatory modeling. The package can also handle different response formats or a mix of them, with or without missingness.
 
 ## Features
 
@@ -42,6 +43,7 @@ Chen, J. (2021). LAWBL: Latent (variable) analysis with Bayesian learning (R pac
 * Summary of all parameters with both point and interval estimates
 
 Please refer to the [online tutorials](https://jinsong-chen.github.io/LAWBL/articles/LAWBL.html) for more details.
+
 
 ## Installation
 
@@ -57,4 +59,3 @@ install.packages("LAWBL")
 # install.packages("devtools")
 devtools::install_github("Jinsong-Chen/LAWBL")
 ```
-

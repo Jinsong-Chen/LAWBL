@@ -18,7 +18,7 @@ learning (R package version 1.4.0). Retrieved from
 
 ## Introduction
 
-**LAWBL** represents a partially confirmatory / exploratory approach to
+**LAWBL** represents a partially exploratory-confirmatory approach to
 model latent variables based on Bayesian learning. Built on the power of
 statistical learning, it can address psychometric challenges such as
 parameter specification, local dependence, and factor extraction. Built

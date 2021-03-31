@@ -88,7 +88,7 @@
 #' summary(m1,what='eigen')
 #' }
 pefa <- function(dat, Q=NULL, K=8, mjf=3, PPMC = FALSE, burn = 5000, iter = 5000,
-                 update = 1000, rseed = 12345, digits = 4, alas = FALSE, verbose = FALSE) {
+                 update = 1000, rseed = 12345, digits = 4, verbose = FALSE) {
 
     conv = 0
 

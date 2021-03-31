@@ -33,9 +33,9 @@
 #'
 #'
 #' m0 <- pcfa(dat = dat, Q = Q, LD = FALSE,burn = 1000, iter = 1000)
-#' plot(m0) # trace
-#' plot(m0, what='density')
-#' plot(m0, what='APSR')
+#' plot_lawbl(m0) # trace
+#' plot_lawbl(m0, what='density')
+#' plot_lawbl(m0, what='APSR')
 #' }
 plot_lawbl <- function(object, what = "trace") {
     # if (class(obj) != "lawbl")

@@ -31,8 +31,8 @@ Q[1:2,1]<-Q[7:8,2]<-Q[13:14,3]<-1
 
 
 m0 <- pcfa(dat = dat, Q = Q, LD = FALSE,burn = 1000, iter = 1000)
-plot(m0) # trace
-plot(m0, what='density')
-plot(m0, what='APSR')
+plot_lawbl(m0) # trace
+plot_lawbl(m0, what='density')
+plot_lawbl(m0, what='APSR')
 }
 }

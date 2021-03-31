@@ -49,7 +49,7 @@ Gibbs_pefa_main<-function(y,mu=0,ome,ly,psx, tausq,pig,prior,ilamsq,ilamsq_t,con
       vtmp<-chol2inv(chol(tcrossprod(omesub)/psx[j,j]+PSiginv))
       mtmp<-(omesub%*%yj/psx[j,j]+PSiginv%*%rep(Pmean,len))
       # LYnpsx<-calsmnpsx%*%temp
-      ly[j,ind1]<-mvrnorm(1,vtmp%*%mtmp,Sig=vtmp)
+      ly[j,ind1]<-mvrnorm(1,vtmp%*%mtmp,Sigma = vtmp)
 
     } # end len>0
 
@@ -63,7 +63,7 @@ Gibbs_pefa_main<-function(y,mu=0,ome,ly,psx, tausq,pig,prior,ilamsq,ilamsq_t,con
         sigg<-chol2inv(chol(vgh%*%vgh*sum(ome[k,]^2)/diag(psx)+diag(J)))
         mug<-sigg%*%vgh%*%as.vector(ome[k,]%*%t(Ycen))/diag(psx)
 
-        lyb[,k]<- mvrnorm(1,mug,Sig=(sigg))
+        lyb[,k]<- mvrnorm(1,mug,Sigma=(sigg))
 
       if(indg[k]){
 

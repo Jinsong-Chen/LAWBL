@@ -15,7 +15,6 @@ pefa(
   update = 1000,
   rseed = 12345,
   digits = 4,
-  alas = FALSE,
   verbose = FALSE
 )
 }
