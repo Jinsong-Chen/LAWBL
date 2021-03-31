@@ -10,6 +10,6 @@ StartWelcomeMessage <- function(){
   paste("LAWBL Package ",
         "(version ", utils::packageDescription("LAWBL")$Version,
         "; ",utils::packageDescription("LAWBL")$Date, ")\n",
-        "For tutorials, see  https://jinsong-chen.github.io/LAWBL/\n",
+        "For tutorials, see https://jinsong-chen.github.io/LAWBL/\n",
         sep="")
 }

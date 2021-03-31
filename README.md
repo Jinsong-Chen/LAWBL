@@ -49,7 +49,8 @@ formats or a mix of them, with or without missingness.
   - Summary of all parameters with both point and interval estimates
 
 Please refer to the [online
-tutorials](https://jinsong-chen.github.io/LAWBL/) for more details.
+tutorials](https://jinsong-chen.github.io/LAWBL/articles/LAWBL.html) for
+more details.
 
 ## Installation
 

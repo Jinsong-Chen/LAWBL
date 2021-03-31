@@ -41,7 +41,7 @@ Chen, J. (2021). LAWBL: Latent (variable) analysis with Bayesian learning (R pac
 * Plotting trace, density or Gelman-Rubin diagnostics based on eigenvalue
 * Summary of all parameters with both point and interval estimates
 
-Please refer to the [online tutorials](https://jinsong-chen.github.io/LAWBL/) for more details.
+Please refer to the [online tutorials](https://jinsong-chen.github.io/LAWBL/articles/LAWBL.html) for more details.
 
 ## Installation
 

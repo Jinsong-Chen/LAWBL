@@ -15,7 +15,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Dichotomous Data with Local Dependence and Minor Trait:
 
-1) Load the package, obtain the data, loading pattern (*qlam*), and no. of factors/traits.
+1) Load the package, obtain the data, check the true loading pattern (*qlam*) and no. of factors/traits.
 
 ```{r}
 library(LAWBL)
@@ -35,6 +35,7 @@ ipf <- 8
 Q<-matrix(-1,J,K-1); # -1 for unspecified items
 Q[1:8,1]<-Q[9:16,2]<-Q[17:24,3]<-1
 Q
+
 m0<-pcirm(dat = dat,Q=  Q,LD = TRUE,cati = -1,burn = 5000,iter = 5000)
 summary(m0)
 summary(m0, what = 'qlambda')

@@ -50,6 +50,8 @@ for \code{FEFA}, which is the default. See \code{Examples}.}
     \item \code{Shrink}: Shrinkage parameter for each factor.
     \item \code{True Fa}: Is the factor identified as true or not.
     \item \code{Adj PSR}: Adjusted PSR for each factor.
+    \item \code{ROW: LA overflow,sign switch,MJF total, current, reset}: Loading overflow, sign switch,
+     min item per factor reached and related diagnostic information.
 }}
 }
 \value{

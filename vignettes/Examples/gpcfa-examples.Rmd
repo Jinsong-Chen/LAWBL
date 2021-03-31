@@ -15,7 +15,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Categorical Data with Missingness but no Local Dependence:
 
-1) Load the package, obtain the data, loading pattern (*qlam*), and setup the design matrix Q.
+1) Load the package, obtain the data, and check the true loading pattern (*qlam*) and local dependence.
 
 ```{r}
 library(LAWBL)
@@ -24,18 +24,18 @@ dim(dat)
 summary(dat) #10% missingness at random
 J <- ncol(dat) # no. of items
 K <- 3 # no. of factors
-qlam <- sim18ccfa40$qlam
-qlam
-
-Q<-matrix(-1,J,K); # -1 for unspecified items
-Q[1:3,1]<-Q[7:9,2]<-Q[13:15,3]<-1 # 1 for specified items
-Q
+sim18ccfa40$qlam
+sim18ccfa40$LD
 ```
 
-2) **E-step:** Estimate with the GPCFA-LI model (E-step) by setting *LD=F*. Only a few loadings need to be specified in Q (e.g., 3 per factor). Longer chain is suggested for more accurate and stable estimation.
+2) **E-step:** Estimate with the GPCFA-LI model (E-step) by setting *LD=F* and the design matrix Q. Only a few loadings need to be specified in Q (e.g., 2 per factor). Longer chain is suggested for more accurate and stable estimation.
 
 
 ```{r}
+Q<-matrix(-1,J,K); # -1 for unspecified items
+Q[1:2,1]<-Q[7:8,2]<-Q[13:14,3]<-1 # 1 for specified items
+Q
+
 m0 <- pcfa(dat = dat, Q = Q,LD = FALSE, cati = -1,burn = 5000, iter = 5000)
 
 # summarize basic information
@@ -98,7 +98,7 @@ plot_lawbl(m2) # Eigens' traces are excellent without regularization of the load
 
 ## Categorical Data with Missingness and Local Dependence:
 
-1) Load the the data, loading pattern (*qlam*), and LD terms, and setup the design matrix Q.
+1) Obtain the data and check the true loading pattern (*qlam*) and local dependence.
 
 ```{r}
 dat <- sim18ccfa41$dat
@@ -107,16 +107,15 @@ J <- ncol(dat) # no. of items
 K <- 3 # no. of factors
 sim18ccfa41$qlam
 sim18ccfa41$LD # effect size = .3
-
-Q<-matrix(-1,J,K); # -1 for unspecified items
-Q[1:3,1]<-Q[7:9,2]<-Q[13:15,3]<-1 # 1 for specified items
-Q
-
 ```
 
-2) **E-step:** Estimate with the GPCFA-LI model (E-step) by setting *LD=FALSE*. Only a few loadings need to be specified in Q (e.g., 3 per factor). Some loading estimates are biased due to ignoring the LD. So do the eigenvalues.
+2) **E-step:** Estimate with the GPCFA-LI model (E-step) by setting *LD=FALSE* and the design matrix Q. Only a few loadings need to be specified in Q (e.g., 2 per factor). Some loading estimates are biased due to ignoring the LD. So do the eigenvalues.
 
 ```{r}
+Q<-matrix(-1,J,K); # -1 for unspecified items
+Q[1:2,1]<-Q[7:8,2]<-Q[13:14,3]<-1 # 1 for specified items
+Q
+
 m0 <- pcfa(dat = dat, Q = Q,LD = FALSE, cati = -1,burn = 5000, iter = 5000)
 summary(m0)
 summary(m0, what = 'qlambda')
@@ -161,7 +160,7 @@ summary(m2,what='thd')
 
 ## Mixed-type Data with Missingness and Local Dependence:
 
-1) Load the the data, loading pattern (*qlam*), and LD terms, and setup the design matrix Q.
+1) 1) Obtain the data and check the true loading pattern (*qlam*) and local dependence.
 
 ```{r}
 dat <- sim18mcfa41$dat
@@ -170,16 +169,15 @@ J <- ncol(dat) # no. of items
 K <- 3 # no. of factors
 sim18mcfa41$qlam
 sim18mcfa41$LD # effect size = .3
-
-Q<-matrix(-1,J,K); # -1 for unspecified items
-Q[1:3,1]<-Q[7:9,2]<-Q[13:15,3]<-1 # 1 for specified items
-Q
-
 ```
 
-2) **E-step:** Estimate with the GPCFA-LI model (E-step) by setting *LD=FALSE*. Only a few loadings need to be specified in Q (e.g., 3 per factor). The first 6 items are categorical and need to be specified with *cati*.
+2) **E-step:** Estimate with the GPCFA-LI model (E-step) by setting *LD=FALSE* and the design matrix Q. Only a few loadings need to be specified in Q (e.g., 2 per factor). The first 6 items are categorical and need to be specified with *cati*.
 
 ```{r}
+Q<-matrix(-1,J,K); # -1 for unspecified items
+Q[1:2,1]<-Q[7:8,2]<-Q[13:14,3]<-1 # 1 for specified items
+Q
+
 m0 <- pcfa(dat = dat, Q = Q,LD = FALSE, cati = c(1:6),burn = 5000, iter = 5000)
 summary(m0)
 summary(m0, what = 'qlambda')
