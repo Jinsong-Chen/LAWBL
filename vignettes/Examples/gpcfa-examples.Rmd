@@ -160,7 +160,7 @@ summary(m2,what='thd')
 
 ## Mixed-type Data with Missingness and Local Dependence:
 
-1) 1) Obtain the data and check the true loading pattern (*qlam*) and local dependence.
+1) Obtain the data and check the true loading pattern (*qlam*) and local dependence.
 
 ```{r}
 dat <- sim18mcfa41$dat
