@@ -174,10 +174,10 @@ For <code>PEFA</code> or <code>FEFA</code>, only true factors will be plotted.</
 
 
 <span class='va'>m0</span> <span class='op'>&lt;-</span> <span class='fu'><a href='pcfa.html'>pcfa</a></span><span class='op'>(</span>dat <span class='op'>=</span> <span class='va'>dat</span>, Q <span class='op'>=</span> <span class='va'>Q</span>, LD <span class='op'>=</span> <span class='cn'>FALSE</span>,burn <span class='op'>=</span> <span class='fl'>1000</span>, iter <span class='op'>=</span> <span class='fl'>1000</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>m0</span><span class='op'>)</span> <span class='co'># trace</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in xy.coords(x, y, xlabel, ylabel, log): 'x' is a list, but does not have components 'x' and 'y'</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>m0</span>, what<span class='op'>=</span><span class='st'>'density'</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in xy.coords(x, y, xlabel, ylabel, log): 'x' is a list, but does not have components 'x' and 'y'</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>m0</span>, what<span class='op'>=</span><span class='st'>'APSR'</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in xy.coords(x, y, xlabel, ylabel, log): 'x' is a list, but does not have components 'x' and 'y'</span></div><div class='input'><span class='co'># }</span>
+<span class='fu'>plot_lawbl</span><span class='op'>(</span><span class='va'>m0</span><span class='op'>)</span> <span class='co'># trace</span>
+</div><div class='img'><img src='plot_lawbl-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>plot_lawbl</span><span class='op'>(</span><span class='va'>m0</span>, what<span class='op'>=</span><span class='st'>'density'</span><span class='op'>)</span>
+</div><div class='img'><img src='plot_lawbl-2.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>plot_lawbl</span><span class='op'>(</span><span class='va'>m0</span>, what<span class='op'>=</span><span class='st'>'APSR'</span><span class='op'>)</span>
+</div><div class='img'><img src='plot_lawbl-3.png' alt='' width='700' height='433' /></div><div class='input'><span class='co'># }</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

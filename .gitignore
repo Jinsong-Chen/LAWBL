@@ -8,3 +8,5 @@ doc
 Meta
 research
 tests
+^CRAN-RELEASE$
+^cran-comments\.md$
