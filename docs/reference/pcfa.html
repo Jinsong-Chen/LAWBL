@@ -242,9 +242,10 @@ without any specified loading. See <code>Examples</code>.</p></td>
       <td><p>logical; to display the sampling information every <code>update</code> or not.</p><ul>
 <li><p><code>Feigen</code>: Eigenvalue for each factor.</p></li>
 <li><p><code>NLA_le3</code>: Number of Loading estimates &gt;= .3 for each factor.</p></li>
-<li><p><code>Shrink</code>: Ave. shrinkage parameter (for adaptive LASSO) for each factor.</p></li>
+<li><p><code>Shrink</code>: Shrinkage (or ave. shrinkage for each factor for adaptive Lasso).</p></li>
+<li><p><code>sign_sw</code>: Number of sign switch.</p></li>
 <li><p><code>Adj PSR</code>: Adjusted PSR for each factor.</p></li>
-<li><p><code>Ave. Thd</code>: Ave. thresholds.</p></li>
+<li><p><code>Ave. Thd</code>: Ave. thresholds for polytomous items.</p></li>
 <li><p><code>Acc Rate</code>: Acceptance rate of threshold (MH algorithm).</p></li>
 <li><p><code>LD&gt;.2 &gt;.1 LD&gt;.2 &gt;.1</code>: # of LD terms larger than .2 and .1, and LD's shrinkage parameter.</p></li>
 </ul></td>
@@ -303,39 +304,39 @@ the posteriors that can be summarized using <code><a href='summary.lawbl.html'>s
 #&gt; 
 #&gt; $`Adj. PSR`
 #&gt;    Point est. Upper C.I.
-#&gt; F1   1.267631   1.862111
-#&gt; F2   1.133440   1.479512
-#&gt; F3   1.717687   3.043729
+#&gt; F1   1.109770   1.405979
+#&gt; F2   1.034913   1.142842
+#&gt; F3   1.079487   1.312318
 #&gt; 
 #&gt; $`No. of sig LD terms`
 #&gt; [1] 6
 #&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m0</span>, what <span class='op'>=</span> <span class='st'>'qlambda'</span><span class='op'>)</span> <span class='co'>#summarize significant loadings in pattern/Q-matrix format</span>
 </div><div class='output co'>#&gt;          [,1]      [,2]      [,3]
-#&gt; I1  0.6777371 0.0000000 0.0000000
-#&gt; I2  0.6947720 0.0000000 0.0000000
-#&gt; I3  0.7287455 0.0000000 0.0000000
-#&gt; I4  0.7283320 0.0000000 0.0000000
-#&gt; I5  0.7083776 0.3824132 0.0000000
-#&gt; I6  0.6959418 0.3621274 0.0000000
-#&gt; I7  0.0000000 0.6990281 0.0000000
-#&gt; I8  0.0000000 0.7370763 0.0000000
-#&gt; I9  0.0000000 0.7200735 0.0000000
-#&gt; I10 0.0000000 0.7271835 0.0000000
-#&gt; I11 0.0000000 0.6997877 0.3486253
-#&gt; I12 0.0000000 0.7010905 0.3532886
-#&gt; I13 0.0000000 0.0000000 0.7224160
-#&gt; I14 0.0000000 0.0000000 0.6943947
-#&gt; I15 0.0000000 0.0000000 0.7263602
-#&gt; I16 0.0000000 0.0000000 0.7069214
-#&gt; I17 0.3596368 0.0000000 0.7175995
-#&gt; I18 0.3393079 0.0000000 0.7264559</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m0</span>, what <span class='op'>=</span> <span class='st'>'offpsx'</span><span class='op'>)</span> <span class='co'>#summarize significant LD terms</span>
+#&gt; I1  0.6868153 0.0000000 0.0000000
+#&gt; I2  0.6820277 0.0000000 0.0000000
+#&gt; I3  0.7409349 0.0000000 0.0000000
+#&gt; I4  0.7303993 0.0000000 0.0000000
+#&gt; I5  0.7195624 0.2581338 0.0000000
+#&gt; I6  0.7231411 0.2560838 0.0000000
+#&gt; I7  0.0000000 0.7078791 0.0000000
+#&gt; I8  0.0000000 0.7029868 0.0000000
+#&gt; I9  0.0000000 0.7212306 0.0000000
+#&gt; I10 0.0000000 0.7321924 0.0000000
+#&gt; I11 0.0000000 0.6921144 0.2707813
+#&gt; I12 0.0000000 0.7111865 0.2428674
+#&gt; I13 0.0000000 0.0000000 0.7476825
+#&gt; I14 0.0000000 0.0000000 0.6833558
+#&gt; I15 0.0000000 0.0000000 0.7137654
+#&gt; I16 0.0000000 0.0000000 0.7250111
+#&gt; I17 0.2591086 0.0000000 0.7125121
+#&gt; I18 0.2643032 0.0000000 0.7190044</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m0</span>, what <span class='op'>=</span> <span class='st'>'offpsx'</span><span class='op'>)</span> <span class='co'>#summarize significant LD terms</span>
 </div><div class='output co'>#&gt;        row col       est         sd     lower     upper sig
-#&gt; var14   14   1 0.2647726 0.03642568 0.1926225 0.3415343   1
-#&gt; var24    7   2 0.3108189 0.03578501 0.2415014 0.3850120   1
-#&gt; var37    4   3 0.2946160 0.04782329 0.2053247 0.3892355   1
-#&gt; var111  13   8 0.2554767 0.05178663 0.1549109 0.3584666   1
-#&gt; var118  10   9 0.2750974 0.04487471 0.1931764 0.3664781   1
-#&gt; var163  16  15 0.3032920 0.05100715 0.2110932 0.4014631   1</div><div class='input'>
+#&gt; var14   14   1 0.2751311 0.04061078 0.2014654 0.3605088   1
+#&gt; var24    7   2 0.2509555 0.04131086 0.1721757 0.3324327   1
+#&gt; var37    4   3 0.2776626 0.05178795 0.1679454 0.3786775   1
+#&gt; var111  13   8 0.2470121 0.03978863 0.1687752 0.3222239   1
+#&gt; var118  10   9 0.2978787 0.06579039 0.1565678 0.4132873   1
+#&gt; var163  16  15 0.2732802 0.04794030 0.1767578 0.3699594   1</div><div class='input'>
 <span class='co'>######################################################</span>
 <span class='co'>#  Example 2: Estimation with categorical data &amp; LI  #</span>
 <span class='co'>######################################################</span>
@@ -357,7 +358,7 @@ the posteriors that can be summarized using <code><a href='summary.lawbl.html'>s
 #&gt; [1] 3
 #&gt; 
 #&gt; $`Miss%`
-#&gt; [1] 9.883333
+#&gt; [1] 9.888889
 #&gt; 
 #&gt; $`LD enabled`
 #&gt; [1] FALSE
@@ -369,16 +370,16 @@ the posteriors that can be summarized using <code><a href='summary.lawbl.html'>s
 #&gt; [1] 2000
 #&gt; 
 #&gt; $`No. of sig lambda`
-#&gt; [1] 24
+#&gt; [1] 22
 #&gt; 
 #&gt; $`True Factor`
 #&gt; [1] TRUE TRUE TRUE
 #&gt; 
 #&gt; $`Adj. PSR`
 #&gt;    Point est. Upper C.I.
-#&gt; F1   1.036511   1.046103
-#&gt; F2   1.190794   1.485645
-#&gt; F3   2.520378   6.890709
+#&gt; F1   1.454313   3.179276
+#&gt; F2   1.301096   2.455351
+#&gt; F3   1.023701   1.073779
 #&gt; 
 #&gt; $`Cat Items`
 #&gt;  [1]  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18
@@ -387,44 +388,44 @@ the posteriors that can be summarized using <code><a href='summary.lawbl.html'>s
 #&gt; [1] 4
 #&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m1</span>, what <span class='op'>=</span> <span class='st'>'qlambda'</span><span class='op'>)</span> <span class='co'>#summarize significant loadings in pattern/Q-matrix format</span>
 </div><div class='output co'>#&gt;          [,1]      [,2]      [,3]
-#&gt; I1  0.7598362 0.0000000 0.0000000
-#&gt; I2  0.7631264 0.0000000 0.0000000
-#&gt; I3  0.7110248 0.0000000 0.0000000
-#&gt; I4  0.6672460 0.0000000 0.0000000
-#&gt; I5  0.7296244 0.4397355 0.0000000
-#&gt; I6  0.7009867 0.4111027 0.0000000
-#&gt; I7  0.0000000 0.7503882 0.0000000
-#&gt; I8  0.0000000 0.6886856 0.0000000
-#&gt; I9  0.0000000 0.6915755 0.0000000
-#&gt; I10 0.0000000 0.7430489 0.0000000
-#&gt; I11 0.0000000 0.7189176 0.3350080
-#&gt; I12 0.0000000 0.7036005 0.3837379
-#&gt; I13 0.0000000 0.0000000 0.7372507
-#&gt; I14 0.0000000 0.0000000 0.7213758
-#&gt; I15 0.0000000 0.0000000 0.7313625
-#&gt; I16 0.0000000 0.0000000 0.7163863
-#&gt; I17 0.2583261 0.0000000 0.7718187
-#&gt; I18 0.2549616 0.0000000 0.7676993</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m1</span>, what <span class='op'>=</span> <span class='st'>'offpsx'</span><span class='op'>)</span> <span class='co'>#summarize significant LD terms</span>
+#&gt; I1  0.7550021 0.0000000 0.0000000
+#&gt; I2  0.7536468 0.0000000 0.0000000
+#&gt; I3  0.7610762 0.0000000 0.0000000
+#&gt; I4  0.7715230 0.0000000 0.0000000
+#&gt; I5  0.7861296 0.0000000 0.0000000
+#&gt; I6  0.7369862 0.0000000 0.0000000
+#&gt; I7  0.0000000 0.7332096 0.0000000
+#&gt; I8  0.0000000 0.7280202 0.0000000
+#&gt; I9  0.0000000 0.7272484 0.0000000
+#&gt; I10 0.0000000 0.6950041 0.0000000
+#&gt; I11 0.0000000 0.6884393 0.2729948
+#&gt; I12 0.0000000 0.6775198 0.2688260
+#&gt; I13 0.0000000 0.0000000 0.7599434
+#&gt; I14 0.0000000 0.0000000 0.7340905
+#&gt; I15 0.0000000 0.0000000 0.7391114
+#&gt; I16 0.0000000 0.0000000 0.7154095
+#&gt; I17 0.2854946 0.0000000 0.7371265
+#&gt; I18 0.3101711 0.0000000 0.6740785</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m1</span>, what <span class='op'>=</span> <span class='st'>'offpsx'</span><span class='op'>)</span> <span class='co'>#summarize significant LD terms</span>
 </div><div class='output co'>#&gt; NULL</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m1</span>,what<span class='op'>=</span><span class='st'>'thd'</span><span class='op'>)</span> <span class='co'>#thresholds for categorical items</span>
 </div><div class='output co'>#&gt;          [,1]         [,2]     [,3]
-#&gt; I1  -1.521470 -0.033597986 1.511013
-#&gt; I2  -1.549058 -0.019421984 1.616661
-#&gt; I3  -1.584611 -0.071919752 1.455610
-#&gt; I4  -1.467652 -0.088016543 1.460645
-#&gt; I5  -1.660025 -0.068914279 1.476852
-#&gt; I6  -1.574076 -0.026917267 1.509269
-#&gt; I7  -1.493155  0.050588533 1.690817
-#&gt; I8  -1.523947  0.018727926 1.404398
-#&gt; I9  -1.499463  0.017813981 1.539265
-#&gt; I10 -1.455960 -0.020035736 1.480965
-#&gt; I11 -1.647587 -0.022561448 1.543301
-#&gt; I12 -1.593390  0.005463383 1.512301
-#&gt; I13 -1.392118  0.053354389 1.566341
-#&gt; I14 -1.439920  0.057642536 1.601957
-#&gt; I15 -1.401346  0.041512689 1.446094
-#&gt; I16 -1.476899  0.040457459 1.560623
-#&gt; I17 -1.493393 -0.061548455 1.562806
-#&gt; I18 -1.535266 -0.056733222 1.481305</div><div class='input'><span class='co'># }</span>
+#&gt; I1  -1.368340  0.068342209 1.631096
+#&gt; I2  -1.451884  0.048302549 1.493122
+#&gt; I3  -1.467627  0.050404609 1.502046
+#&gt; I4  -1.375263  0.050928944 1.589233
+#&gt; I5  -1.434484  0.009511860 1.461864
+#&gt; I6  -1.496685  0.074570666 1.566003
+#&gt; I7  -1.497976  0.035369783 1.656937
+#&gt; I8  -1.548175 -0.058202174 1.412629
+#&gt; I9  -1.462600 -0.011488064 1.516492
+#&gt; I10 -1.505331  0.008640123 1.626783
+#&gt; I11 -1.456926  0.016642573 1.567622
+#&gt; I12 -1.533736  0.015956121 1.619164
+#&gt; I13 -1.569834 -0.062468624 1.406799
+#&gt; I14 -1.432136  0.042983714 1.519940
+#&gt; I15 -1.549568 -0.029562338 1.472448
+#&gt; I16 -1.461317 -0.018947383 1.366165
+#&gt; I17 -1.437493  0.053745114 1.476399
+#&gt; I18 -1.535492  0.028176615 1.540999</div><div class='input'><span class='co'># }</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

@@ -224,6 +224,8 @@ for <code>FEFA</code>, which is the default. See <code>Examples</code>.</p></td>
 <li><p><code>Shrink</code>: Shrinkage parameter for each factor.</p></li>
 <li><p><code>True Fa</code>: Is the factor identified as true or not.</p></li>
 <li><p><code>Adj PSR</code>: Adjusted PSR for each factor.</p></li>
+<li><p><code>ROW: LA overflow,sign switch,MJF total, current, reset</code>: Loading overflow, sign switch,
+     min item per factor reached and related diagnostic information.</p></li>
 </ul></td>
     </tr>
     </table>
@@ -248,10 +250,10 @@ the posteriors that can be summarized using <code><a href='summary.lawbl.html'>s
 <span class='va'>m0</span> <span class='op'>&lt;-</span> <span class='fu'>pefa</span><span class='op'>(</span>dat <span class='op'>=</span> <span class='va'>dat</span>, K<span class='op'>=</span><span class='fl'>5</span>, burn <span class='op'>=</span> <span class='fl'>2000</span>, iter <span class='op'>=</span> <span class='fl'>2000</span>,verbose <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; 
 #&gt; Tot. Iter = 1000
-#&gt;           [,1]   [,2]   [,3]      [,4]      [,5]
-#&gt; Feigen  3.3600 3.1506 3.0205 0.000e+00 0.000e+00
-#&gt; NLA_le3 8.0000 8.0000 8.0000 0.000e+00 0.000e+00
-#&gt; iShrink 0.2665 0.2595 0.1969 9.241e-84 1.348e-83
+#&gt;           [,1]   [,2]      [,3]      [,4]   [,5]
+#&gt; Feigen  3.1969 2.7813 0.000e+00 0.000e+00 3.0530
+#&gt; NLA_le3 8.0000 6.0000 0.000e+00 0.000e+00 8.0000
+#&gt; iShrink 0.2895 0.1831 2.952e-83 9.032e-84 0.2495
 #&gt; [1] "ROW: LA overflow,sign switch,MJF total, current, reset"
 #&gt;      [,1] [,2] [,3] [,4] [,5]
 #&gt; [1,]    0    0    0    0    0
@@ -261,10 +263,10 @@ the posteriors that can be summarized using <code><a href='summary.lawbl.html'>s
 #&gt; [5,]    0    0    0    0    0
 #&gt; 
 #&gt; Tot. Iter = 2000
-#&gt;           [,1]   [,2]   [,3]     [,4]    [,5]
-#&gt; Feigen  3.3740 3.2687 3.0413 0.00e+00 0.0e+00
-#&gt; NLA_le3 8.0000 8.0000 8.0000 0.00e+00 0.0e+00
-#&gt; iShrink 0.2236 0.2703 0.1598 1.24e-84 4.1e-84
+#&gt;           [,1]   [,2]      [,3]      [,4]   [,5]
+#&gt; Feigen  3.3781 3.1022 0.000e+00 0.000e+00 3.1960
+#&gt; NLA_le3 8.0000 6.0000 0.000e+00 0.000e+00 7.0000
+#&gt; iShrink 0.3471 0.2091 3.424e-84 2.501e-84 0.3196
 #&gt; [1] "ROW: LA overflow,sign switch,MJF total, current, reset"
 #&gt;      [,1] [,2] [,3] [,4] [,5]
 #&gt; [1,]    0    0    0    0    0
@@ -274,12 +276,12 @@ the posteriors that can be summarized using <code><a href='summary.lawbl.html'>s
 #&gt; [5,]    0    0    0    0    0
 #&gt; 
 #&gt; Tot. Iter = 3000
-#&gt;           [,1]   [,2]   [,3]      [,4]      [,5]
-#&gt; Feigen  3.2468 3.2243 3.0053 0.000e+00 0.000e+00
-#&gt; NLA_le3 8.0000 8.0000 8.0000 0.000e+00 0.000e+00
-#&gt; iShrink 0.2113 0.2923 0.1628 6.599e-84 2.866e-84
-#&gt; True Fa 1 1 1 0 0
-#&gt; Adj PSR 1.038 1.071 1.003
+#&gt;           [,1]   [,2]      [,3]      [,4]   [,5]
+#&gt; Feigen  3.0098 2.9839 0.000e+00 0.000e+00 2.9805
+#&gt; NLA_le3 8.0000 6.0000 0.000e+00 0.000e+00 6.0000
+#&gt; iShrink 0.2873 0.3408 4.864e-84 4.918e-84 0.4413
+#&gt; True Fa 1 1 0 0 1
+#&gt; Adj PSR 1.003 1.05 1.003
 #&gt; [1] "ROW: LA overflow,sign switch,MJF total, current, reset"
 #&gt;      [,1] [,2] [,3] [,4] [,5]
 #&gt; [1,]    0    0    0    0    0
@@ -289,12 +291,12 @@ the posteriors that can be summarized using <code><a href='summary.lawbl.html'>s
 #&gt; [5,]    0    0    0    0    0
 #&gt; 
 #&gt; Tot. Iter = 4000
-#&gt;          [,1]   [,2]   [,3]      [,4]      [,5]
-#&gt; Feigen  3.237 3.2180 3.1719 0.000e+00 0.000e+00
-#&gt; NLA_le3 8.000 8.0000 8.0000 0.000e+00 0.000e+00
-#&gt; iShrink 0.195 0.2945 0.2037 5.518e-84 5.675e-84
-#&gt; True Fa 1 1 1 0 0
-#&gt; Adj PSR 1.022 1.048 1.016
+#&gt;           [,1]   [,2]      [,3]      [,4]   [,5]
+#&gt; Feigen  3.0745 2.9198 0.000e+00 0.000e+00 2.9190
+#&gt; NLA_le3 8.0000 6.0000 0.000e+00 0.000e+00 6.0000
+#&gt; iShrink 0.4626 0.2691 2.523e-84 2.345e-83 0.3698
+#&gt; True Fa 1 1 0 0 1
+#&gt; Adj PSR 1.02 1 1.002
 #&gt; [1] "ROW: LA overflow,sign switch,MJF total, current, reset"
 #&gt;      [,1] [,2] [,3] [,4] [,5]
 #&gt; [1,]    0    0    0    0    0
@@ -303,7 +305,7 @@ the posteriors that can be summarized using <code><a href='summary.lawbl.html'>s
 #&gt; [4,]    0    0    0    0    0
 #&gt; [5,]    0    0    0    0    0
 #&gt;    user  system elapsed 
-#&gt;   18.50    0.00   18.51 </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m0</span><span class='op'>)</span> <span class='co'># summarize basic information</span>
+#&gt;   17.41    0.00   17.42 </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m0</span><span class='op'>)</span> <span class='co'># summarize basic information</span>
 </div><div class='output co'>#&gt; $N
 #&gt; [1] 1000
 #&gt; 
@@ -329,41 +331,41 @@ the posteriors that can be summarized using <code><a href='summary.lawbl.html'>s
 #&gt; [1] 24
 #&gt; 
 #&gt; $`True Factor`
-#&gt; [1]  TRUE  TRUE  TRUE FALSE FALSE
+#&gt; [1]  TRUE  TRUE FALSE FALSE  TRUE
 #&gt; 
 #&gt; $`Adj. PSR`
 #&gt;    Point est. Upper C.I.
-#&gt; F1   1.022412   1.103702
-#&gt; F2   1.047502   1.201463
-#&gt; F3   1.015633   1.016419
+#&gt; F1   1.020078   1.093808
+#&gt; F2   1.000240   1.000340
+#&gt; F5   1.002012   1.007974
 #&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m0</span>, what <span class='op'>=</span> <span class='st'>'qlambda'</span><span class='op'>)</span> <span class='co'>#summarize significant loadings in pattern/Q-matrix format</span>
-</div><div class='output co'>#&gt;          [,1]      [,2]      [,3] [,4] [,5]
-#&gt; I1  0.0000000 0.0000000 0.6667297    0    0
-#&gt; I2  0.0000000 0.0000000 0.6787770    0    0
-#&gt; I3  0.0000000 0.0000000 0.6827262    0    0
-#&gt; I4  0.0000000 0.0000000 0.6644396    0    0
-#&gt; I5  0.4212348 0.0000000 0.6910990    0    0
-#&gt; I6  0.4159950 0.0000000 0.6890032    0    0
-#&gt; I7  0.6967177 0.0000000 0.0000000    0    0
-#&gt; I8  0.6801511 0.0000000 0.0000000    0    0
-#&gt; I9  0.6998491 0.0000000 0.0000000    0    0
-#&gt; I10 0.6965932 0.0000000 0.0000000    0    0
-#&gt; I11 0.7000259 0.4121509 0.0000000    0    0
-#&gt; I12 0.6970445 0.4236665 0.0000000    0    0
-#&gt; I13 0.0000000 0.6979444 0.0000000    0    0
-#&gt; I14 0.0000000 0.6718842 0.0000000    0    0
-#&gt; I15 0.0000000 0.6867237 0.0000000    0    0
-#&gt; I16 0.0000000 0.6868011 0.0000000    0    0
-#&gt; I17 0.0000000 0.7078016 0.3930731    0    0
-#&gt; I18 0.0000000 0.7213827 0.3921211    0    0</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m0</span>, what <span class='op'>=</span> <span class='st'>'phi'</span><span class='op'>)</span> <span class='co'>#summarize factorial correlations</span>
+</div><div class='output co'>#&gt;          [,1]      [,2] [,3] [,4]      [,5]
+#&gt; I1  0.0000000 0.0000000    0    0 0.6792743
+#&gt; I2  0.0000000 0.0000000    0    0 0.6885011
+#&gt; I3  0.0000000 0.0000000    0    0 0.7034019
+#&gt; I4  0.0000000 0.0000000    0    0 0.7087433
+#&gt; I5  0.3203782 0.0000000    0    0 0.6962285
+#&gt; I6  0.3382802 0.0000000    0    0 0.6755751
+#&gt; I7  0.7205032 0.0000000    0    0 0.0000000
+#&gt; I8  0.7135709 0.0000000    0    0 0.0000000
+#&gt; I9  0.7200144 0.0000000    0    0 0.0000000
+#&gt; I10 0.6928358 0.0000000    0    0 0.0000000
+#&gt; I11 0.6932601 0.2931659    0    0 0.0000000
+#&gt; I12 0.6936321 0.2868218    0    0 0.0000000
+#&gt; I13 0.0000000 0.6743105    0    0 0.0000000
+#&gt; I14 0.0000000 0.6727961    0    0 0.0000000
+#&gt; I15 0.0000000 0.7057552    0    0 0.0000000
+#&gt; I16 0.0000000 0.6734664    0    0 0.0000000
+#&gt; I17 0.0000000 0.6846177    0    0 0.3056189
+#&gt; I18 0.0000000 0.6833465    0    0 0.2893529</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m0</span>, what <span class='op'>=</span> <span class='st'>'phi'</span><span class='op'>)</span> <span class='co'>#summarize factorial correlations</span>
 </div><div class='output co'>#&gt;      row col       est         sd     lower     upper sig
-#&gt; var1   2   1 0.2579280 0.04058422 0.1758287 0.3328396   1
-#&gt; var2   3   1 0.2502747 0.03600974 0.1761319 0.3179651   1
-#&gt; var5   3   2 0.2459183 0.03923047 0.1681724 0.3211863   1</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m0</span>, what <span class='op'>=</span> <span class='st'>'eigen'</span><span class='op'>)</span> <span class='co'>#summarize factorial eigenvalue</span>
-</div><div class='output co'>#&gt;         est         sd    lower    upper sig
-#&gt; F1 3.253181 0.11408021 3.024826 3.471741   1
-#&gt; F2 3.266066 0.10906184 3.064555 3.484213   1
-#&gt; F3 3.075459 0.09858594 2.878956 3.259401   1</div><div class='input'>
+#&gt; var1   2   1 0.2862291 0.03544784 0.2181643 0.3536639   1
+#&gt; var4   5   1 0.2707575 0.03365689 0.2081182 0.3407784   1
+#&gt; var7   5   2 0.3159037 0.03480783 0.2491543 0.3847971   1</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m0</span>, what <span class='op'>=</span> <span class='st'>'eigen'</span><span class='op'>)</span> <span class='co'>#summarize factorial eigenvalue</span>
+</div><div class='output co'>#&gt;         est        sd    lower    upper sig
+#&gt; F1 3.207819 0.1056215 3.002846 3.419117   1
+#&gt; F2 2.965545 0.1007863 2.762911 3.153562   1
+#&gt; F5 3.054482 0.1097199 2.842626 3.269734   1</div><div class='input'>
 <span class='co'>##########################################################</span>
 <span class='co'>#  Example 2: PEFA with two factors partially specified  #</span>
 <span class='co'>##########################################################</span>
@@ -396,9 +398,9 @@ the posteriors that can be summarized using <code><a href='summary.lawbl.html'>s
 </div><div class='output co'>#&gt; 
 #&gt; Tot. Iter = 1000
 #&gt;           [,1]   [,2]   [,3]      [,4]      [,5]
-#&gt; Feigen  3.2888 3.3304 3.2088 0.000e+00 0.000e+00
-#&gt; NLA_le3 8.0000 8.0000 8.0000 0.000e+00 0.000e+00
-#&gt; iShrink 0.5268 0.5268 0.4651 2.769e-84 3.632e-84
+#&gt; Feigen  3.1497 3.5379 2.9818 0.000e+00 0.000e+00
+#&gt; NLA_le3 7.0000 8.0000 7.0000 0.000e+00 0.000e+00
+#&gt; iShrink 0.5206 0.5206 0.2377 1.169e-83 1.277e-83
 #&gt; [1] "ROW: LA overflow,sign switch,MJF total, current, reset"
 #&gt;      [,1] [,2] [,3] [,4] [,5]
 #&gt; [1,]    0    0    0    0    0
@@ -409,48 +411,48 @@ the posteriors that can be summarized using <code><a href='summary.lawbl.html'>s
 #&gt; 
 #&gt; Tot. Iter = 2000
 #&gt;           [,1]   [,2]   [,3]      [,4]      [,5]
-#&gt; Feigen  3.1966 3.4909 3.1559 0.000e+00 0.000e+00
-#&gt; NLA_le3 8.0000 8.0000 8.0000 0.000e+00 0.000e+00
-#&gt; iShrink 0.4174 0.4174 0.3526 1.601e-84 2.383e-84
+#&gt; Feigen  3.0910 3.3266 2.8584 0.000e+00 0.000e+00
+#&gt; NLA_le3 7.0000 8.0000 7.0000 0.000e+00 0.000e+00
+#&gt; iShrink 0.5683 0.5683 0.3362 6.284e-84 4.642e-84
 #&gt; [1] "ROW: LA overflow,sign switch,MJF total, current, reset"
 #&gt;      [,1] [,2] [,3] [,4] [,5]
 #&gt; [1,]    0    0    0    0    0
 #&gt; [2,]    0    0    0    0    0
-#&gt; [3,]    0    0    0    0    0
+#&gt; [3,]    0    0    0    0    1
 #&gt; [4,]    0    0    0    0    0
 #&gt; [5,]    0    0    0    0    0
 #&gt; 
 #&gt; Tot. Iter = 3000
-#&gt;           [,1]   [,2]   [,3]      [,4]      [,5]
-#&gt; Feigen  2.9410 3.5358 3.1515 0.000e+00 0.000e+00
-#&gt; NLA_le3 8.0000 8.0000 8.0000 0.000e+00 0.000e+00
-#&gt; iShrink 0.6008 0.6008 0.2938 2.119e-84 5.767e-84
+#&gt;          [,1]  [,2]   [,3]      [,4]      [,5]
+#&gt; Feigen  3.136 3.274 2.9886 0.000e+00 0.000e+00
+#&gt; NLA_le3 7.000 8.000 6.0000 0.000e+00 0.000e+00
+#&gt; iShrink 0.520 0.520 0.2744 1.537e-83 8.923e-84
 #&gt; True Fa 1 1 1 0 0
-#&gt; Adj PSR 1.02 1.008 1.001
+#&gt; Adj PSR 1.001 1.009 0.9994
 #&gt; [1] "ROW: LA overflow,sign switch,MJF total, current, reset"
 #&gt;      [,1] [,2] [,3] [,4] [,5]
 #&gt; [1,]    0    0    0    0    0
 #&gt; [2,]    0    0    0    0    0
-#&gt; [3,]    0    0    0    0    0
+#&gt; [3,]    0    0    0    0    1
 #&gt; [4,]    0    0    0    0    0
 #&gt; [5,]    0    0    0    0    0
 #&gt; 
 #&gt; Tot. Iter = 4000
-#&gt;          [,1]  [,2]   [,3]      [,4]      [,5]
-#&gt; Feigen  3.195 3.284 3.2894 0.000e+00 0.000e+00
-#&gt; NLA_le3 8.000 8.000 8.0000 0.000e+00 0.000e+00
-#&gt; iShrink 0.615 0.615 0.2264 4.429e-84 1.104e-83
+#&gt;           [,1]   [,2]   [,3]      [,4]      [,5]
+#&gt; Feigen  3.1086 3.2050 3.0944 0.000e+00 0.000e+00
+#&gt; NLA_le3 7.0000 8.0000 7.0000 0.000e+00 0.000e+00
+#&gt; iShrink 0.6659 0.6659 0.3651 5.181e-84 2.544e-84
 #&gt; True Fa 1 1 1 0 0
-#&gt; Adj PSR 1.001 1.007 1.086
+#&gt; Adj PSR 1 1.004 0.9999
 #&gt; [1] "ROW: LA overflow,sign switch,MJF total, current, reset"
 #&gt;      [,1] [,2] [,3] [,4] [,5]
 #&gt; [1,]    0    0    0    0    0
 #&gt; [2,]    0    0    0    0    0
-#&gt; [3,]    0    0    0    0    0
+#&gt; [3,]    0    0    0    0    1
 #&gt; [4,]    0    0    0    0    0
 #&gt; [5,]    0    0    0    0    0
 #&gt;    user  system elapsed 
-#&gt;   19.89    0.00   19.95 </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m1</span><span class='op'>)</span>
+#&gt;   17.38    0.00   17.39 </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m1</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; $N
 #&gt; [1] 1000
 #&gt; 
@@ -480,37 +482,37 @@ the posteriors that can be summarized using <code><a href='summary.lawbl.html'>s
 #&gt; 
 #&gt; $`Adj. PSR`
 #&gt;    Point est. Upper C.I.
-#&gt; F1   1.000528   1.000553
-#&gt; F2   1.006989   1.027575
-#&gt; F3   1.086365   1.303004
+#&gt; F1   1.000061   1.002111
+#&gt; F2   1.004351   1.019930
+#&gt; F3   0.999901   1.000221
 #&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m1</span>, what <span class='op'>=</span> <span class='st'>'qlambda'</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;          [,1]      [,2]      [,3] [,4] [,5]
-#&gt; I1  0.6735315 0.0000000 0.0000000    0    0
-#&gt; I2  0.6843638 0.0000000 0.0000000    0    0
-#&gt; I3  0.6892692 0.0000000 0.0000000    0    0
-#&gt; I4  0.6707357 0.0000000 0.0000000    0    0
-#&gt; I5  0.6950772 0.4223813 0.0000000    0    0
-#&gt; I6  0.6948685 0.4182749 0.0000000    0    0
-#&gt; I7  0.0000000 0.7186032 0.0000000    0    0
-#&gt; I8  0.0000000 0.6919956 0.0000000    0    0
-#&gt; I9  0.0000000 0.7087884 0.0000000    0    0
-#&gt; I10 0.0000000 0.7039691 0.0000000    0    0
-#&gt; I11 0.0000000 0.7072619 0.4077364    0    0
-#&gt; I12 0.0000000 0.7056352 0.4193172    0    0
-#&gt; I13 0.0000000 0.0000000 0.6992504    0    0
-#&gt; I14 0.0000000 0.0000000 0.6725351    0    0
-#&gt; I15 0.0000000 0.0000000 0.6873442    0    0
-#&gt; I16 0.0000000 0.0000000 0.6870559    0    0
-#&gt; I17 0.3958852 0.0000000 0.7080387    0    0
-#&gt; I18 0.3949583 0.0000000 0.7221333    0    0</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m1</span>, what <span class='op'>=</span> <span class='st'>'phi'</span><span class='op'>)</span>
+#&gt; I1  0.6824198 0.0000000 0.0000000    0    0
+#&gt; I2  0.6922492 0.0000000 0.0000000    0    0
+#&gt; I3  0.7054725 0.0000000 0.0000000    0    0
+#&gt; I4  0.7108995 0.0000000 0.0000000    0    0
+#&gt; I5  0.6972384 0.3226373 0.0000000    0    0
+#&gt; I6  0.6770421 0.3402452 0.0000000    0    0
+#&gt; I7  0.0000000 0.7255844 0.0000000    0    0
+#&gt; I8  0.0000000 0.7212531 0.0000000    0    0
+#&gt; I9  0.0000000 0.7245319 0.0000000    0    0
+#&gt; I10 0.0000000 0.6969630 0.0000000    0    0
+#&gt; I11 0.0000000 0.6974358 0.2934183    0    0
+#&gt; I12 0.0000000 0.6978617 0.2872376    0    0
+#&gt; I13 0.0000000 0.0000000 0.6749680    0    0
+#&gt; I14 0.0000000 0.0000000 0.6724646    0    0
+#&gt; I15 0.0000000 0.0000000 0.7068284    0    0
+#&gt; I16 0.0000000 0.0000000 0.6734638    0    0
+#&gt; I17 0.3049890 0.0000000 0.6862728    0    0
+#&gt; I18 0.2886061 0.0000000 0.6852689    0    0</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m1</span>, what <span class='op'>=</span> <span class='st'>'phi'</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;      row col       est         sd     lower     upper sig
-#&gt; var1   2   1 0.2557402 0.03488180 0.1817713 0.3186925   1
-#&gt; var2   3   1 0.2448117 0.03720091 0.1758008 0.3178213   1
-#&gt; var5   3   2 0.2634231 0.03702354 0.1901555 0.3340776   1</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m1</span>,what<span class='op'>=</span><span class='st'>'eigen'</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;         est        sd    lower    upper sig
-#&gt; F1 3.128837 0.1218312 2.883722 3.356353   1
-#&gt; F2 3.348771 0.1262370 3.101925 3.599454   1
-#&gt; F3 3.261802 0.1139679 3.049078 3.473366   1</div><div class='input'><span class='co'># }</span>
+#&gt; var1   2   1 0.2697510 0.03487694 0.1956002 0.3337020   1
+#&gt; var2   3   1 0.3176036 0.03509587 0.2516807 0.3888819   1
+#&gt; var5   3   2 0.2868095 0.03539818 0.2209352 0.3582262   1</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m1</span>,what<span class='op'>=</span><span class='st'>'eigen'</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;         est         sd    lower    upper sig
+#&gt; F1 3.073414 0.11674782 2.850652 3.304502   1
+#&gt; F2 3.253917 0.12114008 3.008804 3.490464   1
+#&gt; F3 2.972793 0.09762731 2.800737 3.178214   1</div><div class='input'><span class='co'># }</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
