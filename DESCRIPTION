@@ -1,6 +1,6 @@
 Package: LAWBL
 Type: Package
-Title: Latent (Variable) Analysis With Bayesian Learning
+Title: Latent (Variable) Analysis with Bayesian Learning
 Version: 1.4.0
 Date: 2021-04-01
 Author: Jinsong Chen [aut, cre, cph]
