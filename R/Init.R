@@ -8,6 +8,7 @@ init <- function(y, const) {
     Q <- const$Q
     pind <- const$cati
     Jp <- const$Jp
+
     const$sub_sl <- Q == 1
     const$len_sl <- rowSums(Q == 1)
     const$sub_ul <- Q == -1
@@ -36,10 +37,12 @@ init <- function(y, const) {
     # Prior mean of MU & Loading
     prior <- list()
     prior$m_LA <- 0
-    prior$m_MU <- rep(0, J)
+    # prior$m_MU <- rep(0, J)
+    prior$m_MU <- 0
+
     # Inverse prior variance of MU & loading
-    prior$s_LA <- 0.25
-    prior$s_MU <- 0.25
+    prior$s_LA <- .25
+    prior$s_MU <- .25
 
     # hyperparameters of Wishart distribution
     prior$v_PHI <- K + 2
@@ -59,8 +62,8 @@ init <- function(y, const) {
     LA[Q == -1] <- .1
     # LA[Q == 0] <- 0
 
-    PHI <- matrix(0.1, K, K)
-    diag(PHI[, ]) <- 1
+    PHI <- matrix(0., K, K)
+    diag(PHI) <- 1
 
     PSX <- matrix(0, J, J)
     diag(PSX) <- .3
@@ -109,8 +112,32 @@ init <- function(y, const) {
         THD <- NULL
     }  #end Jp
 
-    out <- list(y = y, const = const, prior = prior, PSX = PSX, PHI = PHI, LA = LA, THD = THD, gammas = gammas,
-        gammal_sq = gammal_sq)
+    out <- list(y = y, PSX = PSX, PHI = PHI, LA = LA, THD = THD, gammas = gammas, gammal_sq = gammal_sq)
 
+    # Qb <- const$Qb
+    # if (!is.null(Qb)){
+    #     const$sub_sb <- Qb == 1
+    #     const$len_sb <- rowSums(Qb == 1)
+    #     const$sub_ub <- Qb == -1
+    #     const$len_ub <- rowSums(Qb == -1)
+    #     prior$m_b <- 0
+    #     prior$s_b <- .25
+    #     prior$a_gamb <- 1
+    #     prior$b_gamb <- .1
+    #     # P <- ncol(Qb)
+    #     # MB <- matrix(0, K, P)
+    #     # MB[Qb == 1] <- .5
+    #     # # LA[Q == -1] <- .1+(runif(sum(Q==-1))-.5)/100
+    #     # MB[Qb == -1] <- .1
+    #     # out$MB <- MB
+    #     # out$PSXb <- rep(.3,K)
+    #     # gammab_sq <- Qb
+    #     # gammab_sq[Qb != -1] <- 0
+    #     # out$gammab_sq <- gammab_sq
+    # }
+    out$const = const
+    out$prior = prior
+
+    return(out)
 }
 ######## end of Init #################################################

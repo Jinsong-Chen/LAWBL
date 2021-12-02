@@ -2,29 +2,37 @@
 % Please edit documentation in R/sim_lvm.R
 \name{sim_lvm}
 \alias{sim_lvm}
+\alias{sim_lvm1}
 \title{Simulating data with Latent Variable Modeling}
 \usage{
-sim_lvm(
+sim_lvm1(
   N = 1000,
+  mla = NULL,
   K = 3,
-  ipf = 8,
-  cpf = 2,
+  J = 18,
+  cpf = 0,
   lam = 0.7,
   lac = 0.3,
-  phi = 0.5,
-  ph1 = -1,
+  phi = 0.3,
+  ph12 = -1,
   ecr = 0,
-  ome_out = FALSE,
+  P = 0,
+  b = 0.3,
+  K1 = 0,
+  ph1 = 0.2,
+  b1 = 0.3,
+  ilvl = NULL,
   cati = NULL,
   noc = c(4),
   misp = 0,
-  rseed = 333,
+  ome_out = FALSE,
   necw = K,
   necb = K,
   add_ind = c(),
   add_la = 0.5,
   add_phi = 0,
   zero_it = 0,
+  rseed = 333,
   digits = 4
 )
 }
@@ -32,8 +40,6 @@ sim_lvm(
 \item{N}{Sample size.}
 
 \item{K}{Number of factors.}
-
-\item{ipf}{Items per factor.}
 
 \item{cpf}{Cross-loadings per factor.}
 
@@ -43,11 +49,9 @@ sim_lvm(
 
 \item{phi}{Homogeneous correlations between any two factors.}
 
-\item{ph1}{Correlation between factor 1 and 2 (if it's different from \code{phi}.}
-
 \item{ecr}{Residual correlation (local dependence).}
 
-\item{ome_out}{Output factor score or not.}
+\item{ph1}{Correlation between factor 1 and 2 (if it's different from \code{phi}.}
 
 \item{cati}{The set of categorical (polytomous) items in sequence number (i.e., 1 to \eqn{J});
 \code{NULL} for no and -1 for all (default is \code{NULL}).}
@@ -56,7 +60,7 @@ sim_lvm(
 
 \item{misp}{Proportion of missingness.}
 
-\item{rseed}{An integer for the random seed.}
+\item{ome_out}{Output factor score or not.}
 
 \item{necw}{Number of within-factor local dependence.}
 
@@ -70,7 +74,11 @@ sim_lvm(
 
 \item{zero_it}{Surplus items with zero loading.}
 
+\item{rseed}{An integer for the random seed.}
+
 \item{digits}{Number of significant digits to print when printing numeric values.}
+
+\item{ipf}{Items per factor.}
 }
 \value{
 An object of class \code{list} containing the data, loading, and factorial correlation matrix.

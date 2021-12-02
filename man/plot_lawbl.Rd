@@ -4,7 +4,7 @@
 \alias{plot_lawbl}
 \title{Posterior plots for \code{lawbl} object}
 \usage{
-plot_lawbl(object, what = "trace")
+plot_lawbl(object, what = "trace", istart = 1, iend = -1)
 }
 \arguments{
 \item{object}{A \code{lawbl} object}

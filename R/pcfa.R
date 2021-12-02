@@ -102,11 +102,12 @@
 #' summary(m1,what='thd') #thresholds for categorical items
 #' }
 pcfa <- function(dat, Q, LD = TRUE,cati = NULL,cand_thd = 0.2, PPMC = FALSE, burn = 5000, iter = 5000,
-                 update = 1000, missing = NA, rseed = 12345, digits = 4, alas = FALSE, verbose = FALSE) {
+                 update = 1000, missing = NA, DIC = TRUE, sign_check = FALSE,
+                 rseed = 12345, digits = 4, alas = FALSE, verbose = FALSE) {
 
 
     conv = 0
-
+    Q <- as.matrix(Q)
     if (nrow(Q) != ncol(dat))
         stop("The numbers of items in data and Q are unequal.", call. = FALSE)
 
@@ -127,7 +128,7 @@ pcfa <- function(dat, Q, LD = TRUE,cati = NULL,cand_thd = 0.2, PPMC = FALSE, bur
     N <- ncol(Y)
     J <- nrow(Y)
     int<-F #intercept retained or not
-    Q <- as.matrix(Q)
+
     K <- ncol(Q)
     Jp <- length(cati)
     if (Jp == 1 && cati == -1) {
@@ -194,6 +195,8 @@ pcfa <- function(dat, Q, LD = TRUE,cati = NULL,cand_thd = 0.2, PPMC = FALSE, bur
         ind<-(tmp[,2]==k)
         pof[ind,k]<-1
     }
+    lsum <- 0
+    sy <- 0
 
     ######## end of Init #################################################
 
@@ -221,6 +224,7 @@ pcfa <- function(dat, Q, LD = TRUE,cati = NULL,cand_thd = 0.2, PPMC = FALSE, bur
 
         LA <- LAY$la # OME <- LAY$ome
 
+        if (sign_check) {
         # LA1 <- LAY$la
         # chg <- colSums(LA * LA1 < 0)/Jest > 0.5  # if over half items change sign
         # if (sum(chg) > 0) {
@@ -235,17 +239,20 @@ pcfa <- function(dat, Q, LD = TRUE,cati = NULL,cand_thd = 0.2, PPMC = FALSE, bur
 
         chg <- (colSums(LA)<= sign_eps)
         # chg <- (colSums(LA)<= LA_eps)
-        if (any(chg)) {
+          if (any(chg)) {
             sign <- diag(1 - 2 * chg)
             sign_sw <- sign_sw + chg
             # if(g<0){chg0_count <- chg0_count + chg}else{chg_count <- chg_count + chg}
             LA <- LA %*% sign
             OME <- t(t(OME) %*% sign)
-        }
+            print(c("ii=", ii), quote = FALSE)
+            cat(sign_sw, fill = TRUE, labels = "#Sign switch:")
+          }
+        } #end if
 
         gammal_sq <- LAY$gammal_sq
         # OME <- Gibbs_Omega(y = Y, la = LA, phi = PHI, inv.psx = inv.PSX, N = N, K = K)
-        PHI <- MH_PHI(phi = PHI, ome = OME, N = N, K = K, prior = prior)
+        if ( K > 1) PHI <- MH_PHI(phi = PHI, ome = OME, N = N, K = K, prior = prior)
         # Omega<-Gibbs_Omega(y=Y,la=LA,phi=PHI,inv.psx=inv.PSX)
         if (Jp > 0) {
             Y[cati, ] <- LAY$ys
@@ -276,13 +283,20 @@ pcfa <- function(dat, Q, LD = TRUE,cati = NULL,cand_thd = 0.2, PPMC = FALSE, bur
             if (PPMC)
                 Eppmc[g] <- post_pp(y = Y, ome = OME, la = LA, psx = PSX, inv.psx = inv.PSX, N = N,
                   J = J)
-        }
+            if (DIC){
+              # sy <- sy + Y
+              Yc <- Y - LA %*% OME  # J*N
+              tmp<-(t(Yc) %*%chol(inv.PSX))^2
+              # tmp<-(t(Yc) %*%chol(chol2inv(chol(PSX))))^2
+              lsum<-lsum+sum(tmp)+N*(log(det(PSX)))
+            } #end dic
+        } #end g
 
         if (ii%%update == 0)
             {
                 if (g > 0) {
                   if (conv == 0) {
-                      APSR <- schain.grd(Eigen[1:g,])
+                      EPSR <- schain.grd(Eigen[1:g,])
                       # cat(t(APSR[,1]), fill = TRUE, labels = "Adj PSR")
 
                     # tmp <- schain.grd(ELA[1:g, ])
@@ -291,9 +305,9 @@ pcfa <- function(dat, Q, LD = TRUE,cati = NULL,cand_thd = 0.2, PPMC = FALSE, bur
                     # GRD <- c(GRD_mean[1], GRD_max[1])
                     # cat(GRD, fill = TRUE, labels = "PGR mean & max:")
                   } else {
-                      APSR <- schain.grd(Eigen[1:g,], auto = TRUE)
+                      EPSR <- schain.grd(Eigen[1:g,], auto = TRUE)
                       # cat(t(APSR[,1]), fill = TRUE, labels = "Adj PSR")
-                      if (mean(APSR[,1])<1.1) break
+                      if (mean(EPSR[,1])<1.1) break
 
                     # tmp <- schain.grd(ELA[1:g, ], auto = TRUE)
                     # GRD_mean <- colMeans(tmp)
@@ -318,9 +332,10 @@ pcfa <- function(dat, Q, LD = TRUE,cati = NULL,cand_thd = 0.2, PPMC = FALSE, bur
                 # Mlambda<-colMeans(LA)
 
                 cat(ii, fill = TRUE, labels = "\nTot. Iter =")
-                print(rbind(Feigen, NLA_le3, Shrink,sign_sw))
+                # print(rbind(Feigen, NLA_le3, Shrink,sign_sw))
+                print(rbind(Feigen, NLA_le3, Shrink))
                 # cat(chg_count, fill = TRUE, labels = '#Sign change:')
-                if (g > 0) cat(t(APSR[,1]), fill = TRUE, labels = "Adj PSR")
+                if (g > 0) cat(t(EPSR[,1]), fill = TRUE, labels = "EPSR")
 
                 if (Jp > 0) {
                     cat(colMeans(THD), fill = TRUE, labels = "Ave. Thd:")
@@ -334,9 +349,6 @@ pcfa <- function(dat, Q, LD = TRUE,cati = NULL,cand_thd = 0.2, PPMC = FALSE, bur
                     print(c("LD>.2", ">.1", "Shrink"), quote = FALSE)
                     print(tmp)
                 }
-
-                # print(chg_count)
-                # cat(chg_count, fill = TRUE, labels = '#sign sw:')
 
             }#end verbose
 
@@ -364,10 +376,17 @@ pcfa <- function(dat, Q, LD = TRUE,cati = NULL,cand_thd = 0.2, PPMC = FALSE, bur
         iter <- burn <- g/2
     }
 
+    if (DIC){
+      D_bar<-lsum/iter+N*K*log(2*pi)
+      # Y0 <- Y
+      # Y <- sy / iter
+      # Y <- Y/apply(Y, 1, sd)
+    }
+
     # chg1_count<-rbind(chg0_count,chg_count)
     out <- list(Q = Q, LD = LD, LA = ELA, Omega = mOmega/iter, PSX = EPSX, iter = iter, burn = burn,
                 PHI = EPHI, gammal = Egammal, gammas = Egammas, Nmis = Nmis, PPP = Eppmc, conv = conv,
-                Eigen = Eigen, APSR = APSR)
+                Eigen = Eigen, Y = Y, D_bar=D_bar, time = (proc.time()-ptm))
 
     if (Jp > 0) {
         out$cati = cati

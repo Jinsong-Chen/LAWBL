@@ -1,5 +1,14 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-6XKC5E4PWL"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-6XKC5E4PWL');
+</script>
 
 # LAWBL: Latent (Variable) Analysis With Bayesian Learning
 
@@ -30,23 +39,23 @@ formats or a mix of them, with or without missingness.
 
 ## Features
 
-  - Partially CFA (PCFA) for continuous data: regularization of loading
+-   Partially CFA (PCFA) for continuous data: regularization of loading
     specification and local dependence; PCFA with local independence
     (PCFA-LI); CFA with local dependence (CFA-LD)
-  - Generalized PCFA (GPCFA) for continuous, categorical, or mixed-type
+-   Generalized PCFA (GPCFA) for continuous, categorical, or mixed-type
     data, with or without missingness; GPCFA with local independence
     (GPCFA-LI); Generalized CFA with local dependence (GCFA-LD)
-  - Partially confirmatory item response model (PCIRM) for continuous
+-   Partially confirmatory item response model (PCIRM) for continuous
     and dichotomous data with intercept terms; PCIRM-LI; CIRM-LD
-  - Bayesian regularized EFA (BREFA): factor extraction and parameter
+-   Bayesian regularized EFA (BREFA): factor extraction and parameter
     estimation in one step; Fully and partially EFA: unknown number of
     factors without or with partial knowledge
-  - Estimation using different Bayesian learning methods and MCMC
+-   Estimation using different Bayesian learning methods and MCMC
     algorithms
-  - Simulating data based on all aforementioned models
-  - Plotting trace, density or Gelman-Rubin diagnostics based on
+-   Simulating data based on all aforementioned models
+-   Plotting trace, density or Gelman-Rubin diagnostics based on
     eigenvalue
-  - Summary of all parameters with both point and interval estimates
+-   Summary of all parameters with both point and interval estimates
 
 Please refer to the [online
 tutorials](https://jinsong-chen.github.io/LAWBL/articles/LAWBL.html) for
@@ -54,19 +63,15 @@ more details.
 
 ## Installation
 
-1)  Install the stable version from [CRAN](https://CRAN.R-project.org)
+1.  Install the stable version from [CRAN](https://CRAN.R-project.org)
     with:
-
-<!-- end list -->
 
 ``` r
 install.packages("LAWBL")
 ```
 
-2)  Install the `devtools` package (if necessary), and install the
+2.  Install the `devtools` package (if necessary), and install the
     development version from the Github.
-
-<!-- end list -->
 
 ``` r
 # install.packages("devtools")

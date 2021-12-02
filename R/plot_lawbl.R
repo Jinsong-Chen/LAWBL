@@ -37,7 +37,7 @@
 #' plot_lawbl(m0, what='density')
 #' plot_lawbl(m0, what='APSR')
 #' }
-plot_lawbl <- function(object, what = "trace") {
+plot_lawbl <- function(object, what = "trace",istart =1, iend = -1) {
     # if (class(obj) != "lawbl")
     #     stop("It must be a lawbl object.", call. = F)
 
@@ -48,6 +48,10 @@ plot_lawbl <- function(object, what = "trace") {
     iter <- object$iter
     K <- ncol(Q)
 
+    if (iend == -1 | iend > iter)
+        iend <- iter
+    iter <- iend - istart + 1
+
     # poq <- which(Q != 0, arr.ind = T)
     # eig_arr <- array(0, dim = c(iter, K))
     # for (k in 1:K) {
@@ -57,10 +61,11 @@ plot_lawbl <- function(object, what = "trace") {
     # colnames(eig_arr) <- paste0("F", c(1:K))
     # mobj <- mcmc(eig_arr)
 
-    eigen <-object$Eigen
+    eigen <-object$Eigen[istart:iend,]
     colnames(eigen) <- paste0("F", c(1:K))
-    TF_ind = object$TF_ind
-    if(is.null(TF_ind)) TF_ind <- rep(TRUE, K)
+    eig_eps <- object$eig_eps
+    if(is.null(eig_eps)) eig_eps <- .1
+    TF_ind<-(colMeans(eigen)>eig_eps)
     eig_arr<- as.matrix(eigen[,TF_ind])
     mobj <- mcmc(eig_arr)
 

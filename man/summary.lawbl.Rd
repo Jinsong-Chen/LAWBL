@@ -11,6 +11,8 @@
   SL = 0.05,
   detail = FALSE,
   digits = 4,
+  istart = 1,
+  iend = -1,
   ...
 )
 }

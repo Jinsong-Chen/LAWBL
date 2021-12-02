@@ -15,6 +15,8 @@ pcfa(
   iter = 5000,
   update = 1000,
   missing = NA,
+  DIC = TRUE,
+  sign_check = FALSE,
   rseed = 12345,
   digits = 4,
   alas = FALSE,
