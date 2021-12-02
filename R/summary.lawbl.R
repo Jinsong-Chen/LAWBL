@@ -290,11 +290,13 @@ summary.lawbl <- function(object, what = "basic", med = FALSE, SL = 0.05, detail
     out0$Time <- object$time
 
     LAM <- round(LAM,digits)
+    rownames(LAM) <- NULL
     MLA <- round(MLA,digits)
     eigen <- round(eigen,digits)
     dpsx <- round(dpsx,digits)
     if (!is.null(offpsx)) offpsx <- round(offpsx,digits)
     phi <- round(phi,digits)
+    rownames(phi) <- NULL
     if (!is.null(gammal)) gammal <- round(gammal,digits)
     if (!is.null(gammas)) gammas <- round(gammas,digits)
 
