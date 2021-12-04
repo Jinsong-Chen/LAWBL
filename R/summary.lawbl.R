@@ -181,6 +181,7 @@ summary.lawbl <- function(object, what = "basic", med = FALSE, SL = 0.05, detail
     if (is.null(Qb)){
       gammal <- result(object$gammal[istart:iend,], med, SL)
       row.names(gammal) <- paste0("F", 1:K)
+      gammal <- round(gammal,digits)
       gammab<-coef<-qcoef<-coef.er<-NULL
     }else{
       qcoef <- Qb
@@ -204,16 +205,19 @@ summary.lawbl <- function(object, what = "basic", med = FALSE, SL = 0.05, detail
         coef <- (cbind(ind, tmp[sig > 0, ]))
         qcoef[qcoef > 0] <- tmp[sig > 0, 1]
       }
+      coef <- round(coef,digits)
+      rownames(coef) <- NULL
+      qcoef <- round(qcoef,digits)
 
       coef.er<-result(object$PSXb[istart:iend,],med,SL)
       row.names(coef.er) <- paste0("Y", 1:nrow(Qb))
-
+      coef.er <- round(coef.er,digits)
       if (sum(Qb == -1)>0){
         tmp <- result(object$gammab[istart:iend,], med, SL)
         ind <- which(Qb == -1, arr.ind = TRUE)
         colnames(ind) <- c("Y", "X")
         gammab <- (cbind(ind, tmp))
-
+        gammab <- round(gammab,digits)
       }else{
         gammab <- NULL
       }
@@ -226,6 +230,8 @@ summary.lawbl <- function(object, what = "basic", med = FALSE, SL = 0.05, detail
         # tgam <- cbind(object$gammal, object$gammas)
         gammas <- result(as.matrix(object$gammas[istart:iend], med, SL))
         # row.names(gammas) <- c(paste0("F", 1:K), "PSX")
+        gammas <- round(gammas,digits)
+        rownames(gammas) <- NULL
     }else{
       gammas <- NULL
     }
@@ -261,6 +267,8 @@ summary.lawbl <- function(object, what = "basic", med = FALSE, SL = 0.05, detail
         # } # end nthd
         out0$"Cat Items" <- object$cati
         out0$"max No. of categories" = nthd + 1
+        Mthd <- round(Mthd,digits)
+        rownames(Mthd) <- NULL
         # out$THD = Mthd
     } else {
         Mthd <- NULL
@@ -271,6 +279,7 @@ summary.lawbl <- function(object, what = "basic", med = FALSE, SL = 0.05, detail
 
     if(!is.null(object$MU)){
         MU <- result(object$MU[istart:iend,], med, SL)
+        MU <- round(MU,digits)
         row.names(MU) <- paste0("I", 1:J)
     }else{
         MU <- NULL
