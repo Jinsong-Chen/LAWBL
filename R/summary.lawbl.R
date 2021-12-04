@@ -180,7 +180,7 @@ summary.lawbl <- function(object, what = "basic", med = FALSE, SL = 0.05, detail
     Qb <- object$Qb
     if (is.null(Qb)){
       gammal <- result(object$gammal[istart:iend,], med, SL)
-      row.names(gammal) <- paste0("F", 1:K)
+      # row.names(gammal) <- paste0("F", 1:K)
       gammal <- round(gammal,digits)
       gammab<-coef<-qcoef<-coef.er<-NULL
     }else{
