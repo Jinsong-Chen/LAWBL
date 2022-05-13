@@ -16,6 +16,10 @@ plot_lawbl(object, what = "trace", istart = 1, iend = -1)
     \item \code{density}: The trace of each factor's eigenvalue.
     \item \code{APSR}: The adjusted (single-chain) Gelman-Rubin diagnostics of each factor's eigenvalue.
  }}
+
+\item{istart}{Starting point of the Markov chain for plotting.}
+
+\item{iend}{Ending point of the Markov chain for plotting; -1 for the actual final point.}
 }
 \description{
 Provide posterior plots based on the factorial eigenvalues of a \code{lawbl} object.

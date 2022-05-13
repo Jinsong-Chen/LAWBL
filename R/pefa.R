@@ -37,13 +37,26 @@
 #' @param verbose logical; to display the sampling information every \code{update} or not.
 #' \itemize{
 #'     \item \code{Feigen}: Eigenvalue for each factor.
-#'     \item \code{NLA_le3}: Number of Loading estimates >= .3 for each factor.
-#'     \item \code{Shrink}: Shrinkage parameter for each factor.
+#'     \item \code{NLA_lg0}: Number of Loading magnitudes > 0 for each factor.
+#'     \item \code{iShrink}: Inverted shrinkage parameter for each factor.
 #'     \item \code{True Fa}: Is the factor identified as true or not.
-#'     \item \code{Adj PSR}: Adjusted PSR for each factor.
-#'     \item \code{ROW: LA overflow,sign switch,MJF total, current, reset}: Loading overflow, sign switch,
-#'      min item per factor reached and related diagnostic information.
+#'     \item \code{EPSR & NCOV}: EPSR for each factor & # of convergence.
+#'     \item \code{ROW: LA overflow,sign switch,bk=0, <eig_eps}: Loading overflow, sign switch,
+#'      vector bk=0 and eigenvalue<eig_eps.
 #' }
+#'
+#' @param rfit logical; \code{TRUE} for providing relative fit (DIC, BIC, AIC).
+#'
+#' @param eig_eps minimum eigenvalue for factor extraction.
+#'
+#' @param sign_eps minimum value for switch sign of loading vector.
+#'
+#' @param rs logical; \code{TRUE} for enabling recommendation system.
+#'
+#' @param auto_stop logical; \code{TRUE} for enabling auto stop based on EPSR.
+#'
+#' @param max_conv maximum consecutive number of convergence for auto stop.
+#'
 #'
 #' @return \code{pcfa} returns an object of class \code{lawbl} without item intercepts. It contains a lot of information about
 #' the posteriors that can be summarized using \code{\link{summary.lawbl}}.
@@ -51,7 +64,11 @@
 #' @references
 #'
 #' Chen, J. (2021). A Bayesian regularized approach to exploratory factor analysis in one step.
-#'  \emph{Structural Equation Modeling: A Multidisciplinary Journal}. DOI: 10.1080/10705511.2020.1854763.
+#'  \emph{Structural Equation Modeling: A Multidisciplinary Journal},
+#'   28(4), 518-528. DOI: 10.1080/10705511.2020.1854763.
+#'
+#'	Chen, J. (In Press). Fully and partially exploratory factor analysis with bi-level Bayesian regularization.
+#'	 \emph{Behavior Research Methods}.
 #'
 #' @importFrom MASS mvrnorm
 #'
@@ -87,10 +104,10 @@
 #' summary(m1, what = 'phi')
 #' summary(m1,what='eigen')
 #' }
-pefa <- function(dat, Q=NULL, K=8, mjf=3, PPMC = FALSE, burn = 5000, iter = 5000,
-                 update = 1000, rseed = 12345, digits = 4, verbose = FALSE) {
-
-    conv = 0
+pefa <- function(dat, Q=NULL, K=8, mjf=3, PPMC = FALSE, burn = 5000, iter = 5000,missing = NA,
+                  eig_eps = 1,sign_eps = 0, rfit = TRUE, rs = FALSE, update = 1000, rseed = 12345, verbose = FALSE,
+                 auto_stop=FALSE,max_conv=10,digits = 4)  #ini.burn = 100
+{
 
     if (iter == 0)
         stop("Parameter iter must be larger than zero.", call. = FALSE)
@@ -105,7 +122,14 @@ pefa <- function(dat, Q=NULL, K=8, mjf=3, PPMC = FALSE, burn = 5000, iter = 5000
     options(digits = digits)
 
     Y <- t(dat)
-    # Y[which(Y == missing)] <- NA
+    Y[which(Y == missing)] <- NA
+    ysig<-apply(Y, 1, sd, na.rm=TRUE)
+    ybar<-apply(Y, 1, mean, na.rm=TRUE)
+
+    Nmis <- sum(is.na(Y))
+    mind <- which(is.na(Y), arr.ind = TRUE)
+    # }
+
     N <- ncol(Y)
     J <- nrow(Y)
     if (is.null(Q)){
@@ -120,10 +144,6 @@ pefa <- function(dat, Q=NULL, K=8, mjf=3, PPMC = FALSE, burn = 5000, iter = 5000
 
     int<-F #intercept retained or not
 
-    # Nmis <- sum(is.na(Y))
-    # mind <- which(is.na(Y), arr.ind = TRUE)
-    Nmis <- 0
-
     t_num<-1000
 
     const <- list(N = N, J = J, K = K, Q = Q, cati = NULL, Jp = 0, int = int,
@@ -136,6 +156,7 @@ pefa <- function(dat, Q=NULL, K=8, mjf=3, PPMC = FALSE, burn = 5000, iter = 5000
     ELA <- array(0, dim = c(iter, NLA))  #Store retained trace of Lambda
     EMU <- array(0, dim = c(iter, J))  #Store retained trace of MU
     EPSX <- array(0, dim = c(iter, J)) #Store retained trace of PSX
+    # EPSX <- array(0, dim = c(iter, J * (J + 1)/2))
 
     EPHI <- array(0, dim = c(iter, K * (K - 1)/2))  #Store retained trace of PHI
     # Egammas <- array(0, dim = c(iter, 1))  #Store retained trace of shrink par gammas
@@ -145,32 +166,25 @@ pefa <- function(dat, Q=NULL, K=8, mjf=3, PPMC = FALSE, burn = 5000, iter = 5000
     if (PPMC)
         Eppmc <- array(0, dim = c(iter))
 
-    init <- init(y = Y, const = const)
-    Y <- init$y
-    const <- init$const
-    prior <- init$prior
+    ini <- init(y = Y, const = const)
+    Y <- ini$y
+    const <- ini$const
+    prior <- ini$prior
 
-    PSX <- init$PSX
+    PSX <- ini$PSX
     inv.PSX <- chol2inv(chol(PSX))
-    PHI <- init$PHI
-    LA <- init$LA
+    PHI <- ini$PHI
+    LA <- ini$LA
+    # LA[Q == -1] <- .1+(runif(sum(Q==-1))-.5)/100
     # THD <- init$THD
     # gammas <- init$gammas
     # gammal_sq <- init$gammal_sq
 
-    # accrate <- 0
-    # if (Nmis > 0)
-    #     Y[mind] <- rnorm(Nmis)
+    # # accrate <- 0
+    if (Nmis > 0)
+        Y[mind] <- rnorm(Nmis)
 
-
-
-    # # OME <- t(mvrnorm(N,mu=rep(0,K),Sigma=diag(1,K))) # J*N
-    # chg_count <- rep(0, K)
-    # chg0_count <- rep(0, K)
-    # # chg1_count <- rep(0, K)
-    # # Jest <- colSums(Q != 0)
-    # LA_eps <- -1
-    # la_overf <- rep(0, K)
+    yps<-0
 
     Eigen <- array(0, dim = c(iter, K))  #Store retained trace of Eigen
     tmp <- which(Q!=0,arr.ind=TRUE)
@@ -180,190 +194,169 @@ pefa <- function(dat, Q=NULL, K=8, mjf=3, PPMC = FALSE, burn = 5000, iter = 5000
         pof[ind,k]<-1
     }
 
-    Eigen_eps <- .1
-    pig<-rep(1,K)
-    tmp<-colSums(Q==1)
-    pig[tmp>0]<--1
-    # Epig<-array(0,dim=c(iter,K))
+    # LA[Q != 0] <- .1 #+(runif(sum(Q==-1))-.5)/100
+    # bk_pr<-rep(0,K)
+    sksq<-rep(1,K)
+    sksq_t<-sksq
+    FIS <-const$FIS<-!colSums(Q==1) # factor involved in selection
+
     tausq<-array(1,dim=c(J,K))
     tausq[Q==0]<-0
-    ilamsq<-rep(1,K)
-    ilamsq_t<-ilamsq
-    # Elamsq<-array(0,dim=c(iter,K))
-    const$indg<-(pig!=-1)
+    LA_OF <- 1.1 #.999 #overflow value
+    PHI0 <- diag(K)
+    count <- matrix(0,K,4) #LA overflow,sign switch, bk = 0, < eigen_eps
+    # sign_eps <- 0 #-.01
 
-    tmp <- max(round(J*N/500),10)
-    const$max_var <- min(10^tmp,10^60) #10^10 to 10^60
-    # const$max_var <- 10^24
-    const$no_mjf <- N*(-9/800)+49/4 # 10 for 200; 1 for 1000
-    # const$no_mjf <- 0
+    # K0 <- sum(!FIS)
+    # TK <- K
+    # ini.burn <- 100
+    OME <- Gibbs_Omega(y = Y, la = LA, phi = PHI, inv.psx = inv.PSX, N = N, K = K)
+    # OME <- t(mvrnorm(N,mu=rep(0,K),Sigma=diag(1,K))) # J*N
+    lsum <- 0
+    no_conv <- 0
 
-    count <- matrix(0,K,5) #LA overflow,sign switch,MJF total, current, reset
-    sign_eps <- -.5
-    # la0<-.2
-    # i <- 1
-    # for (k in 1:K){
-    #     if(const$indg[k]) {LA[,k]<-la0; la0 <- la0 - .05/i; i <- i +1}
-    # }
     ######## end of Init #################################################
 
     ptm <- proc.time()
     for (ii in 1:miter) {
-        # i <- 1
+        # ii <- 1
         g = ii - burn
-        OME <- Gibbs_Omega(y = Y, la = LA, phi = PHI, inv.psx = inv.PSX, N = N, K = K)
-        # PHI<-MH_PHI(ph0=PHI,ome=Omega)
 
+        main<-Gibbs_BLR_SSP(y=Y,ome=OME,ly=LA,prior=prior,tausq=tausq,
+                            sksq=sksq,sksq_t=sksq_t,const=const)
+        dPSX<-main$dpsx
+        inv.PSX<- diag(1/dPSX)
+        # bk<-main$bk
+        tausq<-main$tausq
+        sksq<-main$sksq
+        sksq_t<-main$sksq_t
+        # sksq<-pmax(main$sksq,1e-200)
 
-        # OME<-Gibbs_Omega(y=Y,ly=LA,phi=PHI,inv.psx=inv.PSX)
-        main<-Gibbs_pefa_main(y=Y,ome=OME,ly=LA,psx=PSX,tausq=tausq,pig=pig,prior=prior,
-                              ilamsq=ilamsq,ilamsq_t=ilamsq_t,const=const,count=count)
-        PSX<-main$psx
-        inv.PSX<-chol2inv(chol(PSX))
-        count <- main$count
+        bk_pr<-main$bk_pr
+        count[,3]<-count[,3]+!bk_pr
 
-        # LA1<-main$ly
-        # tmp1<-(abs(LA)>=.3)*(abs(LA1)>=.3)
-        # chg0 <- colSums(LA * LA1 * tmp1 < 0)
-        # if (any(chg0>1)) { # possible sign change
-        #   # chg0_count <- chg0_count + chg0
-        #   tmp2<-colSums(tmp1)
-        #   # chg <- (chg0 > (chg2/2))*(chg0!=0) #all non-zero la change sign
-        #   chg <- (chg0 > (tmp2/2))
-        #   if (any(chg)){
-        #     sign <- diag(1 - 2 * chg)
-        #     # chg_count <- chg_count + chg
-        #     if(g<0){chg0_count <- chg0_count + chg}else{chg_count <- chg_count + chg}
-        #     LA1 <- LA1 %*% sign
-        #     OME <- t(t(OME) %*% sign)
-        #     print(c("ii=", ii), quote = FALSE)
-        #     # cat(chg_count, fill = TRUE, labels = "#Sign change:")
-        #     print(rbind(tmp2,chg0))
-        #   }
-        # }
-        # LA <- LA1
-
-
-        LA1<-main$ly
+        LA<-main$ly
         # tausq1<-main$tausq
-        tmp1<-abs(LA1)>.99
-        # LA1[tmp1]<-LA[tmp1]
+        tmp1<-abs(LA)>LA_OF
         if (any(tmp1)){
+        # if (any(abs(LA)>.99)){
 
             # la_overf<-la_overf+(colSums(tmp1)>0)
             count[,1] <- count[,1]+(colSums(tmp1)>0)
-            LA1[tmp1]<-LA[tmp1]
+            # LA1[tmp1]<-LA[tmp1]
+            LA[LA>LA_OF]<-LA_OF
+            LA[LA< -LA_OF]<--LA_OF
             # tausq1[tmp1]<-tausq[tmp1]
         }
 
-        chg <- (colSums(LA)<= sign_eps)
+
+        Feigen <- diag(crossprod(LA))
+        # Feigen <- colSums(LA^2)
+        ind <- !(FIS & (Feigen < eig_eps))
+        # Feigen[!ind] <- 0
+        # count[,4]<-count[,4]+!ind-!bk_pr
+        chg <- (colSums(LA)< sign_eps)
         # chg <- colSums(LA * LA1) < LA_eps
         if (any(chg)) {
-            # print(c("ii=", ii), quote = FALSE)
-            # print(colSums(LA * LA1))
-            # # print(cbind(LA, LA1))
             sign <- diag(1 - 2 * chg)
             count[,2] <- count[,2]+chg
-            # if(g<0){chg0_count <- chg0_count + chg}else{chg_count <- chg_count + chg}
-            LA1 <- LA1 %*% sign
+            LA <- LA %*% sign
             OME <- t(t(OME) %*% sign)
+            # count[ind,2] <- count[ind,2]+chg[ind]
+            # LA[,ind] <- LA[,ind] %*% sign
+            # OME[ind,] <- t(t(OME[ind,]) %*% sign)
+          }
+
+        # if(ii > ini.burn) LA[,!ind] <- 0
+        PHI <- MH_PHI(phi = PHI, ome = OME, N = N, K = K, s0 = prior$s_PHI)
+        OME <- Gibbs_Omega(y = Y, la = LA, phi = PHI, inv.psx = inv.PSX, N = N, K = K)
+        # if(ii > ini.burn) LA[,!ind] <- 0
+        LA[,!ind] <- 0
+        Feigen[!ind] <- 0
+        count[,4]<-count[,4]+!ind-!bk_pr
+
+        # TK <- sum(ind)
+        # if(TK == K || ii < ini.burn){
+        #     # PHI <- MH_PHI(phi = PHI, ome = OME, N = N, K = K, prior = prior)
+        #     OME <- Gibbs_Omega(y = Y, la = LA, phi = PHI, inv.psx = inv.PSX, N = N, K = K)
+        # }else{
+        #     # ind <- Feigen > 0
+        #     phi0<-PHI[ind,ind]
+        #     # PHI <- PHI0
+        #     # PHI[ind,ind] <- MH_PHI1(phi = phi0, ome = OME[ind,], N = N, K = TK, s0 = prior$s_PHI[ind,ind])
+        #     OME[ind,] <- Gibbs_Omega(y = Y, la = LA[,ind], phi = phi0, inv.psx = inv.PSX, N = N, K = TK)
+        #     LA[,!ind] <- 0
+        #     # PHI[!ind,!ind]<-0
+        #     count[,4]<-count[,4]+!ind-!bk_pr
+        # }
+
+        if (Nmis > 0){
+            ytmp <- matrix(rnorm(N * J), J, N) * sqrt(diag(PSX))+ LA %*% OME
+            Y[mind] <- ytmp[mind]
         }
-
-        LA <- LA1
-        # tausq<-tausq1
-        tausq<-main$tausq
-
-        # OME<-main$ome
-        ilamsq<-main$ilamsq
-        ilamsq_t<-main$ilamsq_t
-        # ilamsq_add<-main$ilamsq_add
-
-        pig<-main$pig
-
-        # gammal_sq <- LAY$gammal_sq
-        # OME <- Gibbs_Omega(y = Y, la = LA, phi = PHI, inv.psx = inv.PSX, N = N, K = K)
-        PHI <- MH_PHI(phi = PHI, ome = OME, N = N, K = K, prior = prior)
-        # Omega<-Gibbs_Omega(y=Y,la=LA,phi=PHI,inv.psx=inv.PSX)
-
 
         # Save results
         if ((g > 0)) {
             mOmega <- mOmega + OME
             ELA[g, ] <- LA[Q != 0]
-            Eigen[g,] <- (ELA[g,]^2)%*%pof
-            EPSX[g, ] <- diag(PSX)
-
-            Egammal[g, ] <- 1/sqrt(ilamsq)
-            # Egammal[g, ] <- colMeans(sqrt(gammal_sq))
-
-            # EPHI[g, , ] <- PHI[, ]
+            # Eigen[g,] <- (ELA[g,]^2)%*%pof
+            Eigen[g,] <- Feigen
+            EPSX[g, ] <- dPSX
+            # EPSX[g, ] <- PSX[lower.tri(PSX, diag = TRUE)]
+            Egammal[g, ] <- 1/sqrt(sksq)
             EPHI[g, ] <- PHI[lower.tri(PHI)]
-            # # EMU[g,]<-MU
-
             # Epig[g,]<-pig
-
 
             if (PPMC)
                 Eppmc[g] <- post_pp(y = Y, ome = OME, la = LA, psx = PSX, inv.psx = inv.PSX, N = N,
                   J = J)
+            if (rfit){
+              Yc <- Y - LA %*% OME  # J*N
+              tmp<-(t(Yc) %*%chol(inv.PSX))^2
+              # tmp<-(t(Yc) %*%chol(chol2inv(chol(PSX))))^2
+              # lsum<-lsum+sum(tmp)+N*(log(det(PSX)))
+              lsum<-lsum+sum(tmp)+N*(sum(log(dPSX)))
+            } #end dic
+
+            if (rs) {
+                if (Nmis == 0)
+                    # ytmp <- matrix(rnorm(N * J), J, N) + LA %*% OME/sqrt(diag(PSX))
+                    ytmp <- matrix(rnorm(N * J), J, N) * sqrt(diag(PSX))+ LA %*% OME
+                    # ytmp <- ytmp/apply(ytmp, 1, sd)
+                yps<-yps + ytmp
+            }
         }
 
-        if (ii%%update == 0)
-            {
+        if (ii%%update == 0){
                 if (g > 0) {
-                    TF_ind<-(colMeans(Eigen[1:g,])>Eigen_eps)
-                  if (conv == 0) {
-                      APSR <- schain.grd(Eigen[1:g,TF_ind])
-                      # cat(t(APSR[,1]), fill = TRUE, labels = "Adj PSR")
-
-                    # tmp <- schain.grd(ELA[1:g, ])
-                    # GRD_mean <- colMeans(tmp)
-                    # GRD_max <- c(max(tmp[, 1]), max(tmp[, 2]))
-                    # GRD <- c(GRD_mean[1], GRD_max[1])
-                    # cat(GRD, fill = TRUE, labels = "PGR mean & max:")
-                  } else {
-                      APSR <- schain.grd(Eigen[1:g,TF_ind], auto = TRUE)
-                      # cat(t(APSR[,1]), fill = TRUE, labels = "Adj PSR")
-                      if (mean(APSR[,1])<1.1) break
-
-                    # tmp <- schain.grd(ELA[1:g, ], auto = TRUE)
-                    # GRD_mean <- colMeans(tmp)
-                    # GRD_max <- c(max(tmp[, 1]), max(tmp[, 2]))
-                    # # cat(GRD_mean, fill = TRUE, labels = 'GR Mean & UL:') cat(GRD_max, fill = TRUE, labels = 'GR Max & UL:')
-                    # GRD <- c(GRD_mean[1], GRD_max[1])
-                    # cat(GRD, fill = TRUE, labels = "PGR mean & max:")
-                    # if (conv == 1 && GRD[2] < 1.1)
-                    #   break
-                    # if (conv == 2 && GRD[1] < 1.1 && GRD[2] < 1.2)
-                    #   break
-                  }
-                }
-
+                    TF_ind<-(colMeans(Eigen[1:g,])>eig_eps)
+                    APSR <- schain.grd(Eigen[1:g,TF_ind])
+                  # if (auto_stop) {
+                      if (max(APSR[,1]) <= 1.1) {
+                        no_conv <- no_conv + 1
+                      } else{
+                        no_conv <- 0
+                      }
+                    # } # end auto_stop
+                } # end g
 
             if(verbose){
-                # print(proc.time() - ptm)
-                iShrink <- sqrt(ilamsq)
-                Feigen <- diag(crossprod(LA))
-                NLA_le3 <- colSums(abs(LA) >= 0.3)
-                # Meigen <- colMeans(Eigen)
-                # NLA <- (colSums(LA!=0))
+                iShrink <- sqrt(sksq)
+                NLA_lg0 <- colSums(abs(LA) > 0)
 
                 cat(ii, fill = TRUE, labels = "\nTot. Iter =")
-                print(rbind(Feigen,NLA_le3, iShrink))
+                print(rbind(Feigen,NLA_lg0,iShrink))
                 # cat(chg_count, fill = TRUE, labels = '#Sign change:')
                 if (g > 0) {
-                    cat(t(TF_ind+0), fill = TRUE, labels = "True Fa")
-                    cat(t(APSR[,1]), fill = TRUE, labels = "Adj PSR")
+                    cat(t(TF_ind+0), fill = TRUE, labels = "Tru Fac")
+                    cat(c(t(APSR[,1]),no_conv), fill = TRUE, labels = "EPSR & NCONV")
                 }
-                # cat(t(la_overf), fill = TRUE, labels = "LA Overf")
-                # cat(t(count_mjf), fill = TRUE, labels = "MJF")
-                # cat(t(ilamsq_t), fill = TRUE, labels = "ilamsq_t")
-                print("ROW: LA overflow,sign switch,MJF total, current, reset")
+                print("ROW: LA overflow, sign switch, bk=0, <eig_eps")
                 print(t(count))
             }#end verbose
 
+            if (auto_stop * no_conv >= max_conv) break
             }  # end update
-
     }  #end of g MCMAX
 
     if(verbose){
@@ -371,26 +364,29 @@ pefa <- function(dat, Q=NULL, K=8, mjf=3, PPMC = FALSE, burn = 5000, iter = 5000
         print(proc.time()-ptm)
     }
 
-    if (conv != 0) {
-        st <- g/2 + 1
-        ELA <- ELA[(st):g, ]
-        # EPSX <- EPSX[(st):g, , ] EPHI <- EPHI[(st):g, , ]
-        # EPSX <- EPSX[(st):g, ]
-        EPHI <- EPHI[(st):g, ]
-        Egammal <- Egammal[(st):g, ]
-        # Egammas <- Egammas[(st):g, ]
-        # if (Jp > 0)
-        #     Etd <- Etd[(st):g, , ]
-        Eppmc <- Eppmc[(st):g]
-        mOmega <- mOmega/2
-        iter <- burn <- g/2
+    if (auto_stop * no_conv >= max_conv) {
+        ELA <- ELA[1:g, ]
+        Eigen <- Eigen[1:g, ]
+        EPSX <- EPSX[1:g, ]
+        EPHI <- EPHI[1:g, ]
+        Egammal <- Egammal[1:g, ]
+        Eppmc <- Eppmc[1:g]
+        iter <- g
     }
 
+    if (rfit){
+      lpry <- lsum/iter+N*log(2*pi)
+      # lsum <- lsum/iter
+    }
     # chg1_count<-rbind(chg0_count,chg_count)
     out <- list(Q = Q, LD = FALSE, LA = ELA,PSX = EPSX, Omega = mOmega/iter, iter = iter, burn = burn,
-                PHI = EPHI, gammal = Egammal,  Nmis = Nmis, PPP = Eppmc, conv = conv,
-                Eigen = Eigen, APSR = APSR,TF_ind=TF_ind)
+                PHI = EPHI, gammal = Egammal,  Nmis = Nmis, PPP = Eppmc, Eigen = Eigen, APSR = APSR,Y = Y,
+                auto_conv = c(auto_stop, no_conv, max_conv), eig_eps = eig_eps,lpry=lpry, time = (proc.time()-ptm))
 
+    if (rs) {
+        yp<-yps/iter*ysig+ybar
+        out$yp = t(yp)
+    }
     class(out) <- c("lawbl")
 
     if (!is.null(oldseed))
@@ -400,4 +396,3 @@ pefa <- function(dat, Q=NULL, K=8, mjf=3, PPMC = FALSE, burn = 5000, iter = 5000
 
     return(out)
 }
-

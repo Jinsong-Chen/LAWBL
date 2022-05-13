@@ -8,11 +8,13 @@
 #'
 #' @param N Sample size.
 #'
-#' @param K Number of factors.
+#' @param mla Population loading matrix.
 #'
-#' @param ipf Items per factor.
+#' @param K Number of factors (if \code{mla=NULL}).
 #'
-#' @param cpf Cross-loadings per factor.
+#' @param J Number of items (if \code{mla=NULL}).
+#'
+#' @param cpf Number of cross-loadings per factor (if \code{mla=NULL}).
 #'
 #' @param lam Number of formal iterations for posterior sampling.
 #'
@@ -20,16 +22,29 @@
 #'
 #' @param phi Homogeneous correlations between any two factors.
 #'
-#' @param ph1 Correlation between factor 1 and 2 (if it's different from \code{phi}.
+#' @param ph12 Correlation between factor 1 and 2 (if it's different from \code{phi}.
 #'
 #' @param ecr Residual correlation (local dependence).
 #'
 #' @param ome_out Output factor score or not.
 #'
-#' @param cati The set of categorical (polytomous) items in sequence number (i.e., 1 to \eqn{J});
-#' \code{NULL} for no and -1 for all (default is \code{NULL}).
+#' @param P Number of observable predictors (for MIMIC model).
 #'
-#' @param noc Number of categories for categorical items
+#' @param b Coefficients of observable predictors (for MIMIC model).
+#'
+#' @param K1 Number of latent predictors (for MIMIC model).
+#'
+#' @param ph1 Correlations between latent predictors (for MIMIC model).
+#'
+#' @param b1 Coefficients of latent predictors (for MIMIC model).
+#'
+#' @param ilvl Specified levels of all items (i.e., need to specify Item 1 to \eqn{J+P});
+#'  Any value smaller than 2 is considered as continuous item.
+#'
+#' @param cati The set of polytomous items in sequence number (i.e., can be any number set
+#'  in between 1 and \eqn{J+P}); \code{NULL} for no and -1 for all (if \code{ilvl=NULL}).
+#'
+#' @param noc Number of levels for polytomous items.
 #'
 #' @param misp Proportion of missingness.
 #'
@@ -70,7 +85,7 @@
 #' out$MLA
 #' out$ofd_ind
 #'
-sim_lvm1 <- function(N = 1000, mla=NULL, K = 3, J = 18, cpf = 0, lam = 0.7, lac = 0.3, phi = .3, ph12 = -1,
+sim_lvm <- function(N = 1000, mla=NULL, K = 3, J = 18, cpf = 0, lam = 0.7, lac = 0.3, phi = .3, ph12 = -1,
         ecr = .0,P = 0, b = .3,K1 = 0,ph1 = .2, b1 = .3, ilvl=NULL,cati = NULL, noc = c(4), misp = 0, ome_out = FALSE,
         necw=K,necb=K,add_ind=c(),add_la=.5,add_phi=0,zero_it=0, rseed = 333,digits = 4) {
 

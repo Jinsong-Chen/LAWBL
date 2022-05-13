@@ -50,20 +50,35 @@
 #'     \item \code{Feigen}: Eigenvalue for each factor.
 #'     \item \code{NLA_le3}: Number of Loading estimates >= .3 for each factor.
 #'     \item \code{Shrink}: Shrinkage (or ave. shrinkage for each factor for adaptive Lasso).
-#'     \item \code{sign_sw}: Number of sign switch.
-#'     \item \code{Adj PSR}: Adjusted PSR for each factor.
+#'     \item \code{EPSR & NCOV}: EPSR for each factor & # of convergence.
 #'     \item \code{Ave. Thd}: Ave. thresholds for polytomous items.
 #'     \item \code{Acc Rate}: Acceptance rate of threshold (MH algorithm).
 #'     \item \code{LD>.2 >.1 LD>.2 >.1}: # of LD terms larger than .2 and .1, and LD's shrinkage parameter.
+#'     \item \code{#Sign_sw}: Number of sign switch for each factor.
 #' }
+#'
+#' @param rfit logical; \code{TRUE} for providing relative fit (DIC, BIC, AIC).
+#'
+#' @param sign_check logical; \code{TRUE} for checking sign switch of loading vector.
+#'
+#' @param sign_eps minimum value for switch sign of loading vector (if \code{sign_check=TRUE}).
+#'
+#' @param rs logical; \code{TRUE} for enabling recommendation system.
+#'
+#' @param auto_stop logical; \code{TRUE} for enabling auto stop based on \code{EPSR<1.1}.
+#'
+#' @param max_conv maximum consecutive number of convergence for auto stop.
 #'
 #' @return \code{pcfa} returns an object of class \code{lawbl} without item intercepts. It contains a lot of information about
 #' the posteriors that can be summarized using \code{\link{summary.lawbl}}.
 #'
 #' @references
 #'
-#' Chen, J., Guo, Z., Zhang, L., & Pan, J. (2020). A partially confirmatory approach to scale development
-#'  with the Bayesian Lasso. \emph{Psychological Methods}. Advance online publication. DOI: 10.1037/met0000293.
+#' Chen, J., Guo, Z., Zhang, L., & Pan, J. (2021). A partially confirmatory approach to scale development
+#'  with the Bayesian Lasso. \emph{Psychological Methods}. 26(2), 210–235. DOI: 10.1037/met0000293.
+#'
+#' Chen, J. (2021). A generalized partially confirmatory factor analysis framework with mixed Bayesian Lasso methods.
+#'  \emph{Multivariate Behavioral Research}. DOI: 10.1080/00273171.2021.1925520.
 #'
 #' @importFrom MASS mvrnorm
 #'
@@ -102,11 +117,9 @@
 #' summary(m1,what='thd') #thresholds for categorical items
 #' }
 pcfa <- function(dat, Q, LD = TRUE,cati = NULL,cand_thd = 0.2, PPMC = FALSE, burn = 5000, iter = 5000,
-                 update = 1000, missing = NA, DIC = TRUE, sign_check = FALSE,
-                 rseed = 12345, digits = 4, alas = FALSE, verbose = FALSE) {
+                 update = 1000, missing = NA, rfit = TRUE, sign_check = FALSE, sign_eps = -.5, rs = FALSE,
+                 auto_stop=FALSE,max_conv=10, rseed = 12345, digits = 4, alas = FALSE, verbose = FALSE) {
 
-
-    conv = 0
     Q <- as.matrix(Q)
     if (nrow(Q) != ncol(dat))
         stop("The numbers of items in data and Q are unequal.", call. = FALSE)
@@ -125,6 +138,9 @@ pcfa <- function(dat, Q, LD = TRUE,cati = NULL,cand_thd = 0.2, PPMC = FALSE, bur
 
     Y <- t(dat)
     Y[which(Y == missing)] <- NA
+    ysig<-apply(Y, 1, sd, na.rm=TRUE)
+    ybar<-apply(Y, 1, mean, na.rm=TRUE)
+
     N <- ncol(Y)
     J <- nrow(Y)
     int<-F #intercept retained or not
@@ -182,11 +198,13 @@ pcfa <- function(dat, Q, LD = TRUE,cati = NULL,cand_thd = 0.2, PPMC = FALSE, bur
     }
     accrate <- 0
     if (Nmis > 0)
-        Y[mind] <- rnorm(Nmis)
+      Y[mind] <- rnorm(Nmis)
+
+    yps<-0
 
     # OME <- t(mvrnorm(N,mu=rep(0,K),Sigma=diag(1,K))) # J*N
     sign_sw <- rep(0, K)
-    sign_eps <- -.5
+    # sign_eps <- -.5
 
     Eigen <- array(0, dim = c(iter, K))  #Store retained trace of Eigen
     tmp <- which(Q!=0,arr.ind=TRUE)
@@ -197,6 +215,7 @@ pcfa <- function(dat, Q, LD = TRUE,cati = NULL,cand_thd = 0.2, PPMC = FALSE, bur
     }
     lsum <- 0
     sy <- 0
+    no_conv <- 0
 
     ######## end of Init #################################################
 
@@ -252,7 +271,7 @@ pcfa <- function(dat, Q, LD = TRUE,cati = NULL,cand_thd = 0.2, PPMC = FALSE, bur
 
         gammal_sq <- LAY$gammal_sq
         # OME <- Gibbs_Omega(y = Y, la = LA, phi = PHI, inv.psx = inv.PSX, N = N, K = K)
-        if ( K > 1) PHI <- MH_PHI(phi = PHI, ome = OME, N = N, K = K, prior = prior)
+        if ( K > 1) PHI <- MH_PHI(phi = PHI, ome = OME, N = N, K = K, s0 = prior$s_PHI)
         # Omega<-Gibbs_Omega(y=Y,la=LA,phi=PHI,inv.psx=inv.PSX)
         if (Jp > 0) {
             Y[cati, ] <- LAY$ys
@@ -283,44 +302,36 @@ pcfa <- function(dat, Q, LD = TRUE,cati = NULL,cand_thd = 0.2, PPMC = FALSE, bur
             if (PPMC)
                 Eppmc[g] <- post_pp(y = Y, ome = OME, la = LA, psx = PSX, inv.psx = inv.PSX, N = N,
                   J = J)
-            if (DIC){
-              # sy <- sy + Y
+
+            if (rfit){
               Yc <- Y - LA %*% OME  # J*N
               tmp<-(t(Yc) %*%chol(inv.PSX))^2
               # tmp<-(t(Yc) %*%chol(chol2inv(chol(PSX))))^2
               lsum<-lsum+sum(tmp)+N*(log(det(PSX)))
             } #end dic
+
+            if (rs) {
+              # if (Nmis == 0){
+              #     ytmp<-LAY$ysm
+              #   }else{
+              #     ytmp<-Y[mind]
+              #   }
+              yps<-yps + LAY$ysm
+            }
         } #end g
 
-        if (ii%%update == 0)
-            {
-                if (g > 0) {
-                  if (conv == 0) {
-                      EPSR <- schain.grd(Eigen[1:g,])
-                      # cat(t(APSR[,1]), fill = TRUE, labels = "Adj PSR")
+        if (ii%%update == 0){
+          if (g > 0) {
 
-                    # tmp <- schain.grd(ELA[1:g, ])
-                    # GRD_mean <- colMeans(tmp)
-                    # GRD_max <- c(max(tmp[, 1]), max(tmp[, 2]))
-                    # GRD <- c(GRD_mean[1], GRD_max[1])
-                    # cat(GRD, fill = TRUE, labels = "PGR mean & max:")
-                  } else {
-                      EPSR <- schain.grd(Eigen[1:g,], auto = TRUE)
-                      # cat(t(APSR[,1]), fill = TRUE, labels = "Adj PSR")
-                      if (mean(EPSR[,1])<1.1) break
-
-                    # tmp <- schain.grd(ELA[1:g, ], auto = TRUE)
-                    # GRD_mean <- colMeans(tmp)
-                    # GRD_max <- c(max(tmp[, 1]), max(tmp[, 2]))
-                    # # cat(GRD_mean, fill = TRUE, labels = 'GR Mean & UL:') cat(GRD_max, fill = TRUE, labels = 'GR Max & UL:')
-                    # GRD <- c(GRD_mean[1], GRD_max[1])
-                    # cat(GRD, fill = TRUE, labels = "PGR mean & max:")
-                    # if (conv == 1 && GRD[2] < 1.1)
-                    #   break
-                    # if (conv == 2 && GRD[1] < 1.1 && GRD[2] < 1.2)
-                    #   break
-                  }
-                }
+            APSR <- schain.grd(Eigen[1:g,])
+            if (auto_stop) {
+              if (max(APSR[,1]) < 1.1) {
+                no_conv <- no_conv + 1
+              } else{
+                no_conv <- 0
+              }
+            } # end auto_stop
+          } # end g
 
 
             if(verbose){
@@ -335,7 +346,7 @@ pcfa <- function(dat, Q, LD = TRUE,cati = NULL,cand_thd = 0.2, PPMC = FALSE, bur
                 # print(rbind(Feigen, NLA_le3, Shrink,sign_sw))
                 print(rbind(Feigen, NLA_le3, Shrink))
                 # cat(chg_count, fill = TRUE, labels = '#Sign change:')
-                if (g > 0) cat(t(EPSR[,1]), fill = TRUE, labels = "EPSR")
+                if (g > 0) cat(c(t(APSR[,1]),no_conv), fill = TRUE, labels = "EPSR & NCONV")
 
                 if (Jp > 0) {
                     cat(colMeans(THD), fill = TRUE, labels = "Ave. Thd:")
@@ -352,7 +363,8 @@ pcfa <- function(dat, Q, LD = TRUE,cati = NULL,cand_thd = 0.2, PPMC = FALSE, bur
 
             }#end verbose
 
-            }  # end update
+          if (auto_stop * no_conv >= max_conv) break
+          }  # end update
 
     }  #end of g MCMAX
 
@@ -361,37 +373,53 @@ pcfa <- function(dat, Q, LD = TRUE,cati = NULL,cand_thd = 0.2, PPMC = FALSE, bur
         print(proc.time()-ptm)
     }
 
-    if (conv != 0) {
-        st <- g/2 + 1
-        ELA <- ELA[(st):g, ]
-        # EPSX <- EPSX[(st):g, , ] EPHI <- EPHI[(st):g, , ]
-        EPSX <- EPSX[(st):g, ]
-        EPHI <- EPHI[(st):g, ]
-        Egammal <- Egammal[(st):g, ]
-        Egammas <- Egammas[(st):g, ]
-        if (Jp > 0)
-            Etd <- Etd[(st):g, , ]
-        Eppmc <- Eppmc[(st):g]
-        mOmega <- mOmega/2
-        iter <- burn <- g/2
+    # if (conv != 0) {
+    #     st <- g/2 + 1
+    #     ELA <- ELA[(st):g, ]
+    #     # EPSX <- EPSX[(st):g, , ] EPHI <- EPHI[(st):g, , ]
+    #     EPSX <- EPSX[(st):g, ]
+    #     EPHI <- EPHI[(st):g, ]
+    #     Egammal <- Egammal[(st):g, ]
+    #     Egammas <- Egammas[(st):g, ]
+    #     if (Jp > 0)
+    #         Etd <- Etd[(st):g, , ]
+    #     Eppmc <- Eppmc[(st):g]
+    #     mOmega <- mOmega/2
+    #     iter <- burn <- g/2
+    # }
+
+    if (auto_stop * no_conv >= max_conv) {
+      ELA <- ELA[1:g, ]
+      Eigen <- Eigen[1:g, ]
+      EPSX <- EPSX[1:g, ]
+      EPHI <- EPHI[1:g, ]
+      Egammal <- Egammal[1:g, ]
+      Eppmc <- Eppmc[1:g]
+      Egammas <- Egammas[1:g, ]
+      if (Jp > 0)
+        Etd <- Etd[1:g, , ]
+      iter <- g
     }
 
-    if (DIC){
-      D_bar<-lsum/iter+N*K*log(2*pi)
-      # Y0 <- Y
-      # Y <- sy / iter
-      # Y <- Y/apply(Y, 1, sd)
+    if (rfit){
+      lpry <- lsum/iter+N*log(2*pi)
+      # lsum <- lsum/iter
     }
 
     # chg1_count<-rbind(chg0_count,chg_count)
     out <- list(Q = Q, LD = LD, LA = ELA, Omega = mOmega/iter, PSX = EPSX, iter = iter, burn = burn,
-                PHI = EPHI, gammal = Egammal, gammas = Egammas, Nmis = Nmis, PPP = Eppmc, conv = conv,
-                Eigen = Eigen, Y = Y, D_bar=D_bar, time = (proc.time()-ptm))
+                PHI = EPHI, gammal = Egammal, gammas = Egammas, Nmis = Nmis, PPP = Eppmc, Eigen = Eigen,
+                auto_conv = c(auto_stop, no_conv, max_conv), Y = Y, lpry=lpry, time = (proc.time()-ptm))
 
     if (Jp > 0) {
         out$cati = cati
         out$THD = Etd
         out$mnoc = mnoc
+    }
+
+    if (rs) {
+      yp<-yps/iter*ysig+ybar
+      out$yp = t(yp)
     }
 
     class(out) <- c("lawbl")

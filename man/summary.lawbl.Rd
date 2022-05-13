@@ -44,6 +44,10 @@
 
 \item{digits}{Number of significant digits to print when printing numeric values.}
 
+\item{istart}{Starting point of the Markov chain for summary.}
+
+\item{iend}{Ending point of the Markov chain for summary; -1 for the actual final point.}
+
 \item{...}{additional arguments}
 }
 \value{

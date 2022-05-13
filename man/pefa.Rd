@@ -12,10 +12,17 @@ pefa(
   PPMC = FALSE,
   burn = 5000,
   iter = 5000,
+  missing = NA,
+  eig_eps = 1,
+  sign_eps = 0,
+  rfit = TRUE,
+  rs = FALSE,
   update = 1000,
   rseed = 12345,
-  digits = 4,
-  verbose = FALSE
+  verbose = FALSE,
+  auto_stop = FALSE,
+  max_conv = 10,
+  digits = 4
 )
 }
 \arguments{
@@ -36,22 +43,34 @@ for \code{FEFA}, which is the default. See \code{Examples}.}
 
 \item{iter}{Number of formal iterations for posterior sampling (> 0).}
 
+\item{eig_eps}{minimum eigenvalue for factor extraction.}
+
+\item{sign_eps}{minimum value for switch sign of loading vector.}
+
+\item{rfit}{logical; \code{TRUE} for providing relative fit (DIC, BIC, AIC).}
+
+\item{rs}{logical; \code{TRUE} for enabling recommendation system.}
+
 \item{update}{Number of iterations to update the sampling information.}
 
 \item{rseed}{An integer for the random seed.}
 
-\item{digits}{Number of significant digits to print when printing numeric values.}
-
 \item{verbose}{logical; to display the sampling information every \code{update} or not.
 \itemize{
     \item \code{Feigen}: Eigenvalue for each factor.
-    \item \code{NLA_le3}: Number of Loading estimates >= .3 for each factor.
-    \item \code{Shrink}: Shrinkage parameter for each factor.
+    \item \code{NLA_lg0}: Number of Loading magnitudes > 0 for each factor.
+    \item \code{iShrink}: Inverted shrinkage parameter for each factor.
     \item \code{True Fa}: Is the factor identified as true or not.
-    \item \code{Adj PSR}: Adjusted PSR for each factor.
-    \item \code{ROW: LA overflow,sign switch,MJF total, current, reset}: Loading overflow, sign switch,
-     min item per factor reached and related diagnostic information.
+    \item \code{EPSR & NCOV}: EPSR for each factor & # of convergence.
+    \item \code{ROW: LA overflow,sign switch,bk=0, <eig_eps}: Loading overflow, sign switch,
+     vector bk=0 and eigenvalue<eig_eps.
 }}
+
+\item{auto_stop}{logical; \code{TRUE} for enabling auto stop based on EPSR.}
+
+\item{max_conv}{maximum consecutive number of convergence for auto stop.}
+
+\item{digits}{Number of significant digits to print when printing numeric values.}
 }
 \value{
 \code{pcfa} returns an object of class \code{lawbl} without item intercepts. It contains a lot of information about
@@ -100,5 +119,9 @@ summary(m1,what='eigen')
 }
 \references{
 Chen, J. (2021). A Bayesian regularized approach to exploratory factor analysis in one step.
- \emph{Structural Equation Modeling: A Multidisciplinary Journal}. DOI: 10.1080/10705511.2020.1854763.
+ \emph{Structural Equation Modeling: A Multidisciplinary Journal},
+  28(4), 518-528. DOI: 10.1080/10705511.2020.1854763.
+
+Chen, J. (In Press). Fully and partially exploratory factor analysis with bi-level Bayesian regularization.
+ \emph{Behavior Research Methods}.
 }

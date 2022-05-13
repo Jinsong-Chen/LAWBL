@@ -244,7 +244,7 @@ pcirm <- function(dat, Q, LD = TRUE,cati = NULL, PPMC = FALSE, burn = 5000, iter
 
         gammal_sq <- LAY$gammal_sq
         # OME <- Gibbs_Omega(y = Y, la = LA, phi = PHI, inv.psx = inv.PSX, N = N, K = K)
-        PHI <- MH_PHI(phi = PHI, ome = OME, N = N, K = K, prior = prior)
+        PHI <- MH_PHI(phi = PHI, ome = OME, N = N, K = K, s0 = prior$s_PHI)
         # Omega<-Gibbs_Omega(y=Y,la=LA,phi=PHI,inv.psx=inv.PSX)
         if (Jp > 0) {
             Y[cati, ] <- LAY$ys

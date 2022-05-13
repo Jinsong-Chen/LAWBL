@@ -2,10 +2,9 @@
 % Please edit documentation in R/sim_lvm.R
 \name{sim_lvm}
 \alias{sim_lvm}
-\alias{sim_lvm1}
 \title{Simulating data with Latent Variable Modeling}
 \usage{
-sim_lvm1(
+sim_lvm(
   N = 1000,
   mla = NULL,
   K = 3,
@@ -39,9 +38,13 @@ sim_lvm1(
 \arguments{
 \item{N}{Sample size.}
 
-\item{K}{Number of factors.}
+\item{mla}{Population loading matrix.}
 
-\item{cpf}{Cross-loadings per factor.}
+\item{K}{Number of factors (if \code{mla=NULL}).}
+
+\item{J}{Number of items (if \code{mla=NULL}).}
+
+\item{cpf}{Number of cross-loadings per factor (if \code{mla=NULL}).}
 
 \item{lam}{Number of formal iterations for posterior sampling.}
 
@@ -49,14 +52,27 @@ sim_lvm1(
 
 \item{phi}{Homogeneous correlations between any two factors.}
 
+\item{ph12}{Correlation between factor 1 and 2 (if it's different from \code{phi}.}
+
 \item{ecr}{Residual correlation (local dependence).}
 
-\item{ph1}{Correlation between factor 1 and 2 (if it's different from \code{phi}.}
+\item{P}{Number of observable predictors (for MIMIC model).}
 
-\item{cati}{The set of categorical (polytomous) items in sequence number (i.e., 1 to \eqn{J});
-\code{NULL} for no and -1 for all (default is \code{NULL}).}
+\item{b}{Coefficients of observable predictors (for MIMIC model).}
 
-\item{noc}{Number of categories for categorical items}
+\item{K1}{Number of latent predictors (for MIMIC model).}
+
+\item{ph1}{Correlations between latent predictors (for MIMIC model).}
+
+\item{b1}{Coefficients of latent predictors (for MIMIC model).}
+
+\item{ilvl}{Specified levels of all items (i.e., need to specify Item 1 to \eqn{J+P});
+Any value smaller than 2 is considered as continuous item.}
+
+\item{cati}{The set of polytomous items in sequence number (i.e., can be any number set
+in between 1 and \eqn{J+P}); \code{NULL} for no and -1 for all (if \code{ilvl=NULL}).}
+
+\item{noc}{Number of levels for polytomous items.}
 
 \item{misp}{Proportion of missingness.}
 
@@ -77,8 +93,6 @@ sim_lvm1(
 \item{rseed}{An integer for the random seed.}
 
 \item{digits}{Number of significant digits to print when printing numeric values.}
-
-\item{ipf}{Items per factor.}
 }
 \value{
 An object of class \code{list} containing the data, loading, and factorial correlation matrix.

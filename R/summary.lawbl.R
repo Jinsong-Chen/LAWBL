@@ -31,6 +31,10 @@
 #'
 #' @param digits Number of significant digits to print when printing numeric values.
 #'
+#' @param istart Starting point of the Markov chain for summary.
+#'
+#' @param iend Ending point of the Markov chain for summary; -1 for the actual final point.
+#'
 #' @param ... additional arguments
 #'
 #' @return A list or matrix containing the summarized information based on the option \code{what}.
@@ -87,18 +91,20 @@ summary.lawbl <- function(object, what = "basic", med = FALSE, SL = 0.05, detail
         ind <- which(Q != 0, arr.ind = TRUE)
         colnames(ind) <- c("Item", "F")
         LAM <- (cbind(ind, tmp))
+        LAM <- LAM[ind[,2] %in% which(TF_ind),]
         MLA[Q != 0] <- tmp[, 1]
+        # MLA  <- MLA[,TF_ind]
     } else {
         # Sig. Loading
         MLA[Q != 0] <- sig
         ind <- which(MLA > 0, arr.ind = TRUE)
         MLA[MLA > 0] <- tmp[sig > 0, 1]
-        MLA  <- MLA[,TF_ind]
-        colnames(MLA)<-which(TF_ind)
+
         colnames(ind) <- c("Item", "F")
         LAM <- (cbind(ind, tmp[sig > 0, ]))
     }
-
+    MLA  <- MLA[,TF_ind]
+    colnames(MLA)<-which(TF_ind)
     NSLA <- sum(sig > 0)
     row.names(MLA) <- paste0("I", 1:J)
 
@@ -144,13 +150,13 @@ summary.lawbl <- function(object, what = "basic", med = FALSE, SL = 0.05, detail
 
     # sign_chg<-object$chg_count
     # row.names(sign_chg) <- c("Burn-in", "Iteration")
-    out0 <- list(N = N, J = J, K = K, `Miss%` = object$Nmis/J/N * 100, `LD enabled` = LD, `Burn in` = object$burn+istart-1,
-                 Iteration = iend-istart+1, `No. of sig lambda` = NSLA)
+
+    out0 <- list(NJK = c(N, J, K), `Miss%` = object$Nmis/J/N * 100, `LD Allowed` = LD,
+                 `Burn in` = object$burn+istart-1,Iteration = iend-istart+1, `No. of sig lambda` = NSLA,
+                Selected = TF_ind,'Auto, NCONV, MCONV'=object$auto_conv)
 
 
     if (!detail) eigen <- eigen[TF_ind,]
-    # KE <- sum(TF_ind)
-    out0$'True Factor' = TF_ind
 
     # APSR = object$APSR
     # if(!is.null(nrow(APSR))) row.names(APSR) <- paste0("F", c(ind))
@@ -180,7 +186,7 @@ summary.lawbl <- function(object, what = "basic", med = FALSE, SL = 0.05, detail
     Qb <- object$Qb
     if (is.null(Qb)){
       gammal <- result(object$gammal[istart:iend,], med, SL)
-      # row.names(gammal) <- paste0("F", 1:K)
+      row.names(gammal) <- paste0("F", 1:K)
       gammal <- round(gammal,digits)
       gammab<-coef<-qcoef<-coef.er<-NULL
     }else{
@@ -285,16 +291,19 @@ summary.lawbl <- function(object, what = "basic", med = FALSE, SL = 0.05, detail
         MU <- NULL
     }
 
-    D_bar <- object$D_bar
-    if (!is.null(D_bar)){
-      Yc <- object$Y - MLA %*% object$Omega  # J*N
+    lpry<- object$lpry
+    if (!is.null(lpry)){
+      Yc <- object$Y - MLA %*% object$Omega[TF_ind,]  # J*N
       tmp<-(t(Yc) %*%chol(chol2inv(chol(PSX))))^2
-      D_hat <- sum(tmp)+N*(log(det(PSX))+K*log(2*pi))
+      lhat <- sum(tmp)+N*(log(det(PSX))+log(2*pi))
+      # D_hat <- sum(tmp)+N*(log(det(PSX)))
+      # out0$DIC <- 2*lsum-lhat
 
-      out0$DIC <- 2*D_bar-D_hat
-      # pDIC <- D_bar - D_hat
-      # out0$D_hat=D_hat
-      # out0$D_bar=D_bar
+      npar<-sum(Q!=0)+K*(K-1)/2+J+LD*J*(J-1)/2
+      DIC <- lpry + 2*npar
+      BIC <- lhat + npar*log(N)
+      AIC <- lhat +2*npar
+      out0$"DIC, BIC, AIC" <- c(DIC, BIC, AIC)
     }
     out0$Time <- object$time
 
@@ -327,7 +336,7 @@ summary.lawbl <- function(object, what = "basic", med = FALSE, SL = 0.05, detail
             out1$gammas <- gammas
             out1$thd <- Mthd
             out1$int <- MU
-            out1$factor <- TF_ind
+            # out1$factor <- TF_ind
             out1$coef <- coef
             out1$coef.er <- coef.er
             out1$gammab <- gammab

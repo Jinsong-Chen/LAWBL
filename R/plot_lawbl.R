@@ -15,6 +15,9 @@
 #'     \item \code{APSR}: The adjusted (single-chain) Gelman-Rubin diagnostics of each factor's eigenvalue.
 #'  }
 #'
+#' @param istart Starting point of the Markov chain for plotting.
+#'
+#' @param iend Ending point of the Markov chain for plotting; -1 for the actual final point.
 #'
 #' @return NULL
 #'

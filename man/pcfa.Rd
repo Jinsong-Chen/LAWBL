@@ -15,8 +15,12 @@ pcfa(
   iter = 5000,
   update = 1000,
   missing = NA,
-  DIC = TRUE,
+  rfit = TRUE,
   sign_check = FALSE,
+  sign_eps = -0.5,
+  rs = FALSE,
+  auto_stop = FALSE,
+  max_conv = 10,
   rseed = 12345,
   digits = 4,
   alas = FALSE,
@@ -50,6 +54,18 @@ without any specified loading. See \code{Examples}.}
 
 \item{missing}{Value for missing data (default is \code{NA}).}
 
+\item{rfit}{logical; \code{TRUE} for providing relative fit (DIC, BIC, AIC).}
+
+\item{sign_check}{logical; \code{TRUE} for checking sign switch of loading vector.}
+
+\item{sign_eps}{minimum value for switch sign of loading vector (if \code{sign_check=TRUE}).}
+
+\item{rs}{logical; \code{TRUE} for enabling recommendation system.}
+
+\item{auto_stop}{logical; \code{TRUE} for enabling auto stop based on \code{EPSR<1.1}.}
+
+\item{max_conv}{maximum consecutive number of convergence for auto stop.}
+
 \item{rseed}{An integer for the random seed.}
 
 \item{digits}{Number of significant digits to print when printing numeric values.}
@@ -61,11 +77,11 @@ without any specified loading. See \code{Examples}.}
     \item \code{Feigen}: Eigenvalue for each factor.
     \item \code{NLA_le3}: Number of Loading estimates >= .3 for each factor.
     \item \code{Shrink}: Shrinkage (or ave. shrinkage for each factor for adaptive Lasso).
-    \item \code{sign_sw}: Number of sign switch.
-    \item \code{Adj PSR}: Adjusted PSR for each factor.
+    \item \code{EPSR & NCOV}: EPSR for each factor & # of convergence.
     \item \code{Ave. Thd}: Ave. thresholds for polytomous items.
     \item \code{Acc Rate}: Acceptance rate of threshold (MH algorithm).
     \item \code{LD>.2 >.1 LD>.2 >.1}: # of LD terms larger than .2 and .1, and LD's shrinkage parameter.
+    \item \code{#Sign_sw}: Number of sign switch for each factor.
 }}
 }
 \value{
@@ -118,6 +134,9 @@ summary(m1,what='thd') #thresholds for categorical items
 }
 }
 \references{
-Chen, J., Guo, Z., Zhang, L., & Pan, J. (2020). A partially confirmatory approach to scale development
- with the Bayesian Lasso. \emph{Psychological Methods}. Advance online publication. DOI: 10.1037/met0000293.
+Chen, J., Guo, Z., Zhang, L., & Pan, J. (2021). A partially confirmatory approach to scale development
+ with the Bayesian Lasso. \emph{Psychological Methods}. 26(2), 210–235. DOI: 10.1037/met0000293.
+
+Chen, J. (2021). A generalized partially confirmatory factor analysis framework with mixed Bayesian Lasso methods.
+ \emph{Multivariate Behavioral Research}. DOI: 10.1080/00273171.2021.1925520.
 }
