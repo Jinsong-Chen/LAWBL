@@ -34,7 +34,7 @@
 
 # LAWBL 1.5.0
 
--   Updated - pcfa,pefa,pcirm,sim_lvm,summary
+-   Updated - pcfa,pefa,pcirm
 -   Updated - sim_lvm,summary.lawbl,plot_lawbl
 -   Fixed - bugs
 -   Updated - vignettes & online tutorials
