@@ -1,14 +1,15 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-6XKC5E4PWL"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+<!-- <!-- Global site tag (gtag.js) - Google Analytics -->
 
-  gtag('config', 'G-6XKC5E4PWL');
-</script>
+–&gt;
+<!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-6XKC5E4PWL"></script> -->
+<!-- <script> --> <!--   window.dataLayer = window.dataLayer || []; -->
+<!--   function gtag(){dataLayer.push(arguments);} -->
+<!--   gtag('js', new Date()); -->
+
+<!--   gtag('config', 'G-6XKC5E4PWL'); -->
+<!-- </script> -->
 
 # LAWBL: Latent (Variable) Analysis With Bayesian Learning
 
