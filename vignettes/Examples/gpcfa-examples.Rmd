@@ -53,7 +53,7 @@ summary(m0,what='thd')
 #plotting factorial eigenvalue
 plot_lawbl(m0) # trace
 plot_lawbl(m0, what='density') #density
-plot_lawbl(m0, what='APSR') #adj, PSRF
+plot_lawbl(m0, what='EPSR') #EPSR
 ```
 
 3) **C-step:** Reconfigure the Q matrix for the C-step with one specified loading per item based on results from the E-step. Estimate with the GPCFA model by setting *LD=TRUE* (by default). Longer chain is suggested for more accurate and stable estimation.
@@ -76,7 +76,7 @@ summary(m1,what='thd')
 #plotting factorial eigenvalue
 plot_lawbl(m1) # trace
 plot_lawbl(m1, what='density') #density
-plot_lawbl(m1, what='APSR') #adj, PSRF
+plot_lawbl(m1, what='EPSR') #EPSR
 ```
 
 4) **CFA-LD:** One can also configure the Q matrix for a CCFA model with local dependence (i.e. without any unspecified loading) based on results from the C-step.
@@ -123,7 +123,7 @@ summary(m0,what='eigen')
 summary(m0,what='thd')
 
 plot_lawbl(m0) # trace
-plot_lawbl(m0, what='APSR')
+plot_lawbl(m0, what='EPSR') #EPSR
 ```
 
 3) **C-step:** Reconfigure the Q matrix for the C-step with one specified loading per item based on results from the E-step. Estimate with the GPCFA model by setting *LD=TRUE* (by default). The estimates are more accurate, and the LD terms can be largely recovered.
@@ -186,7 +186,7 @@ summary(m0,what='thd') # only for 12 items
 
 plot_lawbl(m0) # trace
 plot_lawbl(m0, what='density')
-plot_lawbl(m0, what='APSR')
+plot_lawbl(m0, what='EPSR') #EPSR
 ```
 
 3) **C-step:** Reconfigure the Q matrix for the C-step with one specified loading per item based on results from the E-step. Estimate with the GPCFA model by setting *LD=TRUE* (by default). The estimates are more accurate, and the LD terms can be largely recovered.

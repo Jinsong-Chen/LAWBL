@@ -34,14 +34,23 @@ This package is under development. You are very welcome to send me any comments 
   the use of this package.
 }
 \references{
-Chen, J., Guo, Z., Zhang, L., & Pan, J. (2020). A partially confirmatory approach to scale development
- with the Bayesian Lasso. \emph{Psychological Methods}. Advance online publication. DOI:10.1037/met0000293
-
 Chen, J. (2020). A partially confirmatory approach to the multidimensional item response theory with the Bayesian Lasso.
 \emph{Psychometrika}. 85(3), 738-774. DOI:10.1007/s11336-020-09724-3.
 
+Chen, J., Guo, Z., Zhang, L., & Pan, J. (2021). A partially confirmatory approach to scale development
+ with the Bayesian Lasso. \emph{Psychological Methods}. 26(2), 210–235. DOI: 10.1037/met0000293.
+
+Chen, J. (2021). A generalized partially confirmatory factor analysis framework with mixed Bayesian Lasso methods.
+ \emph{Multivariate Behavioral Research}. DOI: 10.1080/00273171.2021.1925520.
+
 Chen, J. (2021). A Bayesian regularized approach to exploratory factor analysis in one step.
 \emph{Structural Equation Modeling: A Multidisciplinary Journal}. DOI: 10.1080/10705511.2020.1854763.
+
+Chen, J. (2022). Partially confirmatory approach to factor analysis with Bayesian learning: A LAWBL tutorial.
+ \emph{Structural Equation Modeling: A Multidisciplinary Journal}. DOI: 10.1080/00273171.2021.1925520.
+
+Chen, J. (In Press). Fully and partially exploratory factor analysis with bi-level Bayesian regularization.
+ \emph{Behavior Research Methods}.
 }
 \author{
 {Jinsong Chen, \email{jinsong.chen@live.com}}

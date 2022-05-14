@@ -15,6 +15,10 @@ pcirm(
   update = 1000,
   missing = NA,
   rseed = 12345,
+  sign_check = FALSE,
+  sign_eps = -0.5,
+  auto_stop = FALSE,
+  max_conv = 10,
   digits = 4,
   alas = FALSE,
   verbose = FALSE
@@ -47,20 +51,27 @@ without any specified loading. See \code{Examples}.}
 
 \item{rseed}{An integer for the random seed.}
 
+\item{sign_check}{logical; \code{TRUE} for checking sign switch of loading vector.}
+
+\item{sign_eps}{minimum value for switch sign of loading vector (if \code{sign_check=TRUE}).}
+
+\item{auto_stop}{logical; \code{TRUE} for enabling auto stop based on \code{EPSR<1.1}.}
+
+\item{max_conv}{maximum consecutive number of convergence for auto stop.}
+
 \item{digits}{Number of significant digits to print when printing numeric values.}
 
 \item{alas}{logical; for adaptive Lasso or not. The default is \code{FALSE}.}
 
 \item{verbose}{logical; to display the sampling information every \code{update} or not.
-
 \itemize{
     \item \code{Feigen}: Eigenvalue for each factor.
     \item \code{NLA_le3}: Number of Loading estimates >= .3 for each factor.
     \item \code{Shrink}: Shrinkage (or ave. shrinkage for each factor for adaptive Lasso).
-    \item \code{sign_sw}: Number of sign switch.
-    \item \code{Adj PSR}: Adjusted PSR for each factor.
+    \item \code{EPSR & NCOV}: EPSR for each factor & # of convergence.
     \item \code{Ave. Int.}: Ave. item intercept.
     \item \code{LD>.2 >.1 LD>.2 >.1}: # of LD terms larger than .2 and .1, and LD's shrinkage parameter.
+    \item \code{#Sign_sw}: Number of sign switch for each factor.
 }}
 }
 \value{

@@ -21,8 +21,8 @@ developed.](http://www.repostatus.org/badges/latest/active.svg)](https://www.rep
 
 ## How to cite the package
 
-Chen, J. (2021). LAWBL: Latent (variable) analysis with Bayesian
-learning (R package version 1.4.0). Retrieved from
+Chen, J. (2022). LAWBL: Latent (variable) analysis with Bayesian
+learning (R package version 1.5.0). Retrieved from
 <https://CRAN.R-project.org/package=LAWBL>
 
 ## Introduction

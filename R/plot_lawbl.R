@@ -12,7 +12,7 @@
 #' \itemize{
 #'      \item \code{trace}: The trace of each factor's eigenvalue.
 #'     \item \code{density}: The trace of each factor's eigenvalue.
-#'     \item \code{APSR}: The adjusted (single-chain) Gelman-Rubin diagnostics of each factor's eigenvalue.
+#'     \item \code{EPSR}: Estimated Potential Scale Reduction (Gelman-Rubin diagnostics) for each factor.
 #'  }
 #'
 #' @param istart Starting point of the Markov chain for plotting.
@@ -38,7 +38,7 @@
 #' m0 <- pcfa(dat = dat, Q = Q, LD = FALSE,burn = 1000, iter = 1000)
 #' plot_lawbl(m0) # trace
 #' plot_lawbl(m0, what='density')
-#' plot_lawbl(m0, what='APSR')
+#' plot_lawbl(m0, what='EPSR')
 #' }
 plot_lawbl <- function(object, what = "trace",istart =1, iend = -1) {
     # if (class(obj) != "lawbl")
@@ -79,7 +79,7 @@ plot_lawbl <- function(object, what = "trace",istart =1, iend = -1) {
     # gelman.diag(xx)
 
     switch(what,
-           APSR = gelman.plot(xx, autoburnin = F,xlab = "", ylab = "PSRF"),
+           EPSR = gelman.plot(xx, autoburnin = F,xlab = "", ylab = "PSRF"),
            trace = plot(mcmc(eig_arr), density = F,xlab = "",cex.main = 1),
            density = plot(mcmc(eig_arr), trace = F, xlab = "",cex.main = 1),
         stop(sprintf("Can not plot element '%s'", what), call. = FALSE))

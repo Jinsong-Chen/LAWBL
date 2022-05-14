@@ -43,16 +43,23 @@
 #' @param digits Number of significant digits to print when printing numeric values.
 #'
 #' @param verbose logical; to display the sampling information every \code{update} or not.
-#'
 #' \itemize{
 #'     \item \code{Feigen}: Eigenvalue for each factor.
 #'     \item \code{NLA_le3}: Number of Loading estimates >= .3 for each factor.
 #'     \item \code{Shrink}: Shrinkage (or ave. shrinkage for each factor for adaptive Lasso).
-#'     \item \code{sign_sw}: Number of sign switch.
-#'     \item \code{Adj PSR}: Adjusted PSR for each factor.
+#'     \item \code{EPSR & NCOV}: EPSR for each factor & # of convergence.
 #'     \item \code{Ave. Int.}: Ave. item intercept.
 #'     \item \code{LD>.2 >.1 LD>.2 >.1}: # of LD terms larger than .2 and .1, and LD's shrinkage parameter.
+#'     \item \code{#Sign_sw}: Number of sign switch for each factor.
 #' }
+#'
+#' @param sign_check logical; \code{TRUE} for checking sign switch of loading vector.
+#'
+#' @param sign_eps minimum value for switch sign of loading vector (if \code{sign_check=TRUE}).
+#'
+#' @param auto_stop logical; \code{TRUE} for enabling auto stop based on \code{EPSR<1.1}.
+#'
+#' @param max_conv maximum consecutive number of convergence for auto stop.
 #'
 #' @return \code{pcirm} returns an object of class \code{lawbl} with item intercepts. It contains a lot of information about
 #' the posteriors that can be summarized using \code{\link{summary.lawbl}}.
@@ -96,10 +103,10 @@
 #' summary(m1, what = 'offpsx') #summarize significant LD terms
 #' }
 pcirm <- function(dat, Q, LD = TRUE,cati = NULL, PPMC = FALSE, burn = 5000, iter = 5000, update = 1000, missing = NA, rseed = 12345,
-    digits = 4, alas = FALSE, verbose = FALSE) {
+                  sign_check = FALSE, sign_eps = -.5, auto_stop=FALSE,max_conv=10,digits = 4, alas = FALSE, verbose = FALSE) {
 
-    cand_thd = 0.2
-    conv = 0
+    # cand_thd = 0.2
+    # conv = 0
 
     if (nrow(Q) != ncol(dat))
         stop("The numbers of items in data and Q are unequal.", call. = FALSE)
@@ -132,7 +139,7 @@ pcirm <- function(dat, Q, LD = TRUE,cati = NULL, PPMC = FALSE, burn = 5000, iter
     Nmis <- sum(is.na(Y))
     mind <- which(is.na(Y), arr.ind = TRUE)
 
-    const <- list(N = N, J = J, K = K, Q = Q, cati = cati, Jp = Jp, Nmis = Nmis, cand_thd = cand_thd, int = int)
+    const <- list(N = N, J = J, K = K, Q = Q, cati = cati, Jp = Jp, Nmis = Nmis, int = int)
 
     ######## Init ########################################################
     miter <- iter + burn
@@ -192,6 +199,7 @@ pcirm <- function(dat, Q, LD = TRUE,cati = NULL, PPMC = FALSE, burn = 5000, iter
         ind<-(tmp[,2]==k)
         pof[ind,k]<-1
     }
+    no_conv <- 0
 
     ######## end of Init #################################################
 
@@ -220,27 +228,19 @@ pcirm <- function(dat, Q, LD = TRUE,cati = NULL, PPMC = FALSE, burn = 5000, iter
 
         LA <- LAY$la # OME <- LAY$ome
 
-        # LA1 <- LAY$la
-        # chg <- colSums(LA * LA1 < 0)/Jest > 0.5  # if over half items change sign
-        # if (sum(chg) > 0) {
-        #     sign <- diag(1 - 2 * chg)
-        #     chg_count <- chg_count + chg
-        #     LA1 <- LA1 %*% sign
-        #     OME <- t(t(OME) %*% sign)
-        #     print(c("ii=", ii), quote = FALSE)
-        #     cat(chg_count, fill = TRUE, labels = "#Sign change:")
-        # }
-        # LA <- LA1
-
-        chg <- (colSums(LA)<= sign_eps)
-        # chg <- (colSums(LA)<= LA_eps)
-        if (any(chg)) {
-            sign <- diag(1 - 2 * chg)
-            sign_sw <- sign_sw + chg
-            # if(g<0){chg0_count <- chg0_count + chg}else{chg_count <- chg_count + chg}
-            LA <- LA %*% sign
-            OME <- t(t(OME) %*% sign)
-        }
+        if (sign_check) {
+            chg <- (colSums(LA)<= sign_eps)
+            # chg <- (colSums(LA)<= LA_eps)
+            if (any(chg)) {
+                sign <- diag(1 - 2 * chg)
+                sign_sw <- sign_sw + chg
+                # if(g<0){chg0_count <- chg0_count + chg}else{chg_count <- chg_count + chg}
+                LA <- LA %*% sign
+                OME <- t(t(OME) %*% sign)
+                print(c("ii=", ii), quote = FALSE)
+                cat(sign_sw, fill = TRUE, labels = "#Sign switch:")
+            }
+        } #end if
 
         gammal_sq <- LAY$gammal_sq
         # OME <- Gibbs_Omega(y = Y, la = LA, phi = PHI, inv.psx = inv.PSX, N = N, K = K)
@@ -277,35 +277,18 @@ pcirm <- function(dat, Q, LD = TRUE,cati = NULL, PPMC = FALSE, burn = 5000, iter
                   J = J)
         }
 
-        if (ii%%update == 0)
-            {
+        if (ii%%update == 0){
                 if (g > 0) {
-                  if (conv == 0) {
-                      APSR <- schain.grd(Eigen[1:g,])
-                      # cat(t(APSR[,1]), fill = TRUE, labels = "Adj PSR")
 
-                    # tmp <- schain.grd(ELA[1:g, ])
-                    # GRD_mean <- colMeans(tmp)
-                    # GRD_max <- c(max(tmp[, 1]), max(tmp[, 2]))
-                    # GRD <- c(GRD_mean[1], GRD_max[1])
-                    # cat(GRD, fill = TRUE, labels = "PGR mean & max:")
-                  } else {
-                      APSR <- schain.grd(Eigen[1:g,], auto = TRUE)
-                      # cat(t(APSR[,1]), fill = TRUE, labels = "Adj PSR")
-                      if (mean(APSR[,1])<1.1) break
-
-                    # tmp <- schain.grd(ELA[1:g, ], auto = TRUE)
-                    # GRD_mean <- colMeans(tmp)
-                    # GRD_max <- c(max(tmp[, 1]), max(tmp[, 2]))
-                    # # cat(GRD_mean, fill = TRUE, labels = 'GR Mean & UL:') cat(GRD_max, fill = TRUE, labels = 'GR Max & UL:')
-                    # GRD <- c(GRD_mean[1], GRD_max[1])
-                    # cat(GRD, fill = TRUE, labels = "PGR mean & max:")
-                    # if (conv == 1 && GRD[2] < 1.1)
-                    #   break
-                    # if (conv == 2 && GRD[1] < 1.1 && GRD[2] < 1.2)
-                    #   break
-                  }
-                }
+                    APSR <- schain.grd(Eigen[1:g,])
+                    if (auto_stop) {
+                        if (max(APSR[,1]) < 1.1) {
+                            no_conv <- no_conv + 1
+                        } else{
+                            no_conv <- 0
+                        }
+                    } # end auto_stop
+                } # end g
 
 
             if(verbose){
@@ -317,11 +300,9 @@ pcirm <- function(dat, Q, LD = TRUE,cati = NULL, PPMC = FALSE, burn = 5000, iter
                 # Mlambda<-colMeans(LA)
 
                 cat(ii, fill = TRUE, labels = "\nTot. Iter =")
-                print(rbind(Feigen, NLA_le3, Shrink,sign_sw))
-                # cat(chg_count, fill = TRUE, labels = '#Sign change:')
-                if (g > 0) cat(t(APSR[,1]), fill = TRUE, labels = "Adj PSR")
-
+                print(rbind(Feigen, NLA_le3, Shrink))
                 cat(mean(MU), fill = TRUE, labels = "Ave. Int.:")
+                if (g > 0) cat(c(t(APSR[,1]),no_conv), fill = TRUE, labels = "EPSR & NCONV")
 
                 if (LD) {
                     opsx <- abs(PSX[row(PSX) != col(PSX)])
@@ -339,6 +320,7 @@ pcirm <- function(dat, Q, LD = TRUE,cati = NULL, PPMC = FALSE, burn = 5000, iter
 
             }#end verbose
 
+            if (auto_stop * no_conv >= max_conv) break
             }  # end update
 
     }  #end of g MCMAX
@@ -349,26 +331,40 @@ pcirm <- function(dat, Q, LD = TRUE,cati = NULL, PPMC = FALSE, burn = 5000, iter
     }
 
 
-    if (conv != 0) {
-        st <- g/2 + 1
-        ELA <- ELA[(st):g, ]
-        # EPSX <- EPSX[(st):g, , ] EPHI <- EPHI[(st):g, , ]
-        EPSX <- EPSX[(st):g, ]
-        EPHI <- EPHI[(st):g, ]
-        Egammal <- Egammal[(st):g, ]
-        Egammas <- Egammas[(st):g, ]
-        EMU <- EMU[(st):g,]
+    if (auto_stop * no_conv >= max_conv) {
+        ELA <- ELA[1:g, ]
+        Eigen <- Eigen[1:g, ]
+        EPSX <- EPSX[1:g, ]
+        EPHI <- EPHI[1:g, ]
+        Egammal <- Egammal[1:g, ]
+        Eppmc <- Eppmc[1:g]
+        Egammas <- Egammas[1:g, ]
         # if (Jp > 0)
-        #     Etd <- Etd[(st):g, , ]
-        Eppmc <- Eppmc[(st):g]
-        mOmega <- mOmega/2
-        iter <- burn <- g/2
+        #     Etd <- Etd[1:g, , ]
+        iter <- g
     }
+
+
+    # if (conv != 0) {
+    #     st <- g/2 + 1
+    #     ELA <- ELA[(st):g, ]
+    #     # EPSX <- EPSX[(st):g, , ] EPHI <- EPHI[(st):g, , ]
+    #     EPSX <- EPSX[(st):g, ]
+    #     EPHI <- EPHI[(st):g, ]
+    #     Egammal <- Egammal[(st):g, ]
+    #     Egammas <- Egammas[(st):g, ]
+    #     EMU <- EMU[(st):g,]
+    #     # if (Jp > 0)
+    #     #     Etd <- Etd[(st):g, , ]
+    #     Eppmc <- Eppmc[(st):g]
+    #     mOmega <- mOmega/2
+    #     iter <- burn <- g/2
+    # }
 
     # chg1_count<-rbind(chg0_count,chg_count)
     out <- list(Q = Q, LD = LD, LA = ELA, Omega = mOmega/iter, PSX = EPSX, iter = iter, burn = burn,
-                PHI = EPHI, gammal = Egammal, gammas = Egammas, Nmis = Nmis, PPP = Eppmc, conv = conv,
-                Eigen = Eigen, APSR = APSR, MU = EMU)
+                PHI = EPHI, gammal = Egammal, gammas = Egammas, Nmis = Nmis, PPP = Eppmc,MU = EMU,
+                auto_conv = c(auto_stop, no_conv, max_conv),Eigen = Eigen, time = (proc.time()-ptm))
 
     if (Jp > 0) {
         out$cati = cati

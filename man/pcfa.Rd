@@ -90,8 +90,10 @@ the posteriors that can be summarized using \code{\link{summary.lawbl}}.
 }
 \description{
 \code{PCFA} is a partially confirmatory approach covering a wide range of
-the exploratory-confirmatory continuum in factor analytic models (Chen, Guo, Zhang, & Pan, 2020).
-The PCFA is only for continuous data, while the generalized PCFA (GPCFA) covers both continuous and categorical data.
+the exploratory-confirmatory continuum in factor analytic models (Chen, Guo, Zhang, & Pan, 2021).
+The PCFA is only for continuous data, while the generalized PCFA (GPCFA; Chen, 2021)
+covers both continuous and categorical data.
+
  There are two major model variants with different constraints for identification. One assumes local
  independence (LI) with a more exploratory tendency, which can be also called the E-step.
  The other allows local dependence (LD) with a more confirmatory tendency, which can be also
