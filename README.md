@@ -83,22 +83,23 @@ devtools::install_github("Jinsong-Chen/LAWBL")
 
 Chen, J. (2020). A partially confirmatory approach to the
 multidimensional item response theory with the Bayesian Lasso.
-*{Psychometrika}*. 85(3), 738-774. DOI: 10.1007/s11336-020-09724-3.
+*Psychometrika*. 85(3), 738-774. DOI: 10.1007/s11336-020-09724-3.
 
 Chen, J., Guo, Z., Zhang, L., & Pan, J. (2021). A partially confirmatory
-approach to scale development with the Bayesian Lasso. . 26(2), 210–235.
-DOI: 10.1037/met0000293.
+approach to scale development with the Bayesian Lasso. *Psychological
+Methods*. 26(2), 210–235. DOI: 10.1037/met0000293.
 
 Chen, J. (2021). A generalized partially confirmatory factor analysis
-framework with mixed Bayesian Lasso methods. . DOI:
-10.1080/00273171.2021.1925520.
+framework with mixed Bayesian Lasso methods. *Multivariate Behavioral
+Research*. DOI: 10.1080/00273171.2021.1925520.
 
 Chen, J. (2021). A Bayesian regularized approach to exploratory factor
-analysis in one step. . DOI: 10.1080/10705511.2020.1854763.
+analysis in one step. *Structural Equation Modeling: A Multidisciplinary
+Journal*. DOI: 10.1080/10705511.2020.1854763.
 
 Chen, J. (2022). Partially confirmatory approach to factor analysis with
-Bayesian learning: A LAWBL tutorial. . DOI:
-10.1080/00273171.2021.1925520.
+Bayesian learning: A LAWBL tutorial. *Structural Equation Modeling: A
+Multidisciplinary Journal*. DOI: 10.1080/00273171.2021.1925520.
 
 Chen, J. (In Press). Fully and partially exploratory factor analysis
-with bi-level Bayesian regularization. .
+with bi-level Bayesian regularization. *Behavior Research Methods*.
