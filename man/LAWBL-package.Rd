@@ -50,7 +50,7 @@ Chen, J. (2022). Partially confirmatory approach to factor analysis with Bayesia
  \emph{Structural Equation Modeling: A Multidisciplinary Journal}. DOI: 10.1080/00273171.2021.1925520.
 
 Chen, J. (In Press). Fully and partially exploratory factor analysis with bi-level Bayesian regularization.
- \emph{Behavior Research Methods}.
+\emph{Behavior Research Methods}.
 }
 \author{
 {Jinsong Chen, \email{jinsong.chen@live.com}}

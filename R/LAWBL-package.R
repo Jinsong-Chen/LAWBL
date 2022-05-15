@@ -58,7 +58,7 @@
 #'  \emph{Structural Equation Modeling: A Multidisciplinary Journal}. DOI: 10.1080/00273171.2021.1925520.
 #'
 #' Chen, J. (In Press). Fully and partially exploratory factor analysis with bi-level Bayesian regularization.
-#'	 \emph{Behavior Research Methods}.
+#' \emph{Behavior Research Methods}.
 #'
 #' @keywords package
 NULL

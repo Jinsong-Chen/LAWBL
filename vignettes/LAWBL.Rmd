@@ -34,5 +34,6 @@ For examples of how to use the package, see
 * For PCFA with continuous data: [here](https://jinsong-chen.github.io/LAWBL/articles/Examples/pcfa-examples.html) 
 * For GPCFA with categorical and mixed-type data: [here](https://jinsong-chen.github.io/LAWBL/articles/Examples/gpcfa-examples.html) 
 * For PCIRM with dichotomous data and intercept terms: [here](https://jinsong-chen.github.io/LAWBL/articles/Examples/pcirm-examples.html) 
+* For fully and partially EFA with unknown number of factors, please refer to the *pefa()* function.
 
 If you would like to contribute an example to this website, please send your .Rmd file to me at jinsong.chen@live.com.

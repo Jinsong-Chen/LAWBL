@@ -2,7 +2,7 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 <!-- <!-- Global site tag (gtag.js) - Google Analytics -->
 
-–&gt;
+–>
 <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-6XKC5E4PWL"></script> -->
 <!-- <script> --> <!--   window.dataLayer = window.dataLayer || []; -->
 <!--   function gtag(){dataLayer.push(arguments);} -->
@@ -16,7 +16,7 @@
 [![Project Status: Active ? The project has reached a stable, usable
 state and is being actively
 developed.](http://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/)
-[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/LAWBL)](https://cran.r-project.org/package=LAWBL)
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/LAWBL)](https://cran.r-project.org/package=LAWBL)
 [![](https://cranlogs.r-pkg.org/badges/LAWBL?color=brightgreen)](https://cran.r-project.org/package=LAWBL)
 [![](http://cranlogs.r-pkg.org/badges/grand-total/LAWBL?color=green)](https://cran.r-project.org/package=LAWBL)
 
@@ -78,3 +78,27 @@ install.packages("LAWBL")
 # install.packages("devtools")
 devtools::install_github("Jinsong-Chen/LAWBL")
 ```
+
+## References
+
+Chen, J. (2020). A partially confirmatory approach to the
+multidimensional item response theory with the Bayesian Lasso.
+*{Psychometrika}*. 85(3), 738-774. DOI: 10.1007/s11336-020-09724-3.
+
+Chen, J., Guo, Z., Zhang, L., & Pan, J. (2021). A partially confirmatory
+approach to scale development with the Bayesian Lasso. . 26(2), 210–235.
+DOI: 10.1037/met0000293.
+
+Chen, J. (2021). A generalized partially confirmatory factor analysis
+framework with mixed Bayesian Lasso methods. . DOI:
+10.1080/00273171.2021.1925520.
+
+Chen, J. (2021). A Bayesian regularized approach to exploratory factor
+analysis in one step. . DOI: 10.1080/10705511.2020.1854763.
+
+Chen, J. (2022). Partially confirmatory approach to factor analysis with
+Bayesian learning: A LAWBL tutorial. . DOI:
+10.1080/00273171.2021.1925520.
+
+Chen, J. (In Press). Fully and partially exploratory factor analysis
+with bi-level Bayesian regularization. .
