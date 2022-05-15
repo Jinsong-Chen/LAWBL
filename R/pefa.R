@@ -30,6 +30,8 @@
 #'
 #' @param update Number of iterations to update the sampling information.
 #'
+#' @param missing Value for missing data (default is \code{NA}).
+#'
 #' @param rseed An integer for the random seed.
 #'
 #' @param digits Number of significant digits to print when printing numeric values.

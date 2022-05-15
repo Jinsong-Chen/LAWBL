@@ -43,6 +43,8 @@ for \code{FEFA}, which is the default. See \code{Examples}.}
 
 \item{iter}{Number of formal iterations for posterior sampling (> 0).}
 
+\item{missing}{Value for missing data (default is \code{NA}).}
+
 \item{eig_eps}{minimum eigenvalue for factor extraction.}
 
 \item{sign_eps}{minimum value for switch sign of loading vector.}

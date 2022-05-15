@@ -74,13 +74,13 @@
 #' @examples
 #'
 #' # for continuous data with cross-loadings and local dependence effect .3
-#' out <- sim_lvm(N=1000,K=3,ipf=6,lam = .7, lac=.3,ecr=.3)
+#' out <- sim_lvm(N=1000,K=3,J=18,lam = .7, lac=.3,ecr=.3)
 #' summary(out$dat)
 #' out$MLA
 #' out$ofd_ind
 #'
 #' # for categorical data with cross-loadings .4 and 10% missingness
-#' out <- sim_lvm(N=1000,K=3,ipf=6,lam = .7, lac=.4,cati=-1,noc=4,misp=.1)
+#' out <- sim_lvm(N=1000,K=3,J=18,lam = .7, lac=.4,cati=-1,noc=4,misp=.1)
 #' summary(out$dat)
 #' out$MLA
 #' out$ofd_ind
