@@ -1,0 +1,15 @@
+Version: 1.5.0
+Date: 2022-05-15 12:05:05 UTC
+SHA: fatal: unsafe repository ('E:/Drive/LAWBL' is owned by someone else)
+
+Version: 1.5.0
+Date: 2022-05-15 12:05:05 UTC
+SHA: To add an exception for this directory, call:
+
+Version: 1.5.0
+Date: 2022-05-15 12:05:05 UTC
+SHA:
+
+Version: 1.5.0
+Date: 2022-05-15 12:05:05 UTC
+SHA: git config --global --add safe.directory E:/Drive/LAWBL
