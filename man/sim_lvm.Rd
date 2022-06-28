@@ -6,31 +6,28 @@
 \usage{
 sim_lvm(
   N = 1000,
-  mla = NULL,
+  lam = 0.7,
   K = 3,
   J = 18,
   cpf = 0,
-  lam = 0.7,
   lac = 0.3,
   phi = 0.3,
-  ph12 = -1,
   ecr = 0,
+  necw = K,
+  necb = K,
   P = 0,
-  b = 0.3,
+  phx = 0,
+  b = 0,
+  lam1 = 0,
   K1 = 0,
-  ph1 = 0.2,
-  b1 = 0.3,
+  J1 = 0,
+  b1 = 0,
+  ph1 = 0,
   ilvl = NULL,
   cati = NULL,
   noc = c(4),
   misp = 0,
-  ome_out = FALSE,
-  necw = K,
-  necb = K,
-  add_ind = c(),
-  add_la = 0.5,
-  add_phi = 0,
-  zero_it = 0,
+  fac_score = FALSE,
   rseed = 333,
   digits = 4
 )
@@ -38,35 +35,41 @@ sim_lvm(
 \arguments{
 \item{N}{Sample size.}
 
-\item{mla}{Population loading matrix.}
+\item{lam}{Loading value (for major loadings) or matrix (\eqn{J \times K}).}
 
-\item{K}{Number of factors (if \code{mla=NULL}).}
+\item{K}{Number of factors (if \code{lam} is a value).}
 
-\item{J}{Number of items (if \code{mla=NULL}).}
+\item{J}{Number of items (if \code{lam} is a value).}
 
-\item{cpf}{Number of cross-loadings per factor (if \code{mla=NULL}).}
+\item{cpf}{Number of cross-loadings per factor (if \code{lam} is a value).}
 
-\item{lam}{Number of formal iterations for posterior sampling.}
+\item{lac}{Cross-loading value (if \code{lam} is a value).}
 
-\item{lac}{Number of iterations to update the sampling information.}
+\item{phi}{Factor correlation scalar or matrix, or error correlations (for MIMIC-type model).}
 
-\item{phi}{Homogeneous correlations between any two factors.}
+\item{ecr}{Error covariance (local dependence) value.}
 
-\item{ph12}{Correlation between factor 1 and 2 (if it's different from \code{phi}.}
+\item{necw}{Number of within-factor local dependence.}
 
-\item{ecr}{Residual correlation (local dependence).}
+\item{necb}{Number of between-factor local dependence.}
 
-\item{P}{Number of observable predictors (for MIMIC model).}
+\item{P}{Number of observable predictors (for MIMIC-type model).}
 
-\item{b}{Coefficients of observable predictors (for MIMIC model).}
+\item{phx}{Observable predictor correlation value or matrix (for MIMIC-type model).}
 
-\item{K1}{Number of latent predictors (for MIMIC model).}
+\item{b}{Coefficients of observable predictors (for MIMIC-type model), value or \eqn{K \times P}.}
 
-\item{ph1}{Correlations between latent predictors (for MIMIC model).}
+\item{lam1}{Loading value (for major loadings) or matrix (\eqn{J1 \times K1}) for latent predictors (for MIMIC-type model).}
 
-\item{b1}{Coefficients of latent predictors (for MIMIC model).}
+\item{K1}{Number of latent predictors (if \code{lam} is a value, for MIMIC-type model).}
 
-\item{ilvl}{Specified levels of all items (i.e., need to specify Item 1 to \eqn{J+P});
+\item{J1}{Number of items latent predictors (if \code{lam} is a value, for MIMIC-type model).}
+
+\item{b1}{Coefficients of latent predictors (for MIMIC-type model), value or \eqn{K \times K1}}
+
+\item{ph1}{Latent predictor correlation scalar or matrix (for MIMIC-type model).}
+
+\item{ilvl}{Specified levels of all items (i.e., need to specify Item 1 to \eqn{J+P+J1});
 Any value smaller than 2 is considered as continuous item.}
 
 \item{cati}{The set of polytomous items in sequence number (i.e., can be any number set
@@ -76,44 +79,36 @@ in between 1 and \eqn{J+P}); \code{NULL} for no and -1 for all (if \code{ilvl=NU
 
 \item{misp}{Proportion of missingness.}
 
-\item{ome_out}{Output factor score or not.}
-
-\item{necw}{Number of within-factor local dependence.}
-
-\item{necb}{Number of between-factor local dependence.}
-
-\item{add_ind}{(Additional) minor factor with cross-loadings.}
-
-\item{add_la}{Value of cross-loadings on (Additional) minor factor.}
-
-\item{add_phi}{Correlations between (Additional) minor factor and other factors.}
-
-\item{zero_it}{Surplus items with zero loading.}
+\item{fac_score}{Output factor score or not.}
 
 \item{rseed}{An integer for the random seed.}
 
 \item{digits}{Number of significant digits to print when printing numeric values.}
 }
 \value{
-An object of class \code{list} containing the data, loading, and factorial correlation matrix.
+An object of class \code{list} containing the data, loadings, factor correlations,
+local dependence, and other information. The data consists of J items for the factors,
+P items for observable predictors, and J1 items for latent predictors.
 }
 \description{
-\code{sim_lvm} can simulate data based on factor analysis or
-item response models with different response formats (continuous or categorical),
-loading patterns and residual covariance (local dependence) structures.
+\code{sim_lvm} can simulate data with continuous latent variables (factors)
+and continuous or categorical observed variables, plus a MIMIC-type structure.
+One can also include an error covariance (local dependence) structure. Categorical
+observed variables are generated with latent continuous responses normally distributed
+and equally spaced within [-3,3].
 }
 \examples{
 
 # for continuous data with cross-loadings and local dependence effect .3
 out <- sim_lvm(N=1000,K=3,J=18,lam = .7, lac=.3,ecr=.3)
 summary(out$dat)
-out$MLA
-out$ofd_ind
+out$lam
+out$loc_dep
 
 # for categorical data with cross-loadings .4 and 10\% missingness
 out <- sim_lvm(N=1000,K=3,J=18,lam = .7, lac=.4,cati=-1,noc=4,misp=.1)
 summary(out$dat)
-out$MLA
-out$ofd_ind
+out$lam
+out$loc_dep
 
 }

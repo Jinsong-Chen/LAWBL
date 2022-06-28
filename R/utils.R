@@ -1,3 +1,5 @@
+is.scalar <- function(x) is.atomic(x) && length(x) == 1L
+
 # x: iter * nvar
 schain.grd <- function(x0, auto = F) {
     x <- as.matrix(x0)
@@ -95,3 +97,42 @@ post_pp <- function(y, mu = 0, ome, la, psx, inv.psx, N, J) {
     return(sum(tmp2 - tmp1) > 0)
 
 }
+
+
+cor_check<-function(phi,K){
+  if (length(phi)==1){
+    phi<-matrix(phi, K, K)
+    diag(phi) <- 1
+  }
+  c0 <- any(dim(phi)!=K) #not K x K
+  if (!c0) c1 <- any(eigen(phi)$values<=0) #not positive definite
+  c2<- any(diag(phi)!=1)
+  c3<- any(phi!=t(phi))
+  if (c0 | c1 | c2 | c3)
+    stop("phi should be a scalar in (small negative value,1) or K*K PD correlation matrix.", call. = FALSE)
+  return(phi)
+}
+
+# check for corr or cov matrix (K*K & PD)
+# scalar only for corr; type = 1 for corr, 2 for cov
+cm_check<-function(cm,K,diag=1,type=1){
+  if (is.scalar(cm)){
+    cm<-matrix(cm, K, K)
+    diag(cm) <- diag
+  }
+  c0 <- any(dim(cm)!=K) #not K x K
+  c1<- any(cm!=t(cm)) #not symmetric
+  if (type ==1){
+    c2<- any(diag(cm)!=1)
+  }else{
+    c2 <- any(diag(cm)<=0)
+  }
+  if (c0 || c1 || c2) return(-1)
+
+  if (any(eigen(cm)$values<=0)) return(-2) #not positive definite
+
+  return(cm)
+}
+
+
+

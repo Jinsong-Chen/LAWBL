@@ -119,8 +119,9 @@
 #' summary(m1,what='thd') #thresholds for categorical items
 #' }
 pcfa <- function(dat, Q, LD = TRUE,cati = NULL,cand_thd = 0.2, PPMC = FALSE, burn = 5000, iter = 5000,
-                 update = 1000, missing = NA, rfit = TRUE, sign_check = FALSE, sign_eps = -.5, rs = FALSE,
-                 auto_stop=FALSE,max_conv=10, rseed = 12345, digits = 4, alas = FALSE, verbose = FALSE) {
+                 update = 1000, missing = NA, rfit = TRUE, sign_check = FALSE, sign_eps = -.1, rs = FALSE,
+                 auto_stop=FALSE,max_conv=10, rseed = 12345, digits = 4, alas = FALSE, verbose = FALSE,
+                 orthogonal = FALSE) {
 
     Q <- as.matrix(Q)
     if (nrow(Q) != ncol(dat))
@@ -218,6 +219,9 @@ pcfa <- function(dat, Q, LD = TRUE,cati = NULL,cand_thd = 0.2, PPMC = FALSE, bur
     lsum <- 0
     sy <- 0
     no_conv <- 0
+    LA_OF <- .99 #overflow value
+    overf <- 0
+    PHI0 <- diag(K)
 
     ######## end of Init #################################################
 
@@ -244,20 +248,15 @@ pcfa <- function(dat, Q, LD = TRUE,cati = NULL,cand_thd = 0.2, PPMC = FALSE, bur
         }
 
         LA <- LAY$la # OME <- LAY$ome
+        tmp1<-abs(LA)>LA_OF
+        if (any(tmp1)){
+          overf <- overf+(colSums(tmp1)>0)
+          # LA1[tmp1]<-LA[tmp1]
+          LA[LA>LA_OF]<-LA_OF
+          LA[LA< -LA_OF]<--LA_OF
+        }
 
         if (sign_check) {
-        # LA1 <- LAY$la
-        # chg <- colSums(LA * LA1 < 0)/Jest > 0.5  # if over half items change sign
-        # if (sum(chg) > 0) {
-        #     sign <- diag(1 - 2 * chg)
-        #     chg_count <- chg_count + chg
-        #     LA1 <- LA1 %*% sign
-        #     OME <- t(t(OME) %*% sign)
-        #     print(c("ii=", ii), quote = FALSE)
-        #     cat(chg_count, fill = TRUE, labels = "#Sign change:")
-        # }
-        # LA <- LA1
-
         chg <- (colSums(LA)<= sign_eps)
         # chg <- (colSums(LA)<= LA_eps)
           if (any(chg)) {
@@ -273,8 +272,13 @@ pcfa <- function(dat, Q, LD = TRUE,cati = NULL,cand_thd = 0.2, PPMC = FALSE, bur
 
         gammal_sq <- LAY$gammal_sq
         # OME <- Gibbs_Omega(y = Y, la = LA, phi = PHI, inv.psx = inv.PSX, N = N, K = K)
-        if ( K > 1) PHI <- MH_PHI(phi = PHI, ome = OME, N = N, K = K, s0 = prior$s_PHI)
-        # Omega<-Gibbs_Omega(y=Y,la=LA,phi=PHI,inv.psx=inv.PSX)
+
+        if (orthogonal == FALSE && K > 1){
+          PHI <- MH_PHI(phi = PHI, ome = OME, N = N, K = K, s0 = prior$s_PHI)
+        }else{
+          PHI <- PHI0
+        }
+
         if (Jp > 0) {
             Y[cati, ] <- LAY$ys
             THD <- LAY$thd
@@ -326,13 +330,13 @@ pcfa <- function(dat, Q, LD = TRUE,cati = NULL,cand_thd = 0.2, PPMC = FALSE, bur
           if (g > 0) {
 
             APSR <- schain.grd(Eigen[1:g,])
-            if (auto_stop) {
+            # if (auto_stop) {
               if (max(APSR[,1]) < 1.1) {
                 no_conv <- no_conv + 1
               } else{
                 no_conv <- 0
               }
-            } # end auto_stop
+            # } # end auto_stop
           } # end g
 
 
@@ -347,7 +351,7 @@ pcfa <- function(dat, Q, LD = TRUE,cati = NULL,cand_thd = 0.2, PPMC = FALSE, bur
                 cat(ii, fill = TRUE, labels = "\nTot. Iter =")
                 # print(rbind(Feigen, NLA_le3, Shrink,sign_sw))
                 print(rbind(Feigen, NLA_le3, Shrink))
-                # cat(chg_count, fill = TRUE, labels = '#Sign change:')
+                cat(overf, fill = TRUE, labels = 'Overflow')
                 if (g > 0) cat(c(t(APSR[,1]),no_conv), fill = TRUE, labels = "EPSR & NCONV")
 
                 if (Jp > 0) {

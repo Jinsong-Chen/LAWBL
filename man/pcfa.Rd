@@ -17,14 +17,15 @@ pcfa(
   missing = NA,
   rfit = TRUE,
   sign_check = FALSE,
-  sign_eps = -0.5,
+  sign_eps = -0.1,
   rs = FALSE,
   auto_stop = FALSE,
   max_conv = 10,
   rseed = 12345,
   digits = 4,
   alas = FALSE,
-  verbose = FALSE
+  verbose = FALSE,
+  orthogonal = FALSE
 )
 }
 \arguments{

@@ -1,44 +1,48 @@
 #' @title Simulating data with Latent Variable Modeling
 #'
-#' @description \code{sim_lvm} can simulate data based on factor analysis or
-#' item response models with different response formats (continuous or categorical),
-#' loading patterns and residual covariance (local dependence) structures.
+#' @description \code{sim_lvm} can simulate data with continuous latent variables (factors)
+#' and continuous or categorical observed variables, plus a MIMIC-type structure.
+#' One can also include an error covariance (local dependence) structure. Categorical
+#' observed variables are generated with latent continuous responses normally distributed
+#' and equally spaced within [-3,3].
 #'
 #' @name sim_lvm
 #'
 #' @param N Sample size.
 #'
-#' @param mla Population loading matrix.
+#' @param lam Loading value (for major loadings) or matrix (\eqn{J \times K}).
 #'
-#' @param K Number of factors (if \code{mla=NULL}).
+#' @param K Number of factors (if \code{lam} is a value).
 #'
-#' @param J Number of items (if \code{mla=NULL}).
+#' @param J Number of items (if \code{lam} is a value).
 #'
-#' @param cpf Number of cross-loadings per factor (if \code{mla=NULL}).
+#' @param cpf Number of cross-loadings per factor (if \code{lam} is a value).
 #'
-#' @param lam Number of formal iterations for posterior sampling.
+#' @param lac Cross-loading value (if \code{lam} is a value).
 #'
-#' @param lac Number of iterations to update the sampling information.
+#' @param phi Factor correlation scalar or matrix, or error correlations (for MIMIC-type model).
 #'
-#' @param phi Homogeneous correlations between any two factors.
+#' @param ecr Error covariance (local dependence) value.
 #'
-#' @param ph12 Correlation between factor 1 and 2 (if it's different from \code{phi}.
+#' @param fac_score Output factor score or not.
 #'
-#' @param ecr Residual correlation (local dependence).
+#' @param P Number of observable predictors (for MIMIC-type model).
 #'
-#' @param ome_out Output factor score or not.
+#' @param phx Observable predictor correlation value or matrix (for MIMIC-type model).
 #'
-#' @param P Number of observable predictors (for MIMIC model).
+#' @param b Coefficients of observable predictors (for MIMIC-type model), value or \eqn{K \times P}.
 #'
-#' @param b Coefficients of observable predictors (for MIMIC model).
+#' @param lam1 Loading value (for major loadings) or matrix (\eqn{J1 \times K1}) for latent predictors (for MIMIC-type model).
 #'
-#' @param K1 Number of latent predictors (for MIMIC model).
+#' @param K1 Number of latent predictors (if \code{lam} is a value, for MIMIC-type model).
 #'
-#' @param ph1 Correlations between latent predictors (for MIMIC model).
+#' @param J1 Number of items latent predictors (if \code{lam} is a value, for MIMIC-type model).
 #'
-#' @param b1 Coefficients of latent predictors (for MIMIC model).
+#' @param ph1 Latent predictor correlation scalar or matrix (for MIMIC-type model).
 #'
-#' @param ilvl Specified levels of all items (i.e., need to specify Item 1 to \eqn{J+P});
+#' @param b1 Coefficients of latent predictors (for MIMIC-type model), value or \eqn{K \times K1}
+#'
+#' @param ilvl Specified levels of all items (i.e., need to specify Item 1 to \eqn{J+P+J1});
 #'  Any value smaller than 2 is considered as continuous item.
 #'
 #' @param cati The set of polytomous items in sequence number (i.e., can be any number set
@@ -54,17 +58,12 @@
 #'
 #' @param necw Number of within-factor local dependence.
 #'
-#' @param add_ind (Additional) minor factor with cross-loadings.
-#'
-#' @param add_la Value of cross-loadings on (Additional) minor factor.
-#'
-#' @param add_phi Correlations between (Additional) minor factor and other factors.
-#'
-#' @param zero_it Surplus items with zero loading.
-#'
 #' @param digits Number of significant digits to print when printing numeric values.
 #'
-#' @return An object of class \code{list} containing the data, loading, and factorial correlation matrix.
+#' @return An object of class \code{list} containing the data, loadings, factor correlations,
+#' local dependence, and other information. The data consists of J items for the factors,
+#' P items for observable predictors, and J1 items for latent predictors.
+#'
 #'
 #'
 #' @importFrom MASS mvrnorm
@@ -76,21 +75,21 @@
 #' # for continuous data with cross-loadings and local dependence effect .3
 #' out <- sim_lvm(N=1000,K=3,J=18,lam = .7, lac=.3,ecr=.3)
 #' summary(out$dat)
-#' out$MLA
-#' out$ofd_ind
+#' out$lam
+#' out$loc_dep
 #'
 #' # for categorical data with cross-loadings .4 and 10% missingness
 #' out <- sim_lvm(N=1000,K=3,J=18,lam = .7, lac=.4,cati=-1,noc=4,misp=.1)
 #' summary(out$dat)
-#' out$MLA
-#' out$ofd_ind
+#' out$lam
+#' out$loc_dep
 #'
-sim_lvm <- function(N = 1000, mla=NULL, K = 3, J = 18, cpf = 0, lam = 0.7, lac = 0.3, phi = .3, ph12 = -1,
-        ecr = .0,P = 0, b = .3,K1 = 0,ph1 = .2, b1 = .3, ilvl=NULL,cati = NULL, noc = c(4), misp = 0, ome_out = FALSE,
-        necw=K,necb=K,add_ind=c(),add_la=.5,add_phi=0,zero_it=0, rseed = 333,digits = 4) {
+sim_lvm <- function(N = 1000, lam = 0.7, K = 3, J = 18, cpf = 0, lac = 0.3, phi = .3,ecr = .0,
+                    necw=K, necb=K, P = 0, phx = 0, b = 0, lam1 = 0, K1 = 0, J1 = 0, b1 = 0, ph1 = 0,
+       ilvl=NULL, cati = NULL, noc = c(4), misp = 0, fac_score = FALSE, rseed = 333,digits = 4) {
 
-    if (is.null(mla) && J%%K != 0)
-        stop("J should be a multiple of K.", call. = FALSE)
+    if (is.scalar(lam) && (J%%K != 0 || J<1) )
+        stop("J should be a multiple of K when lam is a value.", call. = FALSE)
 
     if (exists(".Random.seed", .GlobalEnv))
         oldseed <- .GlobalEnv$.Random.seed else oldseed <- NULL
@@ -102,115 +101,105 @@ sim_lvm <- function(N = 1000, mla=NULL, K = 3, J = 18, cpf = 0, lam = 0.7, lac =
     # old_digits <- getOption("digits")
     options(digits = digits)
 
-    if (!is.null(mla)) {
-        mla<-as.matrix(mla)
-        K <- ncol(mla)
-        J <- nrow(mla)
-        cpf <- 0
+    mla <- function(la0,J,K,lac=0,cpf=0){
+      ipf <- round(J / K)
+      if (K > 1){
+        lam0 <- c(rep(la0, ipf), rep(0, ipf - cpf), rep(lac, cpf), rep(0, (K - 2) * ipf))
+      }else{
+        lam0<-la0
+      }
+      mla1 <- matrix(lam0, ipf, K)
+      if(K == 1){
+        mla <- mla1
+      }else{
+        mla <- c()
+        for (i in K:1) {
+          # i <- 1
+          ind <- (c(1:K) + i)%%K
+          ind[ind == 0] <- K
+          mla <- rbind(mla, mla1[, ind])
+        }
+      }
+      return(mla)
+     }
+
+
+    if (!is.scalar(lam1)) {
+      lam1<-as.matrix(lam1)
+      K1 <- ncol(lam1)
+      J1 <- nrow(lam1)
+    }else{
+      if (K1 > 0){
+        if (J1%%K1 != 0  || J1 < 1)
+          stop("J1 should be a multiple of K1 when lam1 is a value.", call. = FALSE)
+        lam1<-mla(lam1,J1,K1)
+      }else{
+        # lam1 <- NULL
+        J1 <- 0
+      }
     }
 
+    PHI <- fac <- 0
+    x <- y1 <- fac1 <- eigen1 <- mb <- mb1 <- evr1<- NULL
+    if (P>0){
+      PHX <- cm_check(phx,P)
+      if(any(PHX<=-1))
+        stop("phx should be a correlation scalar or matrix (P*P & PD).", call. = FALSE)
 
-    if (P == 0 && K1 == 0){
-        PHI <- matrix(phi, K, K)
-        diag(PHI) <- 1
-        if (ph12 > -1 && ph12 < 1) PHI[1,2] <- PHI[2,1]<-ph12
+      x <- mvrnorm(N, rep(0, P), PHX)
+      if (is.scalar(b)){
+        mb <- matrix(b,K,P)
+      }else{
+        mb <- b #K x P
+      }
 
-        PHX <- NULL
-        eta <- mvrnorm(N, rep(0, K), PHI)
+      PHI <- PHI + mb %*% PHX %*% t(mb)
+      fac <- fac + t(mb %*% t(x))
+    }
+
+   if (K1 > 0){
+     PH1 <- cm_check(ph1,K1)
+     if(any(PH1<=-1))
+       stop("ph1 should be a correlation scalar or matrix (K1*K1 & PD).", call. = FALSE)
+
+     fac1 <- mvrnorm(N, rep(0, K1), PH1)
+     evr1<-1 - diag(lam1 %*% PH1 %*% t(lam1))
+     err1 <- mvrnorm(N, rep(0, J1), diag(evr1))
+     y1 <- t(lam1 %*% t(fac1)) + err1
+     eigen1 <- diag(crossprod(lam1))
+
+     if (is.scalar(b1)){
+       mb1 <- matrix(b1,K,K1)
+     }else{
+       mb1 <- b1
+     }
+     PHI <- PHI + mb1 %*% PH1 %*% t(mb1)
+     fac <- fac + t(mb1 %*% t(fac1))
+   }
+
+    if (!is.scalar(lam)) {
+      lam<-as.matrix(lam)
+      K <- ncol(lam)
+      J <- nrow(lam)
+      cpf <- 0
     }else{
-        mb <- mb1 <- PHX <- NULL
-        tmp <- eta <- 0
-        if (P>0){
-             PHX <- matrix(phi, P, P)
-            diag(PHX) <- 1
-            x <- mvrnorm(N, rep(0, P), PHX)
-            if (length(b)==1){
-                mb <- matrix(b,K-K1,P)
-            }else{
-                mb <- b
-            }
-             tmp <- mb %*% PHX %*% t(mb)
-             eta <- t(mb %*% t(x))
-        }
+      lam <- mla(lam,J,K,lac,cpf)
+    }
 
+    PHI0 <- cm_check(phi,K)
+    if(any(PHI0<=-1))
+      stop("phi should be a correlation scalar or matrix (K*K & PD).", call. = FALSE)
 
-        if (K1 > 0){
-            PH1 <- matrix(ph1, K1, K1)
-            diag(PH1) <- 1
-            ome <- mvrnorm(N, rep(0, K1), PH1)
-            if (length(b1)==1){
-                mb1 <- matrix(b1,K-K1,K1)
-            }else{
-                mb1 <- b1
-            }
-            tmp <- tmp + mb1 %*% PH1 %*% t(mb1)
-            eta <- eta + t(mb1 %*% t(ome))
-        }
+   if (K > 1 && (P+K1)>0)
+     diag(PHI0) <- 1 - diag(PHI) # factor variance standardized
 
+    fac <- fac + mvrnorm(N, rep(0, K), PHI0)
+    PHI <- PHI + PHI0
 
-        ber = 1 - diag(tmp) # factor variance standardized
-        if (K > 1) ber <- diag(ber)
-        mber <- mvrnorm(N, rep(0, K-K1), ber)
-        eta <- eta + mber
-        # diag(tmp)<-1
-
-        if (K1 > 0){
-            # eta <- eta + t(mb1 %*% t(ome))
-            # PHI <- matrix(0,K,K)
-            # PHI[1:(K-K1),1:(K-K1)]<-tmp
-            # diag(PHI)<-1
-            eta <- cbind(eta,ome)
-        }
-
-    } #end P == 0 && K1 == 0
-
-    # J <- K * ipf
-    ipf <- J / K
-
-    if (is.null(mla)) {
-            if (K > 1){
-                lam0 <- c(rep(lam, ipf), rep(0, ipf - cpf), rep(lac, cpf), rep(0, (K - 2) * ipf))
-            }else{
-                lam0<-lam
-            }
-
-            lam1 <- matrix(lam0, ipf, K)
-
-            if(K == 1){
-                mla <- lam1
-            }else{
-                mla <- c()
-                for (i in K:1) {
-                    # i <- 1
-                    ind <- (c(1:K) + i)%%K
-                    ind[ind == 0] <- K
-                    mla <- rbind(mla, lam1[, ind])
-                }
-            }
-
-            if (P == 0 && K1 == 0){
-                Kp1<-K
-                if(!is.null(add_ind)){
-                    # len<-length(add_ind)
-                    Kp1<-K+1
-                    mla<-cbind(mla,0)
-                    mla[add_ind,Kp1]<-add_la
-                    PHI<-cbind(PHI,add_phi)
-                    PHI<-rbind(PHI,add_phi)
-                    PHI[Kp1,Kp1]<-1
-                }
-                if (zero_it>0){
-                    J <- J + zero_it
-                    mla <- rbind(mla,matrix(0,zero_it,Kp1))
-                }
-                eta <- mvrnorm(N, rep(0, Kp1), PHI)
-            }
-        } #end mla
-
-
+    ipf <- round(J / K)
     ecm <- matrix(0, J, J)
     if (ecr > 0) {
-        iecb <- iecw <- NULL
+        # iecb <- iecw <- NULL
         li <- c(1:K) * ipf - cpf
         for (i in 1:necw) {
             if(necw>0) ecm[li[i], li[i] - 1] <- ecm[li[i] - 1,li[i]] <- ecr
@@ -221,64 +210,36 @@ sim_lvm <- function(N = 1000, mla=NULL, K = 3, J = 18, cpf = 0, lam = 0.7, lac =
         }
     }
 
-    # iecb <- iecw <- NULL
-    # li <- c(1:K) * ipf - cpf
-    # for (i in 1:necw) {
-    #     if(necw>0) iecw <- rbind(iecw, c(li[i], li[i] - 1))
-    #     # i1 <- i%%K + 1
-    #     # iecb <- rbind(iecb, c(li[i] - 2, li[i1] - 3))
-    # }
-    # for (i in 1:necb) {
-    #     # iecw <- rbind(iecw, c(li[i], li[i] - 1))
-    #     i1 <- i%%K + 1
-    #     if(necb>0) iecb <- rbind(iecb, c(li[i] - 2, li[i1] - 3))
-    # }
+    # PHI <- cor(eta)
+    evr0<-1 - diag(lam %*% PHI %*% t(lam))
+    diag(ecm) <- evr0
+    err <- mvrnorm(N, rep(0, J), ecm)
+    y0 <- t(lam %*% t(fac)) + err
 
-    # ecm <- matrix(0, J, J)
-    #
-    # if (ecr > 0) {
-    #     ecm[iecw] <- ecm[iecw[, 2:1]] <- ecr
-    #     ecm[iecb] <- ecm[iecb[, 2:1]] <- ecr
-    # }
-
-    PHI <- cor(eta)
-    evr<-1 - diag(mla %*% PHI %*% t(mla))
-
-    # evr <- rep(0, J)
-    # for (j in 1:J) {
-    #     evr[j] = 1 - t(mla[j, ]) %*% PHI %*% mla[j, ]
-    # }  #end j
-
-    diag(ecm) <- evr
-    er <- mvrnorm(N, rep(0, J), ecm)
-
-    # eta <- mvrnorm(N, rep(0, K1), PHI)
-
-    y <- t(mla %*% t(eta)) + er
-    if ( P >0){
-        y <- cbind(y,x)
-    }
+    y<-cbind(y0,x,y1)
 
     scale <- apply(y, 2, sd)
-    eigen <- diag(crossprod(mla))
+    eigen <- c(diag(crossprod(lam)),eigen1)
+    evr <- c(evr0,evr1)
 
-    out <- list(N = N, PHI = PHI, MLA = mla, Eigen = eigen, PSX = ecm, scale = scale)
-    if (ome_out)
-        out$OME <- eta
+    out <- list(lam=lam, PHI = PHI, Eigen = eigen, scale = scale, var_ie=evr)
+    if (fac_score)
+        out$fac <- cbind(fac,fac1)
 
     pos <- lower.tri(ecm)
     ind <- which(pos, arr.ind = T)
     rind <- which(ecm[pos] > 0)
-    out$ofd_ind <- ind[rind, ]
+    out$loc_dep <- ind[rind, ]
 
+    JA <- J + P + J1
     UL <- 3;LL <- -3
     if (is.null(ilvl)) {
         Jp <- length(cati)
         if (Jp > 0)
             {
                 if (Jp == 1 && cati == -1) {
-                    cati <- c(1:J)
-                    Jp <- J
+                    cati <- c(1:JA)
+                    Jp <- JA
                 }
                 yc <- y[, cati]
                 len <- length(noc)
@@ -300,10 +261,10 @@ sim_lvm <- function(N = 1000, mla=NULL, K = 3, J = 18, cpf = 0, lam = 0.7, lac =
             }  #end Jp
 
     }else{
-        if (length(ilvl)!=J+P)
-            stop("number of item levels should be J + P.", call. = F)
+        if (length(ilvl)!=JA)
+            stop("Number of item levels should be J + P + J1.", call. = F)
 
-        for (i in 1:(J+P)) {
+        for (i in 1:(JA)) {
             M <- ilvl[i]  #categories
 
             if (M >=2) {
@@ -315,18 +276,22 @@ sim_lvm <- function(N = 1000, mla=NULL, K = 3, J = 18, cpf = 0, lam = 0.7, lac =
         }  #end J+P
     } #end ilvl
 
-
+  if (misp > 0){
     mind <- matrix(rbinom(N * J, 1, misp), N, J)
-    y[mind == 1] <- NA
-    out$misp <- misp
-    out$dat <- y
+    y0<-y[,1:J]
+    y0[mind == 1] <- NA
+    y[,1:J] <- y0
+  }
+  colnames(y)<-paste0("y",c(1:ncol(y)))
+  out$dat <- y
 
     if (P != 0 || K1 != 0){
         out$mb <- mb
         out$mb1 <- mb1
+        out$var_fe <- PHI0
         out$PHX <- PHX
+        out$lam1 <- lam1
     }
-
 
     if (!is.null(oldseed))
         .GlobalEnv$.Random.seed <- oldseed else rm(".Random.seed", envir = .GlobalEnv)
