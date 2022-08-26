@@ -16,13 +16,13 @@ sim_lvm(
   necw = K,
   necb = K,
   P = 0,
-  phx = 0,
+  phix = 0,
   b = 0,
   lam1 = 0,
   K1 = 0,
   J1 = 0,
   b1 = 0,
-  ph1 = 0,
+  phi1 = 0,
   ilvl = NULL,
   cati = NULL,
   noc = c(4),
@@ -55,7 +55,7 @@ sim_lvm(
 
 \item{P}{Number of observable predictors (for MIMIC-type model).}
 
-\item{phx}{Observable predictor correlation value or matrix (for MIMIC-type model).}
+\item{phix}{Observable predictor correlation value or matrix (for MIMIC-type model).}
 
 \item{b}{Coefficients of observable predictors (for MIMIC-type model), value or \eqn{K \times P}.}
 
@@ -67,7 +67,7 @@ sim_lvm(
 
 \item{b1}{Coefficients of latent predictors (for MIMIC-type model), value or \eqn{K \times K1}}
 
-\item{ph1}{Latent predictor correlation scalar or matrix (for MIMIC-type model).}
+\item{phi1}{Latent predictor correlation scalar or matrix (for MIMIC-type model).}
 
 \item{ilvl}{Specified levels of all items (i.e., need to specify Item 1 to \eqn{J+P+J1});
 Any value smaller than 2 is considered as continuous item.}

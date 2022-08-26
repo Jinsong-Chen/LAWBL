@@ -25,7 +25,7 @@ pcfa(
   digits = 4,
   alas = FALSE,
   verbose = FALSE,
-  orthogonal = FALSE
+  ort.fac = 0
 )
 }
 \arguments{
@@ -84,6 +84,8 @@ without any specified loading. See \code{Examples}.}
     \item \code{LD>.2 >.1 LD>.2 >.1}: # of LD terms larger than .2 and .1, and LD's shrinkage parameter.
     \item \code{#Sign_sw}: Number of sign switch for each factor.
 }}
+
+\item{ort.fac}{for orthogonal factors; either scalar 0/1, or a vector of 0/1 with length K.}
 }
 \value{
 \code{pcfa} returns an object of class \code{lawbl} without item intercepts. It contains a lot of information about
@@ -138,7 +140,7 @@ summary(m1,what='thd') #thresholds for categorical items
 }
 \references{
 Chen, J., Guo, Z., Zhang, L., & Pan, J. (2021). A partially confirmatory approach to scale development
- with the Bayesian Lasso. \emph{Psychological Methods}. 26(2), 210–235. DOI: 10.1037/met0000293.
+ with the Bayesian Lasso. \emph{Psychological Methods}. 26(2), 210-235. DOI: 10.1037/met0000293.
 
 Chen, J. (2021). A generalized partially confirmatory factor analysis framework with mixed Bayesian Lasso methods.
  \emph{Multivariate Behavioral Research}. DOI: 10.1080/00273171.2021.1925520.

@@ -194,20 +194,21 @@ summary.lawbl <- function(object, what = "basic", med = FALSE, SL = 0.05, detail
       tmp <- result(object$B[istart:iend,], med, SL)
       nt <- dim(tmp)[2]
       sig <- tmp[, nt]
-
+      EPSRb <- schain.grd(object$R2[istart:iend,])
+      out0$EPSRb <- round(EPSRb, digits)
       out0$`No. of sig coef` <- sum(sig > 0)
 
       if (detail) {
         # all Loading
         ind <- which(Qb != 0, arr.ind = TRUE)
-        colnames(ind) <- c("Y", "X")
+        colnames(ind) <- c("X", "F")
         coef <- (cbind(ind, tmp))
         qcoef[Qb != 0] <- tmp[, 1]
       } else {
         # Sig. Loading
         qcoef[Qb != 0] <- sig
         ind <- which(qcoef > 0, arr.ind = TRUE)
-        colnames(ind) <- c("Y", "X")
+        colnames(ind) <- c("X", "F")
         coef <- (cbind(ind, tmp[sig > 0, ]))
         qcoef[qcoef > 0] <- tmp[sig > 0, 1]
       }
@@ -216,13 +217,18 @@ summary.lawbl <- function(object, what = "basic", med = FALSE, SL = 0.05, detail
       qcoef <- round(qcoef,digits)
 
       coef.er<-result(object$PSXb[istart:iend,],med,SL)
-      row.names(coef.er) <- paste0("Y", 1:nrow(Qb))
+      row.names(coef.er) <- paste0("F", 1:ncol(Qb))
       coef.er <- round(coef.er,digits)
+
+      R2<-result(object$R2[istart:iend,],med,SL)
+      row.names(R2) <- paste0("F", 1:ncol(Qb))
+      R2 <- round(R2,digits)
       if (sum(Qb == -1)>0){
-        tmp <- result(object$gammab[istart:iend,], med, SL)
-        ind <- which(Qb == -1, arr.ind = TRUE)
-        colnames(ind) <- c("Y", "X")
-        gammab <- (cbind(ind, tmp))
+        gammab <- result(object$gammab[istart:iend,], med, SL)
+        # ind <- which(Qb == -1, arr.ind = TRUE)
+        # colnames(ind) <- c("F", "X")
+        # gammab <- (cbind(ind, tmp))
+        row.names(gammab) <- paste0("F", 1:K)
         gammab <- round(gammab,digits)
       }else{
         gammab <- NULL
@@ -323,7 +329,7 @@ summary.lawbl <- function(object, what = "basic", med = FALSE, SL = 0.05, detail
 
     out <- switch(what, basic = out0, lambda = LAM, qlambda = MLA, eigen = eigen,
                   dpsx = dpsx, offpsx = offpsx,phi = phi, gammal = gammal,gammas = gammas,
-                  thd = Mthd, int = MU, factor = TF_ind,
+                  thd = Mthd, int = MU, factor = TF_ind,R2=R2,
                   coef = coef, qcoef=qcoef,coef.er = coef.er, gammab = gammab, all = {
             out1 <- out0
             out1$lambda <- LAM

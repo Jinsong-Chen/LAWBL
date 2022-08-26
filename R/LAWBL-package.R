@@ -46,7 +46,7 @@
 #' \emph{Psychometrika}. 85(3), 738-774. DOI:10.1007/s11336-020-09724-3.
 #'
 #' Chen, J., Guo, Z., Zhang, L., & Pan, J. (2021). A partially confirmatory approach to scale development
-#'  with the Bayesian Lasso. \emph{Psychological Methods}. 26(2), 210–235. DOI: 10.1037/met0000293.
+#'  with the Bayesian Lasso. \emph{Psychological Methods}. 26(2), 210-235. DOI: 10.1037/met0000293.
 #'
 #' Chen, J. (2021). A generalized partially confirmatory factor analysis framework with mixed Bayesian Lasso methods.
 #'  \emph{Multivariate Behavioral Research}. DOI: 10.1080/00273171.2021.1925520.

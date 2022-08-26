@@ -71,13 +71,15 @@
 #'
 #' @param max_conv maximum consecutive number of convergence for auto stop.
 #'
+#' @param ort.fac for orthogonal factors; either scalar 0/1, or a vector of 0/1 with length K.
+#'
 #' @return \code{pcfa} returns an object of class \code{lawbl} without item intercepts. It contains a lot of information about
 #' the posteriors that can be summarized using \code{\link{summary.lawbl}}.
 #'
 #' @references
 #'
 #' Chen, J., Guo, Z., Zhang, L., & Pan, J. (2021). A partially confirmatory approach to scale development
-#'  with the Bayesian Lasso. \emph{Psychological Methods}. 26(2), 210–235. DOI: 10.1037/met0000293.
+#'  with the Bayesian Lasso. \emph{Psychological Methods}. 26(2), 210-235. DOI: 10.1037/met0000293.
 #'
 #' Chen, J. (2021). A generalized partially confirmatory factor analysis framework with mixed Bayesian Lasso methods.
 #'  \emph{Multivariate Behavioral Research}. DOI: 10.1080/00273171.2021.1925520.
@@ -121,7 +123,7 @@
 pcfa <- function(dat, Q, LD = TRUE,cati = NULL,cand_thd = 0.2, PPMC = FALSE, burn = 5000, iter = 5000,
                  update = 1000, missing = NA, rfit = TRUE, sign_check = FALSE, sign_eps = -.1, rs = FALSE,
                  auto_stop=FALSE,max_conv=10, rseed = 12345, digits = 4, alas = FALSE, verbose = FALSE,
-                 orthogonal = FALSE) {
+                 ort.fac = 0) {
 
     Q <- as.matrix(Q)
     if (nrow(Q) != ncol(dat))
@@ -189,7 +191,7 @@ pcfa <- function(dat, Q, LD = TRUE,cati = NULL,cand_thd = 0.2, PPMC = FALSE, bur
     prior <- init$prior
     PSX <- init$PSX
     inv.PSX <- chol2inv(chol(PSX))
-    PHI <- init$PHI
+    # PHI <- init$PHI
     LA <- init$LA
     THD <- init$THD
     gammas <- init$gammas
@@ -221,7 +223,15 @@ pcfa <- function(dat, Q, LD = TRUE,cati = NULL,cand_thd = 0.2, PPMC = FALSE, bur
     no_conv <- 0
     LA_OF <- .99 #overflow value
     overf <- 0
-    PHI0 <- diag(K)
+
+    PHI <- diag(K)
+    orl<-length(ort.fac)
+    if (orl > 1){
+      if (orl != K)
+        stop("ort.fac should be either scalar 0/1, or a vector of 0/1 with length K.", call. = FALSE)
+      nort.K <- sum(!ort.fac)
+      s_PHI<-prior$s_PHI[!ort.fac,!ort.fac]
+    }
 
     ######## end of Init #################################################
 
@@ -265,18 +275,22 @@ pcfa <- function(dat, Q, LD = TRUE,cati = NULL,cand_thd = 0.2, PPMC = FALSE, bur
             # if(g<0){chg0_count <- chg0_count + chg}else{chg_count <- chg_count + chg}
             LA <- LA %*% sign
             OME <- t(t(OME) %*% sign)
-            print(c("ii=", ii), quote = FALSE)
-            cat(sign_sw, fill = TRUE, labels = "#Sign switch:")
+            if(verbose){
+              print(c("ii=", ii), quote = FALSE)
+              cat(sign_sw, fill = TRUE, labels = "#Sign switch:")
+            }
           }
         } #end if
 
         gammal_sq <- LAY$gammal_sq
         # OME <- Gibbs_Omega(y = Y, la = LA, phi = PHI, inv.psx = inv.PSX, N = N, K = K)
 
-        if (orthogonal == FALSE && K > 1){
+        if (orl > 1){
+            # phi0<-PHI[!ort.fac,!ort.fac]
+            tmp <- MH_PHI(phi = PHI[!ort.fac,!ort.fac], ome = OME[!ort.fac,], N = N, K = nort.K, s0 = s_PHI)
+            PHI[!ort.fac,!ort.fac]<-tmp
+        }else if (ort.fac == 0){
           PHI <- MH_PHI(phi = PHI, ome = OME, N = N, K = K, s0 = prior$s_PHI)
-        }else{
-          PHI <- PHI0
         }
 
         if (Jp > 0) {

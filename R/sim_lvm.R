@@ -28,7 +28,7 @@
 #'
 #' @param P Number of observable predictors (for MIMIC-type model).
 #'
-#' @param phx Observable predictor correlation value or matrix (for MIMIC-type model).
+#' @param phix Observable predictor correlation value or matrix (for MIMIC-type model).
 #'
 #' @param b Coefficients of observable predictors (for MIMIC-type model), value or \eqn{K \times P}.
 #'
@@ -38,7 +38,7 @@
 #'
 #' @param J1 Number of items latent predictors (if \code{lam} is a value, for MIMIC-type model).
 #'
-#' @param ph1 Latent predictor correlation scalar or matrix (for MIMIC-type model).
+#' @param phi1 Latent predictor correlation scalar or matrix (for MIMIC-type model).
 #'
 #' @param b1 Coefficients of latent predictors (for MIMIC-type model), value or \eqn{K \times K1}
 #'
@@ -85,7 +85,7 @@
 #' out$loc_dep
 #'
 sim_lvm <- function(N = 1000, lam = 0.7, K = 3, J = 18, cpf = 0, lac = 0.3, phi = .3,ecr = .0,
-                    necw=K, necb=K, P = 0, phx = 0, b = 0, lam1 = 0, K1 = 0, J1 = 0, b1 = 0, ph1 = 0,
+                    necw=K, necb=K, P = 0, phix = 0, b = 0, lam1 = 0, K1 = 0, J1 = 0, b1 = 0, phi1 = 0,
        ilvl=NULL, cati = NULL, noc = c(4), misp = 0, fac_score = FALSE, rseed = 333,digits = 4) {
 
     if (is.scalar(lam) && (J%%K != 0 || J<1) )
@@ -142,28 +142,28 @@ sim_lvm <- function(N = 1000, lam = 0.7, K = 3, J = 18, cpf = 0, lac = 0.3, phi 
     PHI <- fac <- 0
     x <- y1 <- fac1 <- eigen1 <- mb <- mb1 <- evr1<- NULL
     if (P>0){
-      PHX <- cm_check(phx,P)
-      if(any(PHX<=-1))
-        stop("phx should be a correlation scalar or matrix (P*P & PD).", call. = FALSE)
+      PHIX <- cm_check(phix,P)
+      if(any(PHIX<=-1))
+        stop("phix should be a correlation scalar or matrix (P*P & PD).", call. = FALSE)
 
-      x <- mvrnorm(N, rep(0, P), PHX)
+      x <- mvrnorm(N, rep(0, P), PHIX)
       if (is.scalar(b)){
         mb <- matrix(b,K,P)
       }else{
         mb <- b #K x P
       }
 
-      PHI <- PHI + mb %*% PHX %*% t(mb)
+      PHI <- PHI + mb %*% PHIX %*% t(mb)
       fac <- fac + t(mb %*% t(x))
     }
 
    if (K1 > 0){
-     PH1 <- cm_check(ph1,K1)
-     if(any(PH1<=-1))
-       stop("ph1 should be a correlation scalar or matrix (K1*K1 & PD).", call. = FALSE)
+     PHI1 <- cm_check(phi1,K1)
+     if(any(PHI1<=-1))
+       stop("phi1 should be a correlation scalar or matrix (K1*K1 & PD).", call. = FALSE)
 
-     fac1 <- mvrnorm(N, rep(0, K1), PH1)
-     evr1<-1 - diag(lam1 %*% PH1 %*% t(lam1))
+     fac1 <- mvrnorm(N, rep(0, K1), PHI1)
+     evr1<-1 - diag(lam1 %*% PHI1 %*% t(lam1))
      err1 <- mvrnorm(N, rep(0, J1), diag(evr1))
      y1 <- t(lam1 %*% t(fac1)) + err1
      eigen1 <- diag(crossprod(lam1))
@@ -173,7 +173,7 @@ sim_lvm <- function(N = 1000, lam = 0.7, K = 3, J = 18, cpf = 0, lac = 0.3, phi 
      }else{
        mb1 <- b1
      }
-     PHI <- PHI + mb1 %*% PH1 %*% t(mb1)
+     PHI <- PHI + mb1 %*% PHI1 %*% t(mb1)
      fac <- fac + t(mb1 %*% t(fac1))
    }
 
@@ -222,7 +222,7 @@ sim_lvm <- function(N = 1000, lam = 0.7, K = 3, J = 18, cpf = 0, lac = 0.3, phi 
     eigen <- c(diag(crossprod(lam)),eigen1)
     evr <- c(evr0,evr1)
 
-    out <- list(lam=lam, PHI = PHI, Eigen = eigen, scale = scale, var_ie=evr)
+    out <- list(lam=lam, PHI = PHI, Eigen = eigen, scale = scale, var_ie=evr,PSX = ecm)
     if (fac_score)
         out$fac <- cbind(fac,fac1)
 
@@ -289,7 +289,7 @@ sim_lvm <- function(N = 1000, lam = 0.7, K = 3, J = 18, cpf = 0, lac = 0.3, phi 
         out$mb <- mb
         out$mb1 <- mb1
         out$var_fe <- PHI0
-        out$PHX <- PHX
+        out$PHIX <- PHIX
         out$lam1 <- lam1
     }
 
